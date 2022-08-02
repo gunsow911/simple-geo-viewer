@@ -1,4 +1,5 @@
-type DataType = 'raster' | 'vector' | 'polygon' | 'line' | 'point' | 'building' | 'icon';
+import { Title } from '../Map/Legend/Content/title';
+type DataType = 'raster' | 'vector' | 'polygon' | 'line' | 'point' | 'building' | 'icon' | 'transaction' | 'pointcloud' | 'personflow';
 
 /**
  * menu.json直下のFolderがもつレイヤー定義
@@ -63,6 +64,13 @@ export const getDataList = (menu: Menu) => menu.map((dataset) => dataset.data).f
  */
 export const getDataTitleById = (menu: Menu, id: string) =>
   getDataList(menu).filter((data) => data.id.includes(id))[0].title;
+
+/**
+ * idからdataのカテゴリーを取得
+ * @param id
+ */  
+export const getCategoryByTitle = (menu: Menu, title: string) => 
+  menu.filter((dataset) => dataset.data.some((layer) => layer.title === title))[0].category;
 /**
  * dataのtitleからidを取得
  * @param title
