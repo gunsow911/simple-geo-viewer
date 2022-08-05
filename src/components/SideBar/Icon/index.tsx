@@ -33,9 +33,9 @@ const configIcon = (url: string) => {
     }} 
     >
       <img style={{
-          width: '36px',
-          height: '36px',
-          objectPosition: '-9.6px -4px',
+          width: '26px',
+          height: '26px',
+          objectPosition: '-5px -1px',
           objectFit: 'cover'
         }} 
         src={url} 
