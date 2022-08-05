@@ -22,8 +22,11 @@ const IconViewBox = '0 0 100 150';
 
 const configIcon = (url: string) => {
   return (
-    <div className="index-icon">
-      <img width={getIconSize().width} height={getIconSize().height} src={url} />
+    <div className="index-icon" style={{
+      minWidth: '32px',
+      minHeight: '32px'}} 
+    >
+      <img width={getIconSize().width} height={getIconSize().height}  src={url} />
     </div>
   );
 };
