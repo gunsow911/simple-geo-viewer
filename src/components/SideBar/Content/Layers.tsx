@@ -100,7 +100,7 @@ export const Layers = (props: LayersProps) => {
                   toggleSelectedResourceList(resource.title, resource.id);
                 }}
               />
-              {getResourceIcon(resource)}
+              {getResourceIcon(resource, preferences.config)}
               <p style={textStyle}>{resource.title}</p>
             </div>
             <div className="w-1/12">
