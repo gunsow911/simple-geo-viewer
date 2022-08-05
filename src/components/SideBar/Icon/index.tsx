@@ -18,15 +18,28 @@ const getIconSize = () => {
   };
 };
 
+
+
 const IconViewBox = '0 0 100 150';
 
 const configIcon = (url: string) => {
   return (
     <div className="index-icon" style={{
-      minWidth: '32px',
-      minHeight: '32px'}} 
+      minWidth: '16px',
+      minHeight: '16px',
+      maxWidth: '16px',
+      maxHeight: '16px',
+      overflow: 'hidden'
+    }} 
     >
-      <img width={getIconSize().width} height={getIconSize().height}  src={url} />
+      <img style={{
+          width: '36px',
+          height: '36px',
+          objectPosition: '-9.6px -4px',
+          objectFit: 'cover'
+        }} 
+        src={url} 
+        />
     </div>
   );
 };
