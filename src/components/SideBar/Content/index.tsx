@@ -59,7 +59,7 @@ const FolderIcon = (
  * @param categoryName
  * @returns {string | null} - ダウンロードリンク文字列。存在しなければnull
  */
-const getDownloadLink = (menu: Menu, categoryName: string): string | null => {
+export const getDownloadLink = (menu: Menu, categoryName: string): string | null => {
   // menuをカテゴリー名で探して配列のインデックスを取得
   const categoryIdx = menu.map((m) => m.category).indexOf(categoryName);
   if (categoryIdx === -1) return null;
@@ -98,7 +98,7 @@ export const Content: React.FC<LayerListProps> = ({ title, layers }) => {
         style={datasetStyle}
         onClick={toggleAccordion}
       >
-        <div className="text-left flex w-11/12 items-center">
+        <div className="text-left flex w-11/12">
           {FolderIcon}
           <Title datasetName={title} />
         </div>
