@@ -5,6 +5,7 @@ import { GeoJsonLayer } from '@deck.gl/layers';
 import { show } from '@/components/Tooltip/show';
 import { Dispatch, SetStateAction } from 'react';
 
+
 import {
   GeojsonIconLayerConfig,
   GeojsonLayerConfig,
@@ -22,7 +23,7 @@ export function makeGeoJsonLayers(
   map: Map,
   layerConfig: LayerConfig[],
   init: boolean,
-  setTooltipData
+  setTooltipData,
 ) {
   const geoJsonLinePolygonCreator = new GeoJsonLinePolygonCreator(layerConfig, map, setTooltipData);
   const geoJsonIconCreator = new GeoJsonIconLayerCreator(layerConfig, map, setTooltipData);
@@ -82,7 +83,9 @@ class GeoJsonLinePolygonCreator {
     const { coordinate, object } = info;
     if (!coordinate) return;
     if (!object) return;
-    show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData);
+    const { layer: { props:{ tooltipType } } } = info;
+    const { layer: { id } } = info;
+    show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
   };
 }
 
@@ -140,7 +143,9 @@ class GeoJsonIconLayerCreator {
     const { coordinate, object } = info;
     if (!coordinate) return;
     if (!object) return;
-    show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData);
+    const { layer: { props:{ tooltipType } } } = info;
+    const { layer: { id } } = info;
+    show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
   };
 }
 
@@ -228,6 +233,8 @@ class GeoJsonFeatureCollectionIconLayerCreator {
     const { coordinate, object } = info;
     if (!coordinate) return;
     if (!object) return;
-    show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData);
+    const { layer: { props:{ tooltipType } } } = info;
+    const { layer: { id } } = info;
+    show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
   };
 }
