@@ -5,7 +5,6 @@ import { ArcLayer } from '@deck.gl/layers';
 import { show } from '@/components/Tooltip/show';
 import { Dispatch, SetStateAction } from 'react';
 
-
 type ArcLayerConfig = {
   id: string;
   type: string;
@@ -78,8 +77,6 @@ class ArcLayerCreator {
     const { coordinate, object } = info;
     if (!coordinate) return;
     if (!object) return;
-    const { layer: { props:{ tooltipType } } } = info;
-    const { layer: { id } } = info;
-    show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
+    show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData);
   };
 }

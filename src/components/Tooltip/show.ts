@@ -1,7 +1,6 @@
 import { Map, Marker } from 'maplibre-gl';
 import { Dispatch, SetStateAction } from 'react';
 import { getPropertiesObj } from '@/components/Tooltip/util';
-import { Tooltip } from './content';
 
 let pointMarker: Marker | null = null;
 
@@ -22,9 +21,7 @@ export const show = (
   lng: number,
   lat: number,
   map: any,
-  setTooltipData: Dispatch<SetStateAction<any>>,
-  tooltipType: string,
-  id: string
+  setTooltipData: Dispatch<SetStateAction<any>>
 ) => {
   //すでに表示されているマーカーとポップアップを削除
   removeExistingTooltip(setTooltipData);
@@ -34,7 +31,7 @@ export const show = (
   setTooltipData((prevState) => {
     return {
       ...prevState,
-      tooltip: getPropertiesObj(object, !tooltipType ? "default" : tooltipType, id),
+      tooltip: getPropertiesObj(object),
     };
   });
 };
