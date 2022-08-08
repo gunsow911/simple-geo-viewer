@@ -289,7 +289,7 @@ class TripsDRMLayerCreator extends TemporalLayerCreator {
         // @ts-ignore
         getLineColor: (d: any) => {
           const dataIndex: number = Math.trunc(timestamp / layerConfig.step);
-          const temporalValue: number = JSON.parse(d.properties.traffic_volume)[dataIndex];
+          const temporalValue: number = JSON.parse('[' + d.properties.traffic_volume + ']')[dataIndex];
           // 0〜1の範囲にノーマライズの計算
           const normalizedValue = this.generateNormalizedValue(temporalValue, layerConfig);
           return this.generateColor(normalizedValue, layerConfig);
@@ -297,7 +297,7 @@ class TripsDRMLayerCreator extends TemporalLayerCreator {
         // 線幅の表示
         getLineWidth: (d: any) => {
           const dataIndex: number = Math.trunc(timestamp / layerConfig.step);
-          const temporalValue: number = JSON.parse(d.properties.traffic_volume)[dataIndex];
+          const temporalValue: number = JSON.parse('[' + d.properties.traffic_volume + ']')[dataIndex];
           const normalizedValue = this.generateNormalizedValue(temporalValue, layerConfig);
           const widths = layerConfig.widths || [5, 5];
           const width = widths[0] * (1 - normalizedValue) + widths[1] * normalizedValue;

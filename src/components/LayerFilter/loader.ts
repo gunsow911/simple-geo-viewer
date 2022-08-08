@@ -11,6 +11,7 @@ import { route } from 'next/dist/server/router';
 export type Settings = {
   title: string;
   background_color: string;
+  tooltip_background_color: string;
 };
 /**
  * backgrounds.json

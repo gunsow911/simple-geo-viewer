@@ -9,7 +9,7 @@ import { getFilteredLayerConfig, Config } from '@/components/LayerFilter/config'
 import { makeIconLayers } from '@/components/Map/Layer/iconLayerMaker';
 import { Dispatch, SetStateAction } from 'react';
 import { Deck } from 'deck.gl';
-import { getDataList, Menu, getCategoryById, getDataTitleById  } from '@/components/LayerFilter/menu';
+import { getDataList, Menu } from '@/components/LayerFilter/menu';
 import { makeTile3DLayers } from '@/components/Map/Layer/tile3DLayerMaker';
 
 export const makeDeckGlLayers = (

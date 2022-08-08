@@ -91,16 +91,16 @@ export const Layers = (props: LayersProps) => {
             }
             onMouseOut={() => setMouseTooltipData(() => null)}
           >
-            <div className="w-11/12 pr-3 flex">
+            <div className="w-11/12 pr-3 flex items-center">
               <input
                 type="checkbox"
-                className="rounded-full mx-1 text-cyan-600 focus:outline-none"
+                className="rounded-full mx-1 text-cyan-600 focus:outline-none min-w-16 min-h-16 max-w-16 max-h-16"
                 checked={isSelected(resource.title, checkedLayerTitleList)}
                 onChange={() => {
                   toggleSelectedResourceList(resource.title, resource.id);
                 }}
               />
-              {getResourceIcon(resource)}
+              {getResourceIcon(resource, preferences.config)}
               <p style={textStyle}>{resource.title}</p>
             </div>
             <div className="w-1/12">
