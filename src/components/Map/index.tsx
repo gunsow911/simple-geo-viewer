@@ -168,7 +168,7 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData }) => {
     <>
       <div className="h-full" ref={maplibreContainer}>
         <canvas className="z-10 absolute h-full" ref={deckglContainer}></canvas>
-        <div className="z-10 top-0 left-0 w-40">
+        <div className="z-10 absolute top-2 left-2 w-60">
           <Legend id={useGetClickedLayerId()} />
         </div>
         <div className="z-10 absolute top-2 right-12 bg-white p-1">

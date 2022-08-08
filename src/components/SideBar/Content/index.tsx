@@ -98,7 +98,7 @@ export const Content: React.FC<LayerListProps> = ({ title, layers }) => {
         style={datasetStyle}
         onClick={toggleAccordion}
       >
-        <div className="text-left flex w-11/12">
+        <div className="text-left flex w-11/12 items-center">
           {FolderIcon}
           <Title datasetName={title} />
         </div>

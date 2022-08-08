@@ -15,7 +15,45 @@ const gyoseiTokyo = (layer: any) => {
 };
 
 const susonoBuilding = (layer: any) => {
-  const getFillColor = () => [200, 200, 200, 200];
+  const getFillColor = (d: any) => {
+    if('建物分類' in d.properties) {
+
+      getColorParam(layer.id, d.properties['建物分類']);
+      if(d.properties['建物分類'] === 9999) {
+        // その他
+        return [150, 150, 150, 150];
+      }
+      else if(d.properties['建物分類'] < 0) {
+        // NULL
+        return [255, 255, 255, 150];
+      }
+      else {
+        // 公共2019, 教育2020
+        const bldg_class = d.properties['建物分類'];
+        if (bldg_class === 2019) {
+          return [220, 220, 150, 180]
+        }
+        else if (bldg_class === 2020)  {
+          return [150, 220, 220, 180]
+        }
+        else {
+          // 住居系:100x、事業所系：20xx、商業施設系：300x
+          const x = Math.floor(bldg_class / 1000);
+          if (x === 1) {
+            return [150, 150, 220, 180]
+          }
+          else if (x === 2) {
+            return [150, 220, 150, 180]
+          }
+          else {
+            return [220, 150, 150, 180]
+          }
+        }
+      }
+    } else {
+      return [200, 200, 200, 200];
+    }
+  }
   const getLineColor = () => [200, 200, 200, 200];
   const getElevation = (d: any) => {
     if ('bui_floor' in d.properties) {

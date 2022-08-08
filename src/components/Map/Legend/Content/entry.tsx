@@ -9,7 +9,7 @@ type props = {
 export const Entry = (props: props) => {
   const { name, color } = props;
   return (
-    <div className="flex m-0 p-0">
+    <div className="flex m-0 px-2 items-center">
       <Symbol color={color} />
       <Text name={name} />
     </div>
