@@ -93,8 +93,8 @@ const TooltipDefaultBody: VFC<TooltipBodyProps> = ({ properties, labels }) => {
 const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labels, id }) => {
   //todo jsonに移動
   const summaryKey = {
-    title: ["話題提供者名", "タイトル"],
-    image: ["画像", "写真"],
+    title: ["話題提供者名", "タイトル","事業所名"],
+    image: ["画像", "写真","サムネイル"],
     description: ["内容"]
   }
 
@@ -121,7 +121,7 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
       return content;
     }
 
-    const descriptionValue = properties[
+    const descriptionValue: string | undefined = properties[
       labels.filter((key) => { return summaryKey.description.indexOf(key) > -1 })[0]
     ];
     return(
@@ -129,7 +129,7 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
         { image() }
         <div className='text-center'>{ titleValue }</div>
         <div className='text-sm text-gray-600 text-center'>{ layerTitle }</div>
-        <div className='text-sm text-left'>{ descriptionValue.slice(0, 15) + "…"  }</div>
+        <div className='text-sm text-left'>{ typeof descriptionValue === 'string' ? descriptionValue.slice(0, 15) + "…" : '' }  </div>
         <div className='flex justify-center'>{resource.download_url === undefined ? undefined : largeDownloadIcon(resource.download_url)}</div>
       </>
     )
