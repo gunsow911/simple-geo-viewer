@@ -6,6 +6,7 @@ import { havingLegendIdList } from '@/components/Map/Legend/layerIds';
 import { getDataTitleById } from '@/components/LayerFilter/menu';
 import { getCheckedLayerIdByDataTitleList } from '@/components/LayerFilter/sideBar';
 import { defaultLegendId } from '@/components/Map/Legend/layerIds';
+import { getLayerConfigById } from '@/components/LayerFilter/config'
 
 const getClickedLayerId = (clickedLayerViewState: clickedLayerViewState | null) => {
   return clickedLayerViewState ? clickedLayerViewState.id : '';
@@ -31,8 +32,11 @@ export const useGetClickedLayerId = () => {
 
   // 現在凡例が表示されている場合、そのタイトルを取得
   let displayedLegendLayerTitle = '';
+  
   if (displayedLegendLayerId !== '') {
-    displayedLegendLayerTitle = getDataTitleById(preferences.menu, displayedLegendLayerId);
+    if (getLayerConfigById(displayedLegendLayerId,preferences.config) !== undefined) {
+      displayedLegendLayerTitle = getDataTitleById(preferences.menu, displayedLegendLayerId);
+    }
   }
   // 初回にこの関数が呼ばれた際は何も返さない
   if (isDefault) {

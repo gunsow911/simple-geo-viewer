@@ -243,11 +243,13 @@ export const getResourceIcon = (resource: Data) => {
   const layerid = resource.id[0];
   const { preferences } = useContext(context);
   const layerConfig = getLayerConfigById(layerid, preferences.config);
+  if (layerConfig === undefined) return;
   const iconLoadTypes = ["geojsonicon", "geojsonfcicon"];
   
   const color = resource.color;
 
   const type = resource.type;
+
 
   if(iconLoadTypes.includes(layerConfig.type)){
     return configIcon(layerConfig.icon.url);
