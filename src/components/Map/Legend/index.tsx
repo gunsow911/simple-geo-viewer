@@ -34,7 +34,7 @@ export const useGetClickedLayerId = () => {
   let displayedLegendLayerTitle = '';
   
   if (displayedLegendLayerId !== '') {
-    if (getLayerConfigById(displayedLegendLayerId,preferences.config) != undefined) {
+    if (getLayerConfigById(displayedLegendLayerId,preferences.config) !== undefined) {
       displayedLegendLayerTitle = getDataTitleById(preferences.menu, displayedLegendLayerId);
     }
   }
