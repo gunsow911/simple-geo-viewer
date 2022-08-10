@@ -15,7 +15,7 @@ type TitleProps = {
 const Title = (props: TitleProps) => {
   const { datasetName } = props;
 
-  return <span className="pl-1">{datasetName}</span>;
+  return <span className="pl-1 layer_category">{datasetName}</span>;
 };
 
 type LayersProps = {
@@ -72,7 +72,7 @@ export const Content: React.FC<LayerListProps> = ({ title, layers }) => {
   const [active, setActive] = useState<boolean>(true);
   const [height, setHeight] = useState<number>(44);
 
-  const { preferences } = useContext(context);
+  const { preferences, setMouseTooltipData } = useContext(context);
 
   const toggleAccordion = () => {
     setActive(!active);
@@ -92,7 +92,17 @@ export const Content: React.FC<LayerListProps> = ({ title, layers }) => {
   const downloadLink = getDownloadLink(preferences.menu, title);
 
   return (
-    <div className="pb-px">
+    <div 
+      className="pb-px"
+      onMouseOver={(event) =>
+        setMouseTooltipData(() => ({
+          text: title,
+          top: (window.innerHeight - event.clientY + 10) * -1,
+          left: 20,
+        }))
+      }
+      onMouseOut={() => setMouseTooltipData(() => null)}
+    >
       <div
         className="h-10 text-left transition-hover duration-500 ease bg-white hover:bg-gray-200 shadow-md flex p-3"
         style={datasetStyle}
