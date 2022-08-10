@@ -3,6 +3,13 @@
   height: calc(100vh - theme('spacing.12'));
 }
 
+.layer_category {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0px;
+}
+
 #tooltip {
   position: relative;
   height: calc(50%);
@@ -80,7 +87,7 @@
   transform: translate3d(-50%, 0, 0);
   top: -35px;
 }
-.rangeslider__handle-tooltip span{
+.rangeslider__handle-tooltip span {
   display: inline-block;
   line-height: 100%;
 }
@@ -103,5 +110,5 @@
   cursor: pointer;
   display: inline-block;
   top: 14px;
-  transform: translate3d(-50%,0,0);
+  transform: translate3d(-50%, 0, 0);
 }
