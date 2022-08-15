@@ -82,6 +82,7 @@ class MvtLayerCreator {
     const { coordinate, object } = info;
     if (!coordinate) return;
     if (!object) return;
+    // @ts-ignore
     const { layer: { props:{ tooltipType } } } = info;
     const { layer: { id } } = info;
     show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);

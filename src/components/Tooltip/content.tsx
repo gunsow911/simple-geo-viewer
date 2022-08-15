@@ -1,7 +1,7 @@
 import React, { ReactNode, VFC, useContext } from 'react';
 import { context } from '@/pages';
 import Collapsible from 'react-collapsible';
-import { getDataById, getCategoryById, getDataTitleById } from '@/components/LayerFilter/menu';
+import { getDataById, getCategoryByTitle, getDataTitleById } from '@/components/LayerFilter/menu';
 import { largeDownloadIcon } from '@/components/SideBar/Icon';
 
 type BaseTooltipProps = { children: ReactNode };
@@ -196,10 +196,10 @@ const TooltipTableBody: VFC<TooltipTableBodyProps> = ({ properties, labels, id }
     resource: [''],
   };
 
-  const summary = () => {
+  const Summary = () => {
     const { preferences } = useContext(context);
     const layerTitle = getDataTitleById(preferences.menu, id);
-    const layerCategory = getCategoryById(preferences.menu, id);
+    const layerCategory = getCategoryByTitle(preferences.menu, layerTitle);
 
     const titleValue =
       properties[
@@ -219,7 +219,7 @@ const TooltipTableBody: VFC<TooltipTableBodyProps> = ({ properties, labels, id }
 
   return (
     <>
-      {summary()}
+      {Summary()}
       <table className="tooltip_table">
         <tbody>
           {labels.map((key) => {
