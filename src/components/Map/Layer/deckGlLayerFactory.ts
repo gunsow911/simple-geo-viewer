@@ -28,12 +28,12 @@ export const makeDeckGlLayers = (
   };
   const layerCreator = [
     makeTileLayers,
-    makeGeoJsonLayers,
     makeArcLayers,
     makeMvtLayers,
     makeGltfLayers,
     makeIconLayers,
     makeTile3DLayers,
+    makeGeoJsonLayers,
   ];
   // ここでフィルタリングのidを求める
   const layerConfig = getFilteredLayerConfig(menu, config).filter((layer) => {
