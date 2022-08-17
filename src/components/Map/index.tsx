@@ -13,10 +13,15 @@ import Legend, { useGetClickedLayerId } from '@/components/Map/Legend';
 
 import BackgroundSelector from './Controller/BackgroundSelector';
 import { TimeSlider } from '@/components/Map/Controller/TimeSlider';
-import { getFilteredLayerConfig } from '@/components/LayerFilter/config';
+import {
+  getFilteredLayerConfig,
+  getLayerConfigById,
+  Config,
+} from '@/components/LayerFilter/config';
 import { Menu } from '@/components/LayerFilter/menu';
 import { TEMPORAL_LAYER_TYPES } from '@/components/Map/Layer/temporalLayerMaker';
 import { Preferences, Backgrounds } from '@/components/LayerFilter/loader';
+import { resolveUrl } from '@loaders.gl/gltf/src/lib/gltf-utils/resolve-url';
 
 let map: Map;
 let deck: Deck;
@@ -120,14 +125,26 @@ const useInitializeMap = (
   }, []);
 };
 
-const useToggleVisibly = (menu: Menu) => {
+const useToggleVisibly = (menu: Menu, config: Config) => {
   const { checkedLayerTitleList } = useContext(context);
 
   if (!deck) return;
   const deckGlLayers = deck.props.layers;
   const toggleVisibleLayers = toggleVisibly(deckGlLayers, checkedLayerTitleList, menu);
-  const zommVisibleLayers = zoomVisibly(toggleVisibleLayers, visLayers);
-  deck.setProps({ layers: zommVisibleLayers });
+  const zoomVisibleLayers = zoomVisibly(toggleVisibleLayers, visLayers);
+  const priorityViewLayer = zoomVisibleLayers
+    .map((layer) => {
+      if (getLayerConfigById(layer.id, config)?.type === 'geojsonicon') {
+        return { index: 1, layer: layer };
+      } else {
+        return { index: 0, layer: layer };
+      }
+    })
+    .sort((a, b) => a.index - b.index)
+    .map((obj) => {
+      return obj.layer;
+    });
+  deck.setProps({ layers: priorityViewLayer });
   visLayers.setlayerList(checkedLayerTitleList);
 };
 
@@ -159,7 +176,7 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData }) => {
   }, []);
 
   //layerの可視状態を変更
-  useToggleVisibly(preferences.menu);
+  useToggleVisibly(preferences.menu, preferences.config);
 
   //クリックされたレイヤに画面移動
   useFlyTo(deck);
