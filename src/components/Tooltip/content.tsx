@@ -71,11 +71,18 @@ const TooltipDefaultBody: VFC<TooltipBodyProps> = ({ properties, labels }) => {
           const value = String(properties[key]);
           // "画像"というkeyでかつURLを持っている場合は画像を表示する・それ以外は文字列として表示する
           let content: JSX.Element | string;
+
+          content = value;
+
           if ((key === '画像') || (key === '写真') || (key === 'サムネイル')) {
             content = 'N/A';
             if (value.startsWith('http')) content = <img src={value} />; // 値がURLではない場合があるのでチェック
-          } else {
-            content = value;
+          }
+          if ((key === 'URL') || (key === '関連URL')) {
+            content = <a className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" href={value} target="TOP">{value}</a>
+          }
+          if ((key === 'HP') || (key === 'YouTubeリンク')) {
+            content = <a className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" href={value} target="TOP">リンク</a>
           }
 
           return (
