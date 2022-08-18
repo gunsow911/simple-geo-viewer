@@ -74,6 +74,28 @@ const susonoBuilding = (layer: any) => {
   });
 };
 
+const zenrinBuilding = (layer: any) => {
+  const getFillColor = () => [200, 200, 200, 200];
+  const getLineColor = () => [200, 200, 200, 200];
+  const getElevation = (d: any) => {
+    if ('bui_floor' in d.properties) {
+      if (d.properties.bui_floor === 0) {
+        return 2 * 3;
+      } else {
+        return d.properties.bui_floor * 3;
+      }
+    }
+    return 2 * 3;
+  };
+
+  return layer.clone({
+    extruded: true,
+    getFillColor,
+    getLineColor,
+    getElevation,
+  });
+};
+
 export const addRenderOption = (layers: any[]) => {
   const addedPropsLayers: any[] = [];
 
@@ -89,6 +111,13 @@ export const addRenderOption = (layers: any[]) => {
       addedPropsLayers.push(newLayer);
       continue;
     }
+
+    if (layer.id === 'zenrin-building') {
+      const newLayer: any = zenrinBuilding(layer);
+      addedPropsLayers.push(newLayer);
+      continue;
+    }
+
     //条件に一致しなければlayerに変更を加えずに配列に追加
     addedPropsLayers.push(layer);
   }

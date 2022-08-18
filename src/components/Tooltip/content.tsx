@@ -13,7 +13,7 @@ const BaseTooltip: VFC<BaseTooltipProps> = ({ children }) => {
   };
   return (
     <div className="visible">
-      <div id="tooltip_content" className="bg-white overflow-auto" style={toolChipStyle}>
+      <div id="tooltip_content" className="bg-white overflow-hidden" style={toolChipStyle}>
         {children}
       </div>
     </div>
@@ -71,7 +71,7 @@ const TooltipDefaultBody: VFC<TooltipBodyProps> = ({ properties, labels }) => {
           const value = String(properties[key]);
           // "画像"というkeyでかつURLを持っている場合は画像を表示する・それ以外は文字列として表示する
           let content: JSX.Element | string;
-          if (key === '画像') {
+          if ((key === '画像') || (key === '写真') || (key === 'サムネイル')) {
             content = 'N/A';
             if (value.startsWith('http')) content = <img src={value} />; // 値がURLではない場合があるのでチェック
           } else {
@@ -80,8 +80,8 @@ const TooltipDefaultBody: VFC<TooltipBodyProps> = ({ properties, labels }) => {
 
           return (
             <tr key={key}>
-              <th className="tooltip_th">{key}</th>
-              <td className="tooltip_td">{content}</td>
+              <td className="whitespace-nowrap font-bold align-top">{key}</td>
+              <td className="whitespace-nomal">{content}</td>
             </tr>
           );
         })}
@@ -135,11 +135,11 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
       <>
         {image()}
         <div className="text-center">{titleValue}</div>
-        <div className="text-sm text-gray-600 text-center">{layerTitle}</div>
+        <div className="text-sm text-gray-600 text-left">{layerTitle}</div>
         <div className="text-sm text-left">
           {typeof descriptionValue === 'string' ? descriptionValue.slice(0, 15) + '…' : ''}{' '}
         </div>
-        <div className="flex justify-center">
+        <div className="flex justify-center m-2">
           {resource.download_url === undefined
             ? undefined
             : largeDownloadIcon(resource.download_url)}
@@ -153,10 +153,10 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
       {summary()}
       <Collapsible
         trigger="詳細情報"
-        triggerClassName="text-white bg-blue-500 rounded hover:opacity-75"
-        triggerOpenedClassName="text-white bg-blue-500 rounded hover:opacity-75"
+        triggerClassName="text-white bg-blue-500 rounded hover:opacity-75 text-sm p-1"
+        triggerOpenedClassName="text-white bg-blue-500 rounded hover:opacity-75 text-sm p-1"
       >
-        <table className="tooltip_table">
+        <table className="tooltip_table m-2">
           <tbody>
             {labels.map((key) => {
               const { description, ..._summaryKey } = summaryKey;
@@ -176,8 +176,8 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
 
               return (
                 <tr key={key}>
-                  <th className="tooltip_th">{key}</th>
-                  <td className="whitespace-normal tooltip_td">{content}</td>
+                  <td className="whitespace-nowrap font-bold align-top">{key}</td>
+                  <td className="whitespace-nomal">{content}</td>
                 </tr>
               );
             })}
@@ -239,8 +239,8 @@ const TooltipTableBody: VFC<TooltipTableBodyProps> = ({ properties, labels, id }
 
             return (
               <tr key={key}>
-                <th className="tooltip_th">{key}</th>
-                <td className="tooltip_td">{content}</td>
+                <td className="whitespace-nowrap font-bold align-top">{key}</td>
+                <td className="whitespace-nomal">{content}</td>
               </tr>
             );
           })}
