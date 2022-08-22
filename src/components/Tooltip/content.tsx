@@ -74,15 +74,31 @@ const TooltipDefaultBody: VFC<TooltipBodyProps> = ({ properties, labels }) => {
 
           content = value;
 
-          if ((key === '画像') || (key === '写真') || (key === 'サムネイル')) {
+          if (key === '画像' || key === '写真' || key === 'サムネイル') {
             content = 'N/A';
             if (value.startsWith('http')) content = <img src={value} />; // 値がURLではない場合があるのでチェック
           }
-          if ((key === 'URL') || (key === '関連URL')) {
-            content = <a className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" href={value} target="TOP">{value}</a>
+          if (key === 'URL' || key === '関連URL') {
+            content = (
+              <a
+                className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+                href={value}
+                target="TOP"
+              >
+                {value}
+              </a>
+            );
           }
-          if ((key === 'HP') || (key === 'YouTubeリンク')) {
-            content = <a className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" href={value} target="TOP">リンク</a>
+          if (key === 'HP' || key === 'YouTubeリンク') {
+            content = (
+              <a
+                className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+                href={value}
+                target="TOP"
+              >
+                リンク
+              </a>
+            );
           }
 
           return (
@@ -179,6 +195,28 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
                 return;
               } else {
                 content = value;
+                if (key === 'URL' || key === '関連URL') {
+                  content = (
+                    <a
+                      className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+                      href={value}
+                      target="TOP"
+                    >
+                      {value}
+                    </a>
+                  );
+                }
+                if (key === 'HP' || key === 'YouTubeリンク') {
+                  content = (
+                    <a
+                      className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+                      href={value}
+                      target="TOP"
+                    >
+                      リンク
+                    </a>
+                  );
+                }
               }
 
               return (
