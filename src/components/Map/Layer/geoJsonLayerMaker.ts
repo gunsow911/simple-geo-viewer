@@ -122,6 +122,9 @@ class GeoJsonIconLayerCreator {
           anchorY: layerConfig.icon.anchorY,
           mask: false,
         }),
+        parameters: {
+          depthTest: false
+        },
         ...config,
       });
     });
