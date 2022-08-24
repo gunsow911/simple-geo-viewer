@@ -65,7 +65,7 @@ export const usePreferences = () => {
       // 指定されていなければデフォルト設定を読み込む
       let preferencesPath = router.query.preferences as string | undefined;
       if (typeof preferencesPath === 'undefined') {
-        preferencesPath = `${router.asPath}defaultPreferences`;
+        preferencesPath = `${router.basePath}/defaultPreferences`;
       }
 
       const results = await Promise.all([
