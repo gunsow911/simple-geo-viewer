@@ -62,18 +62,21 @@ const App: NextPage = () => {
     return <div>loading</div>;
   }
 
-  const toolChipStyle = {
+  const toolChipStyle: any = {
     backgroundColor: preferences.settings.tooltip_background_color,
-    position: "absolute",
-    top: "63.7%",
-    right: "0%"
+    position: 'absolute',
+    top: '63.7%',
+    right: '0%',
   };
 
   return (
     <>
       <Head>
         <title>{preferences.settings.title}</title>
-        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet"></link>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap"
+          rel="stylesheet"
+        ></link>
       </Head>
       <div className="h-screen">
         <context.Provider value={{ ...contextValues, preferences }}>
