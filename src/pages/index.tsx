@@ -65,7 +65,7 @@ const App: NextPage = () => {
   const toolChipStyle: any = {
     backgroundColor: preferences.settings.tooltip_background_color,
     position: 'absolute',
-    top: '63.7%',
+    top: '30.3%',
     right: '0%',
   };
 
@@ -97,7 +97,7 @@ const App: NextPage = () => {
             <div className="relative w-4/5 m-2 pb-5 h-full">
               <Map setTooltipData={setTooltipData} />
               {tooltipData.tooltip ? (
-                <div className="w-2/5 h-1/3 border-2 border-black z-50" style={toolChipStyle}>
+                <div className="w-1/4 h-2/3 border-2 border-black z-50" style={toolChipStyle}>
                   {tooltipData.tooltip ? <Tooltip {...tooltipData.tooltip} /> : undefined}
                   <div className="text-right bg-white absolute top-0 right-2">
                     <button
