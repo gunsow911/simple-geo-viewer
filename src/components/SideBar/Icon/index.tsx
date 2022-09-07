@@ -18,28 +18,29 @@ const getIconSize = () => {
   };
 };
 
-
-
 const IconViewBox = '0 0 100 150';
 
 const configIcon = (url: string) => {
   return (
-    <div className="index-icon" style={{
-      minWidth: '16px',
-      minHeight: '16px',
-      maxWidth: '16px',
-      maxHeight: '16px',
-      overflow: 'hidden'
-    }} 
+    <div
+      className="index-icon"
+      style={{
+        minWidth: '16px',
+        minHeight: '16px',
+        maxWidth: '16px',
+        maxHeight: '16px',
+        overflow: 'hidden',
+      }}
     >
-      <img style={{
+      <img
+        style={{
           width: '26px',
           height: '26px',
           objectPosition: '-5px -1px',
-          objectFit: 'cover'
-        }} 
-        src={url} 
-        />
+          objectFit: 'cover',
+        }}
+        src={url}
+      />
     </div>
   );
 };
@@ -354,6 +355,48 @@ export const largeDownloadIcon = (downloadUrl: string) => {
           fill="currentColor"
           d="M216 0h80c13.3 0 24 10.7 24 24v168h87.7c17.8 0 26.7 21.5 14.1 34.1L269.7 378.3c-7.5 7.5-19.8 7.5-27.3 0L90.1 226.1c-12.6-12.6-3.7-34.1 14.1-34.1H192V24c0-13.3 10.7-24 24-24zm296 376v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h146.7l49 49c20.1 20.1 52.5 20.1 72.6 0l49-49H488c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"
         />
+      </svg>
+    </a>
+  );
+};
+
+export const linkIcon = (url: string) => {
+  return (
+    <a
+      href={url}
+      onClick={(e) => {
+        // アコーディオンメニューへのイベントの伝播を抑制
+        e.stopPropagation();
+      }}
+      rel="noreferrer noopener"
+      target="_blank"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="32"
+        height="32"
+        viewBox="0 0 24 24"
+        fill="#000000"
+      >
+        <path d="M0 0h24v24H0V0z" fill="none" />
+        <path d="M17 7h-4v2h4c1.65 0 3 1.35 3 3s-1.35 3-3 3h-4v2h4c2.76 0 5-2.24 5-5s-2.24-5-5-5zm-6 8H7c-1.65 0-3-1.35-3-3s1.35-3 3-3h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-2zm-3-4h8v2H8z" />
+      </svg>
+    </a>
+  );
+};
+
+export const shareIcon = (url: string) => {
+  return (
+    <a>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="32"
+        height="32"
+        viewBox="0 0 24 24"
+        fill="#000000"
+      >
+        <path d="M0 0h24v24H0V0z" fill="none" />
+        <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92zM18 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM6 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm12 7.02c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z" />
       </svg>
     </a>
   );

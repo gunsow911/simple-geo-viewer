@@ -62,15 +62,21 @@ const App: NextPage = () => {
     return <div>loading</div>;
   }
 
-  const toolChipStyle = {
+  const toolChipStyle: any = {
     backgroundColor: preferences.settings.tooltip_background_color,
+    position: 'absolute',
+    top: '30.3%',
+    right: '0%',
   };
 
   return (
     <>
       <Head>
         <title>{preferences.settings.title}</title>
-        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet"></link>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap"
+          rel="stylesheet"
+        ></link>
       </Head>
       <div className="h-screen">
         <context.Provider value={{ ...contextValues, preferences }}>
@@ -82,11 +88,17 @@ const App: NextPage = () => {
               <div id="sideBar" className="overflow-auto relative flex-1">
                 <Sidebar />
               </div>
+              {contextValues.mouseTooltipData !== null ? (
+                <div className="relative">
+                  <MouseTooltip mouseTooltipData={contextValues.mouseTooltipData} />
+                </div>
+              ) : undefined}
+            </div>
+            <div className="relative w-4/5 m-2 pb-5 h-full">
+              <Map setTooltipData={setTooltipData} />
               {tooltipData.tooltip ? (
-                <div className="relative h-1/3 border-2 border-black" style={toolChipStyle}>
-                  <div className={'relative overflow-auto pt-2 pl-2 pr-2 h-full'}>
-                    {tooltipData.tooltip ? <Tooltip {...tooltipData.tooltip} /> : undefined}
-                  </div>
+                <div className="w-1/4 h-2/3 border-2 border-black z-50" style={toolChipStyle}>
+                  {tooltipData.tooltip ? <Tooltip {...tooltipData.tooltip} /> : undefined}
                   <div className="text-right bg-white absolute top-0 right-2">
                     <button
                       className="text-2xl"
@@ -98,14 +110,6 @@ const App: NextPage = () => {
                   </div>
                 </div>
               ) : undefined}
-              {contextValues.mouseTooltipData !== null ? (
-                <div className="relative">
-                  <MouseTooltip mouseTooltipData={contextValues.mouseTooltipData} />
-                </div>
-              ) : undefined}
-            </div>
-            <div className="w-4/5 m-2 pb-5 h-full">
-              <Map setTooltipData={setTooltipData} />
             </div>
           </div>
         </context.Provider>
