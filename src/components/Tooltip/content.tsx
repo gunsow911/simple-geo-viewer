@@ -190,11 +190,10 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
       {summary()}
       <Collapsible
         trigger="詳細情報"
-        contentOuterClassName="w-full"
-        triggerClassName="text-white bg-blue-500 rounded hover:opacity-75 text-sm p-1 text-center"
-        triggerOpenedClassName="text-white bg-blue-500 rounded hover:opacity-75 text-sm p-1 text-center"
+        triggerClassName="text-white bg-blue-500 rounded hover:opacity-75 text-sm p-1 text-center absolute w-full"
+        triggerOpenedClassName="text-white bg-blue-500 rounded hover:opacity-75 text-sm p-1 text-center absolute w-full"
       >
-        <table className="tooltip_table m-2">
+        <table className="mt-8 tooltip_table m-2">
           <tbody>
             {labels.map((key) => {
               const { description, ..._summaryKey } = summaryKey;
