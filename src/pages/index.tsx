@@ -97,10 +97,8 @@ const App: NextPage = () => {
             <div className="relative w-4/5 m-2 pb-5 h-full">
               <Map setTooltipData={setTooltipData} />
               {tooltipData.tooltip ? (
-                <div className="h-1/3 border-2 border-black z-50" style={toolChipStyle}>
-                  <div className={'relative overflow-auto pt-2 pl-2 pr-2 h-full'}>
-                    {tooltipData.tooltip ? <Tooltip {...tooltipData.tooltip} /> : undefined}
-                  </div>
+                <div className="w-2/5 h-1/3 border-2 border-black z-50" style={toolChipStyle}>
+                  {tooltipData.tooltip ? <Tooltip {...tooltipData.tooltip} /> : undefined}
                   <div className="text-right bg-white absolute top-0 right-2">
                     <button
                       className="text-2xl"

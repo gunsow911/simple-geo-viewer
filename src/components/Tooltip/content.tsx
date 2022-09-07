@@ -2,7 +2,7 @@ import React, { ReactNode, VFC, useContext } from 'react';
 import { context } from '@/pages';
 import Collapsible from 'react-collapsible';
 import { getDataById, getCategoryByTitle, getDataTitleById } from '@/components/LayerFilter/menu';
-import { largeDownloadIcon } from '@/components/SideBar/Icon';
+import { largeDownloadIcon, shareIcon, linkIcon } from '@/components/SideBar/Icon';
 
 type BaseTooltipProps = { children: ReactNode };
 
@@ -46,20 +46,24 @@ type TooltipTableBodyProps = {
 
 export const Tooltip: VFC<TooltipProps> = ({ properties, labels, tooltipType, id }) => {
   return (
-    <BaseTooltip>
-      {(() => {
-        switch (tooltipType) {
-          case 'default':
-            return <TooltipDefaultBody {...{ properties: properties, labels: labels }} />;
-          case 'thumbnail':
-            return <TooltipThumbnailBody {...{ properties: properties, labels: labels, id: id }} />;
-          case 'table':
-            return <TooltipTableBody {...{ properties: properties, labels: labels, id: id }} />;
-          default:
-            break;
-        }
-      })()}
-    </BaseTooltip>
+    <div className={'relative overflow-auto pt-2 h-full '}>
+      <BaseTooltip>
+        {(() => {
+          switch (tooltipType) {
+            case 'default':
+              return <TooltipDefaultBody {...{ properties: properties, labels: labels }} />;
+            case 'thumbnail':
+              return (
+                <TooltipThumbnailBody {...{ properties: properties, labels: labels, id: id }} />
+              );
+            case 'table':
+              return <TooltipTableBody {...{ properties: properties, labels: labels, id: id }} />;
+            default:
+              break;
+          }
+        })()}
+      </BaseTooltip>
+    </div>
   );
 };
 
@@ -157,15 +161,25 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
     return (
       <>
         {image()}
-        <div className="text-center">{titleValue}</div>
-        <div className="text-sm text-gray-600 text-left">{layerTitle}</div>
-        <div className="text-sm text-left">
-          {typeof descriptionValue === 'string' ? descriptionValue.slice(0, 15) + '…' : ''}{' '}
-        </div>
-        <div className="flex justify-center m-2">
-          {resource.download_url === undefined
-            ? undefined
-            : largeDownloadIcon(resource.download_url)}
+        <div className="pl-2 pr-2">
+          <div className="text-center font-bold">{titleValue}</div>
+          <div className="text-sm text-gray-600 text-left">{layerTitle}</div>
+          <div className="text-sm text-left">
+            {typeof descriptionValue === 'string' ? descriptionValue.slice(0, 15) + '…' : ''}{' '}
+          </div>
+          <div className="flex flex-row justify-center">
+            <div className="flex justify-center m-2">
+              {resource.download_url === undefined
+                ? undefined
+                : largeDownloadIcon(resource.download_url)}
+            </div>
+            <div className="flex justify-center m-2">
+              {resource.download_url === undefined ? undefined : shareIcon(resource.download_url)}
+            </div>
+            <div className="flex justify-center m-2">
+              {resource.download_url === undefined ? undefined : linkIcon(resource.download_url)}
+            </div>
+          </div>
         </div>
       </>
     );
@@ -176,8 +190,9 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
       {summary()}
       <Collapsible
         trigger="詳細情報"
-        triggerClassName="text-white bg-blue-500 rounded hover:opacity-75 text-sm p-1"
-        triggerOpenedClassName="text-white bg-blue-500 rounded hover:opacity-75 text-sm p-1"
+        contentOuterClassName="w-full"
+        triggerClassName="text-white bg-blue-500 rounded hover:opacity-75 text-sm p-1 text-center"
+        triggerOpenedClassName="text-white bg-blue-500 rounded hover:opacity-75 text-sm p-1 text-center"
       >
         <table className="tooltip_table m-2">
           <tbody>
