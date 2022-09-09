@@ -18,18 +18,18 @@ import {
  * @param layerConfig 作成したいlayerのコンフィグ
  * @param init 初期表示レイヤー生成かどうか
  * @param setTooltipData Click時に表示するsetTooltipData関数
- * @param settoolChipStyle ポップアップのスタイルをセットする関数
+ * @param setsetTooltipPosition ポップアップのスタイルをセットする関数
  */
 export function makeGeoJsonLayers(
   map: Map,
   layerConfig: LayerConfig[],
   init: boolean,
   setTooltipData,
-  settoolChipStyle,
+  setsetTooltipPosition,
 ) {
-  const geoJsonLinePolygonCreator = new GeoJsonLinePolygonCreator(layerConfig, map, setTooltipData, settoolChipStyle);
-  const geoJsonIconCreator = new GeoJsonIconLayerCreator(layerConfig, map, setTooltipData, settoolChipStyle);
-  const geoJsoneatureCollectionIconCreator = new GeoJsonFeatureCollectionIconLayerCreator(layerConfig, map, setTooltipData, settoolChipStyle);
+  const geoJsonLinePolygonCreator = new GeoJsonLinePolygonCreator(layerConfig, map, setTooltipData, setsetTooltipPosition);
+  const geoJsonIconCreator = new GeoJsonIconLayerCreator(layerConfig, map, setTooltipData, setsetTooltipPosition);
+  const geoJsoneatureCollectionIconCreator = new GeoJsonFeatureCollectionIconLayerCreator(layerConfig, map, setTooltipData, setsetTooltipPosition);
   const layers = [
     ...geoJsonLinePolygonCreator.makeDeckGlLayers(init),
     ...geoJsonIconCreator.makeDeckGlLayers(init),
@@ -43,13 +43,13 @@ class GeoJsonLinePolygonCreator {
   private readonly layerConfig: LayerConfig[];
   private readonly map: Map;
   private readonly setTooltipData: Dispatch<SetStateAction<any>>;
-  private readonly settoolChipStyle: Dispatch<SetStateAction<any>>;
+  private readonly setsetTooltipPosition: Dispatch<SetStateAction<any>>;
 
-  constructor(layerConfig: LayerConfig[], map: Map, setTooltipData, settoolChipStyle) {
+  constructor(layerConfig: LayerConfig[], map: Map, setTooltipData, setsetTooltipPosition) {
     this.layerConfig = layerConfig;
     this.map = map;
     this.setTooltipData = setTooltipData;
-    this.settoolChipStyle = settoolChipStyle;
+    this.setsetTooltipPosition = setsetTooltipPosition;
   }
 
   makeDeckGlLayers(init) {
@@ -90,7 +90,7 @@ class GeoJsonLinePolygonCreator {
     // @ts-ignore
     const { layer: { props:{ tooltipType } } } = info;
     const { layer: { id } } = info;
-    this.settoolChipStyle({
+    this.setsetTooltipPosition({
       top: `${String(info.y)}px`,
       left: `${String(info.x)}px`
     });
@@ -103,14 +103,14 @@ class GeoJsonIconLayerCreator {
   private readonly layerConfig: LayerConfig[];
   private readonly map: Map;
   private readonly setTooltipData: Dispatch<SetStateAction<any>>;
-  private readonly settoolChipStyle: Dispatch<SetStateAction<any>>;
+  private readonly setsetTooltipPosition: Dispatch<SetStateAction<any>>;
 
 
-  constructor(layerConfig: LayerConfig[], map: Map, setTooltipData, settoolChipStyle) {
+  constructor(layerConfig: LayerConfig[], map: Map, setTooltipData, setsetTooltipPosition) {
     this.layerConfig = layerConfig;
     this.map = map;
     this.setTooltipData = setTooltipData;
-    this.settoolChipStyle = settoolChipStyle;
+    this.setsetTooltipPosition = setsetTooltipPosition;
   }
 
   makeDeckGlLayers(init) {
@@ -161,7 +161,7 @@ class GeoJsonIconLayerCreator {
     // @ts-ignore
     const { layer: { props:{ tooltipType } } } = info;
     const { layer: { id } } = info;
-    this.settoolChipStyle({
+    this.setsetTooltipPosition({
       top: `${String(info.y)}px`,
       left: `${String(info.x)}px`
     });
@@ -187,13 +187,13 @@ class GeoJsonFeatureCollectionIconLayerCreator {
   private readonly layerConfig: LayerConfig[];
   private readonly map: Map;
   private readonly setTooltipData: Dispatch<SetStateAction<any>>;
-  private readonly settoolChipStyle: Dispatch<SetStateAction<any>>;
+  private readonly setsetTooltipPosition: Dispatch<SetStateAction<any>>;
 
-  constructor(layerConfig: LayerConfig[], map: Map, setTooltipData, settoolChipStyle) {
+  constructor(layerConfig: LayerConfig[], map: Map, setTooltipData, setsetTooltipPosition) {
     this.layerConfig = layerConfig;
     this.map = map;
     this.setTooltipData = setTooltipData;
-    this.settoolChipStyle = settoolChipStyle;
+    this.setsetTooltipPosition = setsetTooltipPosition;
   }
 
   makeDeckGlLayers(init) {
@@ -258,7 +258,7 @@ class GeoJsonFeatureCollectionIconLayerCreator {
     // @ts-ignore
     const { layer: { props:{ tooltipType } } } = info;
     const { layer: { id } } = info;
-    this.settoolChipStyle({
+    this.setsetTooltipPosition({
       top: `${String(info.y)}px`,
       left: `${String(info.x)}px`
     });

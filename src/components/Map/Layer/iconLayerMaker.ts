@@ -17,10 +17,10 @@ type iconLayerConfig = {
  * @param layerConfig 作成したいlayerのコンフィグ
  * @param init 初期表示レイヤー生成かどうか
  * @param setTooltipData Click時に表示するsetTooltipData関数
- * @param settoolChipStyle ポップアップのスタイルをセットする関数
+ * @param setsetTooltipPosition ポップアップのスタイルをセットする関数
  */
-export function makeIconLayers(map: Map, layerConfig, init: boolean, setTooltipData, settoolChipStyle) {
-  const iconLayerCreator = new IconLayerCreator(layerConfig, map, setTooltipData, settoolChipStyle);
+export function makeIconLayers(map: Map, layerConfig, init: boolean, setTooltipData, setsetTooltipPosition) {
+  const iconLayerCreator = new IconLayerCreator(layerConfig, map, setTooltipData, setsetTooltipPosition);
   return iconLayerCreator.makeDeckGlLayers(init);
 }
 
@@ -29,13 +29,13 @@ class IconLayerCreator {
   private readonly layerConfig: any[];
   private readonly layersType: string = 'icon';
   private readonly setTooltipData: Dispatch<SetStateAction<any>>;
-  private readonly settoolChipStyle: Dispatch<SetStateAction<any>>;
+  private readonly setsetTooltipPosition: Dispatch<SetStateAction<any>>;
 
-  constructor(layerConfig: any[], map: Map, setTooltipData, settoolChipStyle) {
+  constructor(layerConfig: any[], map: Map, setTooltipData, setsetTooltipPosition) {
     this.layerConfig = layerConfig;
     this.map = map;
     this.setTooltipData = setTooltipData;
-    this.settoolChipStyle = settoolChipStyle;
+    this.setsetTooltipPosition = setsetTooltipPosition;
   }
 
   /**
@@ -94,7 +94,7 @@ class IconLayerCreator {
     // @ts-ignore
     const { layer: { props:{ tooltipType } } } = info;
     const { layer: { id } } = info;
-    this.settoolChipStyle({
+    this.setsetTooltipPosition({
       top: `${String(info.y)}px`,
       left: `${String(info.x)}px`
     });

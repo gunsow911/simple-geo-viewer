@@ -150,10 +150,10 @@ const useToggleVisibly = (menu: Menu, config: Config) => {
 
 type Props = {
   setTooltipData: Dispatch<SetStateAction<any>>;
-  settoolChipStyle: Dispatch<SetStateAction<any>>;
+  setsetTooltipPosition: Dispatch<SetStateAction<any>>;
 };
 
-const MapComponent: React.VFC<Props> = ({ setTooltipData, settoolChipStyle }) => {
+const MapComponent: React.VFC<Props> = ({ setTooltipData, setsetTooltipPosition }) => {
   const maplibreContainer = useRef<HTMLDivElement | null>(null);
   const deckglContainer = useRef<HTMLCanvasElement | null>(null);
   const { preferences } = useContext(context);
@@ -171,7 +171,7 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData, settoolChipStyle }) =>
   //対象のレイヤを全て作成してdeckに登録
   useEffect(() => {
     map.on('load', () => {
-      makeDeckGlLayers(map, deck, setTooltipData, settoolChipStyle, preferences.menu, preferences.config);
+      makeDeckGlLayers(map, deck, setTooltipData, setsetTooltipPosition, preferences.menu, preferences.config);
       checkZoomVisible();
     });
   }, []);

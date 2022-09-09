@@ -57,7 +57,7 @@ const App: NextPage = () => {
     tooltip: null,
   });
 
-  const [toolChipStyle, settoolChipStyle] = useState<any>({});
+  const [setTooltipPosition, setsetTooltipPosition] = useState<any>({});
 
   const contextValues = useContextValues();
   const { preferences } = usePreferences();
@@ -96,9 +96,9 @@ const App: NextPage = () => {
               ) : undefined}
             </div>
             <div className="relative w-4/5 m-2 pb-5 h-full">
-              <Map setTooltipData={setTooltipData} settoolChipStyle={settoolChipStyle} />
+              <Map setTooltipData={setTooltipData} setsetTooltipPosition={setsetTooltipPosition} />
               {tooltipData.tooltip ? (
-                <div className="w-1/4 h-2/3 border-2 border-black z-50" style={{...toolChipStyle,...toolChipBaseStyle}}>
+                <div className="w-1/4 h-2/3 border-2 border-black z-50" style={{...setTooltipPosition,...toolChipBaseStyle}}>
                   {tooltipData.tooltip ? <Tooltip {...tooltipData.tooltip} /> : undefined}
                   <div className="text-right bg-white absolute top-0 right-2">
                     <button

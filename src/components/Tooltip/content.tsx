@@ -8,12 +8,12 @@ type BaseTooltipProps = { children: ReactNode };
 
 const BaseTooltip: VFC<BaseTooltipProps> = ({ children }) => {
   const { preferences } = useContext(context);
-  const toolChipStyle = {
+  const setTooltipPosition = {
     backgroundColor: preferences.settings.tooltip_background_color,
   };
   return (
     <div className="visible">
-      <div id="tooltip_content" className="bg-white overflow-hidden" style={toolChipStyle}>
+      <div id="tooltip_content" className="bg-white overflow-hidden" style={setTooltipPosition}>
         {children}
       </div>
     </div>

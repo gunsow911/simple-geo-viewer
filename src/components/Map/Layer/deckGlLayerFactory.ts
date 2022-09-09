@@ -16,7 +16,7 @@ export const makeDeckGlLayers = (
   map: Map,
   deck: Deck,
   setTooltipData: Dispatch<SetStateAction<any>>,
-  settoolChipStyle: Dispatch<SetStateAction<any>>,
+  setsetTooltipPosition: Dispatch<SetStateAction<any>>,
   menu: Menu,
   config: Config
 ) => {
@@ -42,7 +42,7 @@ export const makeDeckGlLayers = (
     return getDataList(menu).some((value) => value.checked && value.id.includes(layer.id));
   });
   layerCreator.forEach((func) => {
-    addRenderOption(func(map, layerConfig, true, setTooltipData, settoolChipStyle)).forEach(LayerLoader);
+    addRenderOption(func(map, layerConfig, true, setTooltipData, setsetTooltipPosition)).forEach(LayerLoader);
   });
 
   // 初期表示のレイヤーのロード完了を検知する方法がないため1sec初期表示以外のレイヤーのロードを遅らせる
@@ -51,7 +51,7 @@ export const makeDeckGlLayers = (
       return getDataList(menu).some((value) => !value.checked && value.id.includes(layer.id));
     });
     layerCreator.forEach((func) => {
-      addRenderOption(func(map, layerConfig, false, setTooltipData, settoolChipStyle)).forEach(LayerLoader);
+      addRenderOption(func(map, layerConfig, false, setTooltipData, setsetTooltipPosition)).forEach(LayerLoader);
     });
   }, 1000);
 };
