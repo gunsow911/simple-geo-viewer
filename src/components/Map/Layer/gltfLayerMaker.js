@@ -9,10 +9,11 @@ import { show } from '@/components/Tooltip/show';
  * @param layerConfig {any}
  * @param init {boolean}
  * @param setTooltipData {Dispatch<SetStateAction<any>>}
+ * @param settoolChipStyle ポップアップのスタイルをセットする関数
  * @returns {ScenegraphLayer[]}
  */
-export function makeGltfLayers(map, layerConfig, init, setTooltipData) {
-  const gltfCreator = new gltfLayerCreator(layerConfig, map, setTooltipData);
+export function makeGltfLayers(map, layerConfig, init, setTooltipData, settoolChipStyle) {
+  const gltfCreator = new gltfLayerCreator(layerConfig, map, setTooltipData, settoolChipStyle);
   return gltfCreator.makeDeckGlLayers(init);
 }
 
@@ -21,6 +22,7 @@ class gltfLayerCreator {
   layerConfig;
   layersType = 'gltf';
   setTooltipData;
+  settoolChipStyle;
 
   /**
    *
@@ -28,10 +30,11 @@ class gltfLayerCreator {
    * @param map {maplibregl.Map}
    * @param setTooltipData {Dispatch<SetStateAction<any>>}
    */
-  constructor(layerConfig, map, setTooltipData) {
+  constructor(layerConfig, map, setTooltipData, settoolChipStyle) {
     this.layerConfig = layerConfig;
     this.map = map;
     this.setTooltipData = setTooltipData;
+    this.settoolChipStyle = settoolChipStyle;
   }
 
   /**
@@ -83,6 +86,10 @@ class gltfLayerCreator {
     // @ts-ignore
     const { layer: { props:{ tooltipType } } } = info;
     const { layer: { id } } = info;
+    this.settoolChipStyle({
+      top: `${String(info.y)}px`,
+      left: `${String(info.x)}px`
+    });
     show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
   };
 }

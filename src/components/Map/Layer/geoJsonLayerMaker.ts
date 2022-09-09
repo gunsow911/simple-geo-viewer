@@ -18,16 +18,18 @@ import {
  * @param layerConfig 作成したいlayerのコンフィグ
  * @param init 初期表示レイヤー生成かどうか
  * @param setTooltipData Click時に表示するsetTooltipData関数
+ * @param settoolChipStyle ポップアップのスタイルをセットする関数
  */
 export function makeGeoJsonLayers(
   map: Map,
   layerConfig: LayerConfig[],
   init: boolean,
   setTooltipData,
+  settoolChipStyle,
 ) {
-  const geoJsonLinePolygonCreator = new GeoJsonLinePolygonCreator(layerConfig, map, setTooltipData);
-  const geoJsonIconCreator = new GeoJsonIconLayerCreator(layerConfig, map, setTooltipData);
-  const geoJsoneatureCollectionIconCreator = new GeoJsonFeatureCollectionIconLayerCreator(layerConfig, map, setTooltipData);
+  const geoJsonLinePolygonCreator = new GeoJsonLinePolygonCreator(layerConfig, map, setTooltipData, settoolChipStyle);
+  const geoJsonIconCreator = new GeoJsonIconLayerCreator(layerConfig, map, setTooltipData, settoolChipStyle);
+  const geoJsoneatureCollectionIconCreator = new GeoJsonFeatureCollectionIconLayerCreator(layerConfig, map, setTooltipData, settoolChipStyle);
   const layers = [
     ...geoJsonLinePolygonCreator.makeDeckGlLayers(init),
     ...geoJsonIconCreator.makeDeckGlLayers(init),
@@ -41,11 +43,13 @@ class GeoJsonLinePolygonCreator {
   private readonly layerConfig: LayerConfig[];
   private readonly map: Map;
   private readonly setTooltipData: Dispatch<SetStateAction<any>>;
+  private readonly settoolChipStyle: Dispatch<SetStateAction<any>>;
 
-  constructor(layerConfig: LayerConfig[], map: Map, setTooltipData) {
+  constructor(layerConfig: LayerConfig[], map: Map, setTooltipData, settoolChipStyle) {
     this.layerConfig = layerConfig;
     this.map = map;
     this.setTooltipData = setTooltipData;
+    this.settoolChipStyle = settoolChipStyle;
   }
 
   makeDeckGlLayers(init) {
@@ -86,6 +90,10 @@ class GeoJsonLinePolygonCreator {
     // @ts-ignore
     const { layer: { props:{ tooltipType } } } = info;
     const { layer: { id } } = info;
+    this.settoolChipStyle({
+      top: `${String(info.y)}px`,
+      left: `${String(info.x)}px`
+    });
     show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
   };
 }
@@ -95,11 +103,14 @@ class GeoJsonIconLayerCreator {
   private readonly layerConfig: LayerConfig[];
   private readonly map: Map;
   private readonly setTooltipData: Dispatch<SetStateAction<any>>;
+  private readonly settoolChipStyle: Dispatch<SetStateAction<any>>;
 
-  constructor(layerConfig: LayerConfig[], map: Map, setTooltipData) {
+
+  constructor(layerConfig: LayerConfig[], map: Map, setTooltipData, settoolChipStyle) {
     this.layerConfig = layerConfig;
     this.map = map;
     this.setTooltipData = setTooltipData;
+    this.settoolChipStyle = settoolChipStyle;
   }
 
   makeDeckGlLayers(init) {
@@ -150,6 +161,10 @@ class GeoJsonIconLayerCreator {
     // @ts-ignore
     const { layer: { props:{ tooltipType } } } = info;
     const { layer: { id } } = info;
+    this.settoolChipStyle({
+      top: `${String(info.y)}px`,
+      left: `${String(info.x)}px`
+    });
     show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
   };
 }
@@ -172,11 +187,13 @@ class GeoJsonFeatureCollectionIconLayerCreator {
   private readonly layerConfig: LayerConfig[];
   private readonly map: Map;
   private readonly setTooltipData: Dispatch<SetStateAction<any>>;
+  private readonly settoolChipStyle: Dispatch<SetStateAction<any>>;
 
-  constructor(layerConfig: LayerConfig[], map: Map, setTooltipData) {
+  constructor(layerConfig: LayerConfig[], map: Map, setTooltipData, settoolChipStyle) {
     this.layerConfig = layerConfig;
     this.map = map;
     this.setTooltipData = setTooltipData;
+    this.settoolChipStyle = settoolChipStyle;
   }
 
   makeDeckGlLayers(init) {
@@ -241,6 +258,10 @@ class GeoJsonFeatureCollectionIconLayerCreator {
     // @ts-ignore
     const { layer: { props:{ tooltipType } } } = info;
     const { layer: { id } } = info;
+    this.settoolChipStyle({
+      top: `${String(info.y)}px`,
+      left: `${String(info.x)}px`
+    });
     show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
   };
 }

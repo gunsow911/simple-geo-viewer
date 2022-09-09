@@ -17,9 +17,10 @@ type tile3DLayerConfig = {
  * @param layerConfig 作成したいlayerのコンフィグ
  * @param init 初期表示レイヤー生成かどうか
  * @param setTooltipData Click時に表示するsetTooltipData関数
+ * @param settoolChipStyle ポップアップのスタイルをセットする関数
  */
-export function makeTile3DLayers(map: Map, layerConfig, init: boolean, setTooltipData) {
-  const tile3DCreator = new Tile3DLayerCreator(layerConfig, map, setTooltipData);
+export function makeTile3DLayers(map: Map, layerConfig, init: boolean, setTooltipData, settoolChipStyle) {
+  const tile3DCreator = new Tile3DLayerCreator(layerConfig, map, setTooltipData, settoolChipStyle);
   return tile3DCreator.makeDeckGlLayers(init);
 }
 
@@ -28,11 +29,13 @@ class Tile3DLayerCreator {
   private readonly layerConfig: any[];
   private readonly layersType: string = '3dtiles';
   private readonly setTooltipData: Dispatch<SetStateAction<any>>;
+  private readonly settoolChipStyle: Dispatch<SetStateAction<any>>;
 
-  constructor(layerConfig: any[], map: Map, setTooltipData) {
+  constructor(layerConfig: any[], map: Map, setTooltipData, settoolChipStyle) {
     this.layerConfig = layerConfig;
     this.map = map;
     this.setTooltipData = setTooltipData;
+    this.settoolChipStyle = settoolChipStyle;
   }
 
   makeDeckGlLayers(init) {
@@ -78,6 +81,10 @@ class Tile3DLayerCreator {
     // @ts-ignore
     const { layer: { props:{ tooltipType } } } = info;
     const { layer: { id } } = info;
+    this.settoolChipStyle({
+      top: `${String(info.y)}px`,
+      left: `${String(info.x)}px`
+    });
     show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
   };
 }

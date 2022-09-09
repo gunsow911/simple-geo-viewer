@@ -22,9 +22,10 @@ type ArcLayerConfig = {
  * @param layerConfig 作成したいlayerのコンフィグ
  * @param init 初期表示レイヤー生成かどうか
  * @param setTooltipData Click時に表示するsetTooltipData関数
+ * @param settoolChipStyle ポップアップのスタイルをセットする関数
  */
-export function makeArcLayers(map: Map, layerConfig, init: boolean, setTooltipData) {
-  const ArcCreator = new ArcLayerCreator(layerConfig, map, setTooltipData);
+export function makeArcLayers(map: Map, layerConfig, init: boolean, setTooltipData, settoolChipStyle) {
+  const ArcCreator = new ArcLayerCreator(layerConfig, map, setTooltipData, settoolChipStyle);
   return ArcCreator.makeDeckGlLayers(init);
 }
 
@@ -33,11 +34,13 @@ class ArcLayerCreator {
   private readonly layerConfig: any[];
   private readonly map: Map;
   private readonly setTooltipData: Dispatch<SetStateAction<any>>;
+  private readonly settoolChipStyle: Dispatch<SetStateAction<any>>;
 
-  constructor(layerConfig: any[], map: Map, setTooltipData) {
+  constructor(layerConfig: any[], map: Map, setTooltipData, settoolChipStyle) {
     this.layerConfig = layerConfig;
     this.map = map;
     this.setTooltipData = setTooltipData;
+    this.settoolChipStyle = settoolChipStyle;
   }
 
   makeDeckGlLayers(init) {
@@ -81,6 +84,10 @@ class ArcLayerCreator {
     // @ts-ignore
     const { layer: { props:{ tooltipType } } } = info;
     const { layer: { id } } = info;
+    this.settoolChipStyle({
+      top: `${String(info.y)}px`,
+      left: `${String(info.x)}px`
+    });
     show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
   };
 }
