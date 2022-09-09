@@ -127,6 +127,15 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
 
   const { preferences } = useContext(context);
 
+  const { description, ..._summaryKey } = summaryKey;
+  const summaryKeys = Object.keys(_summaryKey)
+    .map((key) => {
+      return summaryKey[key];
+    })
+    .flat();
+
+  const infolabels = [...labels].filter((key) => summaryKeys.indexOf(key) === -1);
+
   const summary = () => {
     const titleValue =
       properties[
@@ -188,26 +197,18 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
   return (
     <>
       {summary()}
-      <Collapsible
-        trigger="詳細情報"
-        triggerClassName="text-white bg-blue-500 rounded hover:opacity-75 text-sm p-1 text-center absolute w-full"
-        triggerOpenedClassName="text-white bg-blue-500 rounded hover:opacity-75 text-sm p-1 text-center absolute w-full"
-      >
-        <table className="mt-8 tooltip_table m-2">
-          <tbody>
-            {labels.map((key) => {
-              const { description, ..._summaryKey } = summaryKey;
-              const summaryKeys = Object.keys(_summaryKey)
-                .map((key) => {
-                  return summaryKey[key];
-                })
-                .flat();
-              const value = String(properties[key]);
+      {infolabels.length > 0 ? (
+        <Collapsible
+          trigger="詳細情報"
+          triggerClassName="text-white bg-blue-500 rounded hover:opacity-75 text-sm p-1 text-center absolute w-full"
+          triggerOpenedClassName="text-white bg-blue-500 rounded hover:opacity-75 text-sm p-1 text-center absolute w-full"
+        >
+          <table className="mt-8 tooltip_table m-2">
+            <tbody>
+              {infolabels.map((key) => {
+                const value = String(properties[key]);
 
-              let content: JSX.Element | string;
-              if (summaryKeys.indexOf(key) > -1) {
-                return;
-              } else {
+                let content: JSX.Element | string;
                 content = value;
                 if (key === 'URL' || key === '関連URL') {
                   content = (
@@ -231,18 +232,18 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
                     </a>
                   );
                 }
-              }
 
-              return (
-                <tr key={key}>
-                  <td className="whitespace-nowrap font-bold align-top">{key}</td>
-                  <td className="whitespace-nomal">{content}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </Collapsible>
+                return (
+                  <tr key={key}>
+                    <td className="whitespace-nowrap font-bold align-top">{key}</td>
+                    <td className="whitespace-nomal">{content}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </Collapsible>
+      ) : undefined}
     </>
   );
 };
