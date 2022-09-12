@@ -12,8 +12,8 @@ const BaseTooltip: VFC<BaseTooltipProps> = ({ children }) => {
     backgroundColor: preferences.settings.tooltip_background_color,
   };
   return (
-    <div className="visible">
-      <div id="tooltip_content" className="bg-white overflow-hidden" style={setTooltipPosition}>
+    <div className="visible h-full">
+      <div id="tooltip_content" className="bg-white overflow-hidden h-full" style={setTooltipPosition}>
         {children}
       </div>
     </div>
@@ -157,7 +157,14 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
     const image = () => {
       let content: JSX.Element | string;
       content = 'N/A';
-      if (imageValue.startsWith('http')) content = <img className="w-full" src={imageValue} />;
+
+      const imageStyle = {
+        objectFit: 'cover',
+        objectPosition: '0 0%',
+        height: 'calc(50%)'
+      };
+
+      if (imageValue.startsWith('http')) content = <img className="w-full" src={imageValue} style = { imageStyle } />;
       return content;
     };
 
