@@ -90,9 +90,27 @@ class GeoJsonLinePolygonCreator {
     // @ts-ignore
     const { layer: { props:{ tooltipType } } } = info;
     const { layer: { id } } = info;
+    
+    const parent = document.getElementById("MapArea");
+    const body = document.getElementsByTagName("body")[0];
+    const tooltipWidth = body.clientWidth * 0.25;
+    const tooltipHeight = body.clientHeight * 0.25;
+    const parentWidth = parent.clientWidth;
+    const parentHeight = parent.clientHeight;
+
+    let x = info.x;
+    let y = info.y;
+
+    if (x + tooltipWidth +40 > parentWidth) {
+      x = parentWidth -tooltipWidth -40;
+    }
+
+    if (y + tooltipHeight +300 > parentHeight) {
+      y = parentHeight - tooltipHeight -300;
+    }
     this.setsetTooltipPosition({
-      top: `${String(info.y)}px`,
-      left: `${String(info.x)}px`
+      top: `${String(y)}px`,
+      left: `${String(x)}px`
     });
     show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
   };
@@ -161,9 +179,27 @@ class GeoJsonIconLayerCreator {
     // @ts-ignore
     const { layer: { props:{ tooltipType } } } = info;
     const { layer: { id } } = info;
+    
+    const parent = document.getElementById("MapArea");
+    const body = document.getElementsByTagName("body")[0];
+    const tooltipWidth = body.clientWidth * 0.25;
+    const tooltipHeight = body.clientHeight * 0.25;
+    const parentWidth = parent.clientWidth;
+    const parentHeight = parent.clientHeight;
+
+    let x = info.x;
+    let y = info.y;
+
+    if (x + tooltipWidth +40 > parentWidth) {
+      x = parentWidth -tooltipWidth -40;
+    }
+
+    if (y + tooltipHeight +300 > parentHeight) {
+      y = parentHeight - tooltipHeight -300;
+    }
     this.setsetTooltipPosition({
-      top: `${String(info.y)}px`,
-      left: `${String(info.x)}px`
+      top: `${String(y)}px`,
+      left: `${String(x)}px`
     });
     show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
   };
@@ -258,9 +294,27 @@ class GeoJsonFeatureCollectionIconLayerCreator {
     // @ts-ignore
     const { layer: { props:{ tooltipType } } } = info;
     const { layer: { id } } = info;
+    
+    const parent = document.getElementById("MapArea");
+    const body = document.getElementsByTagName("body")[0];
+    const tooltipWidth = body.clientWidth * 0.25;
+    const tooltipHeight = body.clientHeight * 0.25;
+    const parentWidth = parent.clientWidth;
+    const parentHeight = parent.clientHeight;
+
+    let x = info.x;
+    let y = info.y;
+
+    if (x + tooltipWidth +40 > parentWidth) {
+      x = parentWidth -tooltipWidth -40;
+    }
+
+    if (y + tooltipHeight +300 > parentHeight) {
+      y = parentHeight - tooltipHeight -300;
+    }
     this.setsetTooltipPosition({
-      top: `${String(info.y)}px`,
-      left: `${String(info.x)}px`
+      top: `${String(y)}px`,
+      left: `${String(x)}px`
     });
     show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
   };

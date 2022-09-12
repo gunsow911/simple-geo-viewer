@@ -67,7 +67,7 @@ const App: NextPage = () => {
 
   const toolChipBaseStyle: any = {
     backgroundColor: preferences.settings.tooltip_background_color,
-    position: 'absolute'
+    position: 'absolute',
   };
 
   return (
@@ -95,7 +95,7 @@ const App: NextPage = () => {
                 </div>
               ) : undefined}
             </div>
-            <div className="relative w-4/5 m-2 pb-5 h-full">
+            <div id="MapArea" className="relative w-4/5 m-2 pb-5 h-full">
               <Map setTooltipData={setTooltipData} setsetTooltipPosition={setsetTooltipPosition} />
               {tooltipData.tooltip ? (
                 <div className="w-1/4 h-2/3 border-2 border-black z-50" style={{...setTooltipPosition,...toolChipBaseStyle}}>

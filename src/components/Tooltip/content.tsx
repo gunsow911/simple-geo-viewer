@@ -13,7 +13,7 @@ const BaseTooltip: VFC<BaseTooltipProps> = ({ children }) => {
   };
   return (
     <div className="visible h-full">
-      <div id="tooltip_content" className="bg-white overflow-hidden h-full" style={setTooltipPosition}>
+      <div id="tooltip_content" className="bg-white h-full" style={setTooltipPosition}>
         {children}
       </div>
     </div>
