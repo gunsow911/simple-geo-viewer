@@ -46,7 +46,7 @@ type TooltipTableBodyProps = {
 
 export const Tooltip: VFC<TooltipProps> = ({ properties, labels, tooltipType, id }) => {
   return (
-    <div className={'relative overflow-auto pt-2 h-full '}>
+    <div className={'relative overflow-auto h-full '}>
       <BaseTooltip>
         {(() => {
           switch (tooltipType) {
@@ -160,7 +160,7 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
 
       const imageStyle = {
         objectFit: 'cover',
-        objectPosition: '0 0%',
+        objectPosition: '0% 50%',
         height: 'calc(50%)'
       };
 
@@ -207,8 +207,8 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
       {infolabels.length > 0 ? (
         <Collapsible
           trigger="詳細情報"
-          triggerClassName="text-white bg-blue-500 rounded hover:opacity-75 text-sm p-1 text-center absolute w-full"
-          triggerOpenedClassName="text-white bg-blue-500 rounded hover:opacity-75 text-sm p-1 text-center absolute w-full"
+          triggerClassName="text-white bg-blue-500 hover:opacity-75 text-sm p-1 text-center absolute w-full"
+          triggerOpenedClassName="text-white bg-blue-500 hover:opacity-75 text-sm p-1 text-center absolute w-full"
         >
           <table className="mt-8 tooltip_table m-2">
             <tbody>
