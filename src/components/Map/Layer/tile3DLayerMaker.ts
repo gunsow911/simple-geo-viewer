@@ -86,8 +86,8 @@ class Tile3DLayerCreator {
     const body = document.getElementsByTagName("body")[0];
     const tooltipWidth = body.clientWidth * 0.25;
     const tooltipHeight = body.clientHeight * 0.25;
-    const parentWidth = parent.clientWidth;
-    const parentHeight = parent.clientHeight;
+    const parentWidth = parent !== null ? (parent.clientWidth) : 10 ;
+    const parentHeight = parent !== null ? (parent.clientHeight) : 10 ;
 
     let x = info.x;
     let y = info.y;

@@ -158,13 +158,11 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
       let content: JSX.Element | string;
       content = 'N/A';
 
-      const imageStyle = {
-        objectFit: 'cover',
-        objectPosition: '0% 50%',
-        height: 'calc(50%)'
-      };
-
-      if (imageValue.startsWith('http')) content = <img className="w-full" src={imageValue} style = { imageStyle } />;
+      if (imageValue.startsWith('http')) content = <img className="w-full" src={imageValue} style = {{
+                                                                                                      objectFit: 'cover',
+                                                                                                      objectPosition: '0% 50%',
+                                                                                                      height: 'calc(50%)'
+                                                                                                    }} />;
       return content;
     };
 
