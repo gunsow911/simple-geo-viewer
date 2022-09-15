@@ -16,38 +16,6 @@ const gyoseiTokyo = (layer: any) => {
 
 const susonoBuilding = (layer: any) => {
   const getFillColor = (d: any) => {
-    //Platue
-    if ('用途' in d.properties) {
-      const usage = d.properties['用途'];
-      const x = Math.floor(usage / 10);
-
-      if (usage === 461) {
-        //不明
-        return [180, 200, 210, 230];
-      } else if (usage === 454) {
-        //その他
-        return [180, 200, 210, 180];
-      } else if (usage === 421 || usage === 453) {
-        // 官公庁、防衛
-        return [80, 150, 220, 180];
-      } else if (usage === 422) {
-        // 文教
-        return [80, 120, 240, 180];
-      } else if (usage === 431 || usage === 441 || usage === 451 || usage === 452) {
-        // 運輸倉庫、工場、農林漁業、供給施設
-        return [180, 200, 240, 180];
-      }
-
-      if (x === 40) {
-        // 商業系
-        return [220, 150, 80, 150];
-      } else if (x === 41) {
-        // 住宅系
-        return [140, 250, 120, 150];
-      }
-    }
-
-    //ゼンリン
     if ('建物分類' in d.properties) {
       getColorParam(layer.id, d.properties['建物分類']);
       if (d.properties['建物分類'] === 9999) {
@@ -123,27 +91,6 @@ const zenrinBuilding = (layer: any) => {
 
 export const addRenderOption = (layers: any[]) => {
   const addedPropsLayers: any[] = [];
-  const colorBuildIDs = [
-    'shizuoka-building',
-    '37201',
-    '37202',
-    '37203',
-    '37204',
-    '37205',
-    '37206',
-    '37207',
-    '37208',
-    '22213',
-    '22213_plateau',
-    '44201',
-    '12101',
-    '12102',
-    '12103',
-    '12104',
-    '12105',
-    '12106',
-  ];
-  const zenrinIDs = ['zenrin-building'];
 
   for (const layer of layers) {
     if (layer.id === 'gyosei-tokyo') {
@@ -152,13 +99,13 @@ export const addRenderOption = (layers: any[]) => {
       continue;
     }
 
-    if (colorBuildIDs.includes(layer.id)) {
+    if (layer.id === 'shizuoka-building') {
       const newLayer: any = susonoBuilding(layer);
       addedPropsLayers.push(newLayer);
       continue;
     }
 
-    if (zenrinIDs.includes(layer.id)) {
+    if (layer.id === 'zenrin-building') {
       const newLayer: any = zenrinBuilding(layer);
       addedPropsLayers.push(newLayer);
       continue;
