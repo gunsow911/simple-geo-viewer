@@ -163,10 +163,8 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
         {image()}
         <div className="pl-2 pr-2">
           <div className="text-center font-bold">{titleValue}</div>
-          <div className="text-sm text-gray-600 text-left">{layerTitle}</div>
-          <div className="text-sm text-left">
-            {typeof descriptionValue === 'string' ? descriptionValue.slice(0, 15) + '…' : ''}{' '}
-          </div>
+          <div className="text-xs text-gray-600 text-left">{layerTitle}</div>
+          <div className="text-sm text-left">{descriptionValue}</div>
           <div className="flex flex-row justify-center">
             <div className="flex justify-center m-2">
               {resource.download_url === undefined

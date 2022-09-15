@@ -11,6 +11,7 @@ import MouseTooltip, { MouseTooltipData } from '@/components/MouseTooltip';
 import { useRouter } from 'next/router';
 import { usePreferences, Preferences } from '@/components/LayerFilter/loader';
 import Head from 'next/head';
+import { closeIcon } from '@/components/SideBar/Icon';
 
 type TContext = {
   checkedLayerTitleList: string[];
@@ -105,7 +106,7 @@ const App: NextPage = () => {
                       onClick={() => removeExistingTooltip(setTooltipData)}
                       style={toolChipStyle}
                     >
-                      x
+                      {closeIcon()}
                     </button>
                   </div>
                 </div>
