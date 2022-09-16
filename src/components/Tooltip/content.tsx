@@ -10,6 +10,7 @@ const BaseTooltip: VFC<BaseTooltipProps> = ({ children }) => {
   const { preferences } = useContext(context);
   const toolChipStyle = {
     backgroundColor: preferences.settings.tooltip_background_color,
+    overflow: 'scroll',
   };
   return (
     <div className="visible">
@@ -171,12 +172,12 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
                 ? undefined
                 : largeDownloadIcon(resource.download_url)}
             </div>
-            <div className="flex justify-center m-2">
+            {/* <div className="flex justify-center m-2">
               {resource.download_url === undefined ? undefined : shareIcon(resource.download_url)}
             </div>
             <div className="flex justify-center m-2">
               {resource.download_url === undefined ? undefined : linkIcon(resource.download_url)}
-            </div>
+            </div> */}
           </div>
         </div>
       </>
