@@ -6,6 +6,10 @@ import { largeDownloadIcon, shareIcon, linkIcon } from '@/components/SideBar/Ico
 
 type BaseTooltipProps = { children: ReactNode };
 
+const tdStyle = {
+  paddingRight: '35px',
+};
+
 const BaseTooltip: VFC<BaseTooltipProps> = ({ children }) => {
   const { preferences } = useContext(context);
   const setTooltipPosition = {
@@ -108,7 +112,9 @@ const TooltipDefaultBody: VFC<TooltipBodyProps> = ({ properties, labels }) => {
           return (
             <tr key={key}>
               <td className="whitespace-nowrap font-bold align-top">{key}</td>
-              <td className="whitespace-nomal">{content}</td>
+              <td className="whitespace-nomal break-all" style={tdStyle}>
+                {content}
+              </td>
             </tr>
           );
         })}
@@ -158,11 +164,18 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
       let content: JSX.Element | string;
       content = 'N/A';
 
-      if (imageValue.startsWith('http')) content = <img className="w-full" src={imageValue} style = {{
-                                                                                                      objectFit: 'cover',
-                                                                                                      objectPosition: '0% 50%',
-                                                                                                      height: 'calc(50%)'
-                                                                                                    }} />;
+      if (imageValue.startsWith('http'))
+        content = (
+          <img
+            className="w-full"
+            src={imageValue}
+            style={{
+              objectFit: 'cover',
+              objectPosition: '0% 50%',
+              height: 'calc(50%)',
+            }}
+          />
+        );
       return content;
     };
 
@@ -177,22 +190,20 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
         {image()}
         <div className="pl-2 pr-2">
           <div className="text-center font-bold">{titleValue}</div>
-          <div className="text-sm text-gray-600 text-left">{layerTitle}</div>
-          <div className="text-sm text-left">
-            {typeof descriptionValue === 'string' ? descriptionValue.slice(0, 15) + '…' : ''}{' '}
-          </div>
+          <div className="text-xs text-gray-600 text-left">{layerTitle}</div>
+          <div className="text-sm text-left">{descriptionValue}</div>
           <div className="flex flex-row justify-center">
             <div className="flex justify-center m-2">
               {resource.download_url === undefined
                 ? undefined
                 : largeDownloadIcon(resource.download_url)}
             </div>
-            <div className="flex justify-center m-2">
+            {/* <div className="flex justify-center m-2">
               {resource.download_url === undefined ? undefined : shareIcon(resource.download_url)}
             </div>
             <div className="flex justify-center m-2">
               {resource.download_url === undefined ? undefined : linkIcon(resource.download_url)}
-            </div>
+            </div> */}
           </div>
         </div>
       </>
@@ -241,7 +252,9 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
                 return (
                   <tr key={key}>
                     <td className="whitespace-nowrap font-bold align-top">{key}</td>
-                    <td className="whitespace-nomal">{content}</td>
+                    <td className="whitespace-nomal break-all" style={tdStyle}>
+                      {content}
+                    </td>
                   </tr>
                 );
               })}
@@ -305,7 +318,9 @@ const TooltipTableBody: VFC<TooltipTableBodyProps> = ({ properties, labels, id }
             return (
               <tr key={key}>
                 <td className="whitespace-nowrap font-bold align-top">{key}</td>
-                <td className="whitespace-nomal">{content}</td>
+                <td className="whitespace-nomal break-all" style={tdStyle}>
+                  {content}
+                </td>
               </tr>
             );
           })}

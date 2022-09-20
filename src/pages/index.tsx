@@ -11,6 +11,7 @@ import MouseTooltip, { MouseTooltipData } from '@/components/MouseTooltip';
 import { useRouter } from 'next/router';
 import { usePreferences, Preferences } from '@/components/LayerFilter/loader';
 import Head from 'next/head';
+import { closeIcon } from '@/components/SideBar/Icon';
 import { Backgrounds } from '../components/LayerFilter/loader';
 
 type TContext = {
@@ -104,13 +105,13 @@ const App: NextPage = () => {
                   style={{ ...setTooltipPosition, ...toolChipBaseStyle }}
                 >
                   {tooltipData.tooltip ? <Tooltip {...tooltipData.tooltip} /> : undefined}
-                  <div className="text-right bg-white absolute top-0 right-2">
+                  <div className="text-right absolute top-0 right-2">
                     <button
                       className="text-2xl"
                       onClick={() => removeExistingTooltip(setTooltipData)}
                       style={{ backgroundColor: toolChipBaseStyle.backgroundColor }}
                     >
-                      x
+                      {closeIcon()}
                     </button>
                   </div>
                 </div>
