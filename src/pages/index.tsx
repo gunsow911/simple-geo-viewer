@@ -105,7 +105,7 @@ const App: NextPage = () => {
                   style={{ ...setTooltipPosition, ...toolChipBaseStyle }}
                 >
                   {tooltipData.tooltip ? <Tooltip {...tooltipData.tooltip} /> : undefined}
-                  <div className="text-right bg-white absolute top-0 right-2">
+                  <div className="text-right absolute top-0 right-2">
                     <button
                       className="text-2xl"
                       onClick={() => removeExistingTooltip(setTooltipData)}
