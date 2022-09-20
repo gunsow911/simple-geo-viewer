@@ -7,7 +7,7 @@ import { largeDownloadIcon, shareIcon, linkIcon } from '@/components/SideBar/Ico
 type BaseTooltipProps = { children: ReactNode };
 
 const tdStyle = {
-  paddingRight: '30px',
+  paddingRight: '35px',
 };
 
 const BaseTooltip: VFC<BaseTooltipProps> = ({ children }) => {
