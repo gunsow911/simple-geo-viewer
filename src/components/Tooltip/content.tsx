@@ -6,11 +6,14 @@ import { largeDownloadIcon, shareIcon, linkIcon } from '@/components/SideBar/Ico
 
 type BaseTooltipProps = { children: ReactNode };
 
+const tdStyle = {
+  paddingRight: '30px',
+};
+
 const BaseTooltip: VFC<BaseTooltipProps> = ({ children }) => {
   const { preferences } = useContext(context);
   const setTooltipPosition = {
     backgroundColor: preferences.settings.tooltip_background_color,
-    overflow: 'scroll',
   };
   return (
     <div className="visible h-full">
@@ -109,7 +112,9 @@ const TooltipDefaultBody: VFC<TooltipBodyProps> = ({ properties, labels }) => {
           return (
             <tr key={key}>
               <td className="whitespace-nowrap font-bold align-top">{key}</td>
-              <td className="whitespace-nomal">{content}</td>
+              <td className="whitespace-nomal break-all" style={tdStyle}>
+                {content}
+              </td>
             </tr>
           );
         })}
@@ -159,11 +164,18 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
       let content: JSX.Element | string;
       content = 'N/A';
 
-      if (imageValue.startsWith('http')) content = <img className="w-full" src={imageValue} style = {{
-                                                                                                      objectFit: 'cover',
-                                                                                                      objectPosition: '0% 50%',
-                                                                                                      height: 'calc(50%)'
-                                                                                                    }} />;
+      if (imageValue.startsWith('http'))
+        content = (
+          <img
+            className="w-full"
+            src={imageValue}
+            style={{
+              objectFit: 'cover',
+              objectPosition: '0% 50%',
+              height: 'calc(50%)',
+            }}
+          />
+        );
       return content;
     };
 
@@ -240,7 +252,9 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
                 return (
                   <tr key={key}>
                     <td className="whitespace-nowrap font-bold align-top">{key}</td>
-                    <td className="whitespace-nomal">{content}</td>
+                    <td className="whitespace-nomal break-all" style={tdStyle}>
+                      {content}
+                    </td>
                   </tr>
                 );
               })}
@@ -304,7 +318,9 @@ const TooltipTableBody: VFC<TooltipTableBodyProps> = ({ properties, labels, id }
             return (
               <tr key={key}>
                 <td className="whitespace-nowrap font-bold align-top">{key}</td>
-                <td className="whitespace-nomal">{content}</td>
+                <td className="whitespace-nomal break-all" style={tdStyle}>
+                  {content}
+                </td>
               </tr>
             );
           })}
