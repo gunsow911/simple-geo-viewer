@@ -14,6 +14,16 @@ const gyoseiTokyo = (layer: any) => {
   });
 };
 
+const getBuildingElevation = (d: any) => {
+  var vals = ['bui_floor', 'floor', '階数', '建物の階数', 'height'];
+  var floor = 'none';
+  for (const val of vals) {
+    floor = val in d.properties ? val : floor;
+  }
+  if (floor == 'none') return 0;
+  return floor in d.properties ? (d.properties[floor] === 0 ? 2 : d.properties[floor]) * 3 : 2 * 3;
+};
+
 const susonoBuilding = (layer: any) => {
   const getFillColor = (d: any) => {
     //Platue
@@ -103,14 +113,7 @@ const zenrinBuilding = (layer: any) => {
   const getFillColor = () => [200, 200, 200, 200];
   const getLineColor = () => [200, 200, 200, 200];
   const getElevation = (d: any) => {
-    if ('bui_floor' in d.properties) {
-      if (d.properties.bui_floor === 0) {
-        return 2 * 3;
-      } else {
-        return d.properties.bui_floor * 3;
-      }
-    }
-    return 2 * 3;
+    return getBuildingElevation(d);
   };
 
   return layer.clone({
@@ -143,7 +146,16 @@ export const addRenderOption = (layers: any[]) => {
     '12105',
     '12106',
   ];
-  const zenrinIDs = ['zenrin-building'];
+  const zenrinIDs = [
+    'zenrin-building',
+    'tokyo-building',
+    'zenrin-building1',
+    'zenrin-building2',
+    'zenrin-building3',
+    'zenrin-building4',
+    'zenrin-building5',
+    'zenrin-building6',
+  ];
 
   for (const layer of layers) {
     if (layer.id === 'gyosei-tokyo') {
