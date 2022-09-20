@@ -8,12 +8,12 @@ type BaseTooltipProps = { children: ReactNode };
 
 const BaseTooltip: VFC<BaseTooltipProps> = ({ children }) => {
   const { preferences } = useContext(context);
-  const toolChipStyle = {
+  const setTooltipPosition = {
     backgroundColor: preferences.settings.tooltip_background_color,
   };
   return (
-    <div className="visible">
-      <div id="tooltip_content" className="bg-white overflow-hidden" style={toolChipStyle}>
+    <div className="visible h-full">
+      <div id="tooltip_content" className="bg-white h-full" style={setTooltipPosition}>
         {children}
       </div>
     </div>
@@ -46,7 +46,7 @@ type TooltipTableBodyProps = {
 
 export const Tooltip: VFC<TooltipProps> = ({ properties, labels, tooltipType, id }) => {
   return (
-    <div className={'relative overflow-auto pt-2 h-full '}>
+    <div className={'relative overflow-auto h-full '}>
       <BaseTooltip>
         {(() => {
           switch (tooltipType) {
@@ -127,6 +127,15 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
 
   const { preferences } = useContext(context);
 
+  const { description, ..._summaryKey } = summaryKey;
+  const summaryKeys = Object.keys(_summaryKey)
+    .map((key) => {
+      return summaryKey[key];
+    })
+    .flat();
+
+  const infolabels = [...labels].filter((key) => summaryKeys.indexOf(key) === -1);
+
   const summary = () => {
     const titleValue =
       properties[
@@ -148,7 +157,12 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
     const image = () => {
       let content: JSX.Element | string;
       content = 'N/A';
-      if (imageValue.startsWith('http')) content = <img className="w-full" src={imageValue} />;
+
+      if (imageValue.startsWith('http')) content = <img className="w-full" src={imageValue} style = {{
+                                                                                                      objectFit: 'cover',
+                                                                                                      objectPosition: '0% 50%',
+                                                                                                      height: 'calc(50%)'
+                                                                                                    }} />;
       return content;
     };
 
@@ -188,26 +202,18 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
   return (
     <>
       {summary()}
-      <Collapsible
-        trigger="詳細情報"
-        triggerClassName="text-white bg-blue-500 rounded hover:opacity-75 text-sm p-1 text-center absolute w-full"
-        triggerOpenedClassName="text-white bg-blue-500 rounded hover:opacity-75 text-sm p-1 text-center absolute w-full"
-      >
-        <table className="mt-8 tooltip_table m-2">
-          <tbody>
-            {labels.map((key) => {
-              const { description, ..._summaryKey } = summaryKey;
-              const summaryKeys = Object.keys(_summaryKey)
-                .map((key) => {
-                  return summaryKey[key];
-                })
-                .flat();
-              const value = String(properties[key]);
+      {infolabels.length > 0 ? (
+        <Collapsible
+          trigger="詳細情報"
+          triggerClassName="text-white bg-blue-500 hover:opacity-75 text-sm p-1 text-center absolute w-full"
+          triggerOpenedClassName="text-white bg-blue-500 hover:opacity-75 text-sm p-1 text-center absolute w-full"
+        >
+          <table className="mt-8 tooltip_table m-2">
+            <tbody>
+              {infolabels.map((key) => {
+                const value = String(properties[key]);
 
-              let content: JSX.Element | string;
-              if (summaryKeys.indexOf(key) > -1) {
-                return;
-              } else {
+                let content: JSX.Element | string;
                 content = value;
                 if (key === 'URL' || key === '関連URL') {
                   content = (
@@ -231,18 +237,18 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
                     </a>
                   );
                 }
-              }
 
-              return (
-                <tr key={key}>
-                  <td className="whitespace-nowrap font-bold align-top">{key}</td>
-                  <td className="whitespace-nomal">{content}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </Collapsible>
+                return (
+                  <tr key={key}>
+                    <td className="whitespace-nowrap font-bold align-top">{key}</td>
+                    <td className="whitespace-nomal">{content}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </Collapsible>
+      ) : undefined}
     </>
   );
 };

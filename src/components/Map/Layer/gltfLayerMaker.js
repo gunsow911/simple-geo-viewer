@@ -9,10 +9,11 @@ import { show } from '@/components/Tooltip/show';
  * @param layerConfig {any}
  * @param init {boolean}
  * @param setTooltipData {Dispatch<SetStateAction<any>>}
+ * @param setsetTooltipPosition ポップアップのスタイルをセットする関数
  * @returns {ScenegraphLayer[]}
  */
-export function makeGltfLayers(map, layerConfig, init, setTooltipData) {
-  const gltfCreator = new gltfLayerCreator(layerConfig, map, setTooltipData);
+export function makeGltfLayers(map, layerConfig, init, setTooltipData, setsetTooltipPosition) {
+  const gltfCreator = new gltfLayerCreator(layerConfig, map, setTooltipData, setsetTooltipPosition);
   return gltfCreator.makeDeckGlLayers(init);
 }
 
@@ -21,6 +22,7 @@ class gltfLayerCreator {
   layerConfig;
   layersType = 'gltf';
   setTooltipData;
+  setsetTooltipPosition;
 
   /**
    *
@@ -28,10 +30,11 @@ class gltfLayerCreator {
    * @param map {maplibregl.Map}
    * @param setTooltipData {Dispatch<SetStateAction<any>>}
    */
-  constructor(layerConfig, map, setTooltipData) {
+  constructor(layerConfig, map, setTooltipData, setsetTooltipPosition) {
     this.layerConfig = layerConfig;
     this.map = map;
     this.setTooltipData = setTooltipData;
+    this.setsetTooltipPosition = setsetTooltipPosition;
   }
 
   /**
@@ -83,6 +86,28 @@ class gltfLayerCreator {
     // @ts-ignore
     const { layer: { props:{ tooltipType } } } = info;
     const { layer: { id } } = info;
+    
+    const parent = document.getElementById("MapArea");
+    const body = document.getElementsByTagName("body")[0];
+    const tooltipWidth = body.clientWidth * 0.25;
+    const tooltipHeight = body.clientHeight * 0.25;
+    const parentWidth = parent !== null ? (parent.clientWidth) : 10 ;
+    const parentHeight = parent !== null ? (parent.clientHeight) : 10 ;
+
+    let x = info.x;
+    let y = info.y;
+
+    if (x + tooltipWidth +40 > parentWidth) {
+      x = parentWidth -tooltipWidth -40;
+    }
+
+    if (y + tooltipHeight +300 > parentHeight) {
+      y = parentHeight - tooltipHeight -300;
+    }
+    this.setsetTooltipPosition({
+      top: `${String(y)}px`,
+      left: `${String(x)}px`
+    });
     show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
   };
 }

@@ -11,6 +11,7 @@ import MouseTooltip, { MouseTooltipData } from '@/components/MouseTooltip';
 import { useRouter } from 'next/router';
 import { usePreferences, Preferences } from '@/components/LayerFilter/loader';
 import Head from 'next/head';
+import { Backgrounds } from '../components/LayerFilter/loader';
 
 type TContext = {
   checkedLayerTitleList: string[];
@@ -56,17 +57,18 @@ const App: NextPage = () => {
     tooltip: null,
   });
 
+  const [setTooltipPosition, setsetTooltipPosition] = useState<any>({});
+
   const contextValues = useContextValues();
   const { preferences } = usePreferences();
   if (preferences === null) {
     return <div>loading</div>;
   }
 
-  const toolChipStyle: any = {
+  const toolChipBaseStyle: any = {
     backgroundColor: preferences.settings.tooltip_background_color,
     position: 'absolute',
-    top: '30.3%',
-    right: '0%',
+    height: '400px',
   };
 
   return (
@@ -94,16 +96,19 @@ const App: NextPage = () => {
                 </div>
               ) : undefined}
             </div>
-            <div className="relative w-4/5 m-2 pb-5 h-full">
-              <Map setTooltipData={setTooltipData} />
+            <div id="MapArea" className="relative w-4/5 m-2 pb-5 h-full">
+              <Map setTooltipData={setTooltipData} setsetTooltipPosition={setsetTooltipPosition} />
               {tooltipData.tooltip ? (
-                <div className="w-1/4 h-2/3 border-2 border-black z-50" style={toolChipStyle}>
+                <div
+                  className="w-1/4 border-2 border-black z-50"
+                  style={{ ...setTooltipPosition, ...toolChipBaseStyle }}
+                >
                   {tooltipData.tooltip ? <Tooltip {...tooltipData.tooltip} /> : undefined}
                   <div className="text-right bg-white absolute top-0 right-2">
                     <button
                       className="text-2xl"
                       onClick={() => removeExistingTooltip(setTooltipData)}
-                      style={toolChipStyle}
+                      style={{ backgroundColor: toolChipBaseStyle.backgroundColor }}
                     >
                       x
                     </button>
