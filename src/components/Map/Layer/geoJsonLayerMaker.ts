@@ -30,10 +30,12 @@ export function makeGeoJsonLayers(
   const geoJsonLinePolygonCreator = new GeoJsonLinePolygonCreator(layerConfig, map, setTooltipData, setsetTooltipPosition);
   const geoJsonIconCreator = new GeoJsonIconLayerCreator(layerConfig, map, setTooltipData, setsetTooltipPosition);
   const geoJsoneatureCollectionIconCreator = new GeoJsonFeatureCollectionIconLayerCreator(layerConfig, map, setTooltipData, setsetTooltipPosition);
+  const geoJsoneatureCollectionArrowCreator = new GeoJsonArrowLayerCreator(layerConfig, map, setTooltipData, setsetTooltipPosition);
   const layers = [
     ...geoJsonLinePolygonCreator.makeDeckGlLayers(init),
     ...geoJsonIconCreator.makeDeckGlLayers(init),
-    ...geoJsoneatureCollectionIconCreator.makeDeckGlLayers(init)
+    ...geoJsoneatureCollectionIconCreator.makeDeckGlLayers(init),
+    ...geoJsoneatureCollectionArrowCreator.makeDeckGlLayers(init)
   ];
   return layers;
 }
@@ -275,6 +277,105 @@ class GeoJsonFeatureCollectionIconLayerCreator {
 
     return result;
   }
+
+  extractLayerConfig = (layerConfig: GeojsonIconLayerConfig) => {
+    const { type, source, ...otherConfig } = layerConfig;
+    return otherConfig;
+  };
+
+  extractTargetConfig() {
+    return this.layerConfig.filter((layerConfig: LayerConfig) => {
+      return layerConfig.type === this.layersType;
+    }) as GeojsonIconLayerConfig[];
+  }
+
+  showToolTip = (info: PickInfo<any>) => {
+    const { coordinate, object } = info;
+    if (!coordinate) return;
+    if (!object) return;
+    // @ts-ignore
+    const { layer: { props:{ tooltipType } } } = info;
+    const { layer: { id } } = info;
+    
+    const parent = document.getElementById("MapArea");
+    const body = document.getElementsByTagName("body")[0];
+    const tooltipWidth = body.clientWidth * 0.25;
+    const tooltipHeight = body.clientHeight * 0.25;
+    const parentWidth = parent !== null ? (parent.clientWidth) : 10 ;
+    const parentHeight = parent !== null ? (parent.clientHeight) : 10 ;
+
+    let x = info.x;
+    let y = info.y;
+
+    if (x + tooltipWidth +40 > parentWidth) {
+      x = parentWidth -tooltipWidth -40;
+    }
+
+    if (y + tooltipHeight +300 > parentHeight) {
+      y = parentHeight - tooltipHeight -300;
+    }
+    this.setsetTooltipPosition({
+      top: `${String(y)}px`,
+      left: `${String(x)}px`
+    });
+    show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
+  };
+}
+
+class GeoJsonArrowLayerCreator {
+  layersType: string = 'geojsonarrow';
+  private readonly layerConfig: LayerConfig[];
+  private readonly map: Map;
+  private readonly setTooltipData: Dispatch<SetStateAction<any>>;
+  private readonly setsetTooltipPosition: Dispatch<SetStateAction<any>>;
+
+
+  constructor(layerConfig: LayerConfig[], map: Map, setTooltipData, setsetTooltipPosition) {
+    this.layerConfig = layerConfig;
+    this.map = map;
+    this.setTooltipData = setTooltipData;
+    this.setsetTooltipPosition = setsetTooltipPosition;
+  }
+
+  makeDeckGlLayers(init) {
+    const targetLayerConfigs = this.extractTargetConfig();
+
+    const result: GeoJsonLayer<any>[] = targetLayerConfigs.map((layerConfig) => {
+      const config = this.extractLayerConfig(layerConfig);
+      return new GeoJsonLayer({
+        data: layerConfig.source,
+        visible: init,
+        pickable: true,
+        autoHighlight: true,
+        onClick: this.showToolTip,
+        sizeScale: 8,
+        iconSizeScale: 60,
+        pointType: 'icon',
+        getIcon: (_) => ({
+          url: layerConfig.icon.url,
+          width: layerConfig.icon.width,
+          height: layerConfig.icon.height,
+          anchorY: layerConfig.icon.anchorY,
+          mask: false,
+        }),
+        parameters: {
+          depthTest: false,
+        },
+        getIconAngle: d => {
+          console.dir(d);
+          return this.getAngle(d)
+        },
+        ...config,
+      });
+    });
+
+
+    return result
+  }
+
+  getAngle = (d: any) => {
+    return "方向" in d.properties ? (d.properties.方向 === null ? 0 : 360.0-d.properties.方向) : 0
+  };
 
   extractLayerConfig = (layerConfig: GeojsonIconLayerConfig) => {
     const { type, source, ...otherConfig } = layerConfig;
