@@ -47,7 +47,7 @@ type TooltipTableBodyProps = {
 
 export const Tooltip: VFC<TooltipProps> = ({ properties, labels, tooltipType, id }) => {
   return (
-    <div className={'relative overflow-auto pt-2 h-full '}>
+    <div className={'relative overflow-auto h-full '}>
       <BaseTooltip>
         {(() => {
           switch (tooltipType) {
