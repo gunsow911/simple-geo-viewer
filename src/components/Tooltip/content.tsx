@@ -171,7 +171,7 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
             src={imageValue}
             style={{
               objectFit: 'cover',
-              objectPosition: '0% 50%',
+              objectPosition: '50% 50%',
               height: 'calc(50%)',
             }}
           />
