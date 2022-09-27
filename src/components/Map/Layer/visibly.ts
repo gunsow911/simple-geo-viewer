@@ -3,6 +3,16 @@ import { filterLayerName } from '@/components/LayerFilter/layer';
 import { filterCheckedData } from '@/components/LayerFilter/sideBar';
 
 /**
+ * ダッシュボードのレイヤーであるかどうか
+ * @param レイヤー
+ */
+const isDashbordLayer = (layer: { id: string }) => {
+  if (layer.id === 'tu-mesh-volume') {
+    return layer;
+  }
+};
+
+/**
  * サイドバーのチェックボックスがonになっているリソースのidを収集する
  * @param selectedResourceNameList
  */
@@ -24,6 +34,10 @@ export function toggleVisibly(originalLayers: any[], targetLayerIdList: string[]
   //上記リストでdeck.glの可視状態を変更したレイヤーの配列を返す
   return originalLayers.map((layer: any) => {
     if (!layer) return;
+
+    if (isDashbordLayer(layer)) {
+      return layer;
+    }
 
     if (visibleLayerIdList.includes(layer.id)) {
       return layer.clone({
@@ -47,6 +61,10 @@ export function zoomVisibly(originalLayers: any[], visLayers: visiblyLayers) {
 
   return originalLayers.map((layer: any) => {
     if (!layer) return;
+
+    if (isDashbordLayer(layer)) {
+      return layer;
+    }
 
     if (checkzoom(layer, visLayers.getzoomLevel()) && visibleLayerIdList.includes(layer.id)) {
       return layer.clone({

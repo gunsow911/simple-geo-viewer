@@ -22,6 +22,7 @@ import { Menu } from '@/components/LayerFilter/menu';
 import { TEMPORAL_LAYER_TYPES } from '@/components/Map/Layer/temporalLayerMaker';
 import { Preferences, Backgrounds } from '@/components/LayerFilter/loader';
 import { resolveUrl } from '@loaders.gl/gltf/src/lib/gltf-utils/resolve-url';
+import { makeDashboardLayers } from '../Dashboard/makeDashboardLayers';
 
 let map: Map;
 let deck: Deck;
@@ -171,7 +172,15 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData, setsetTooltipPosition 
   //対象のレイヤを全て作成してdeckに登録
   useEffect(() => {
     map.on('load', () => {
-      makeDeckGlLayers(map, deck, setTooltipData, setsetTooltipPosition, preferences.menu, preferences.config);
+      makeDeckGlLayers(
+        map,
+        deck,
+        setTooltipData,
+        setsetTooltipPosition,
+        preferences.menu,
+        preferences.config
+      );
+      makeDashboardLayers(deck);
       checkZoomVisible();
     });
   }, []);
