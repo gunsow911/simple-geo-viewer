@@ -1,9 +1,13 @@
 import React, { useContext } from 'react';
 import { context } from '@/pages';
 import settings from '@/assets/settings.json';
-import DashboardMenu from '@/components/Dashboard/Menu';
+import DashboardMenu from '@/components/Dashboard/Menu/DashboardMenu';
 
-function Header() {
+type Props = {
+  onDashboardMenuClick?: (id: string) => void;
+};
+
+const Header = (props: Props) => {
   const { preferences } = useContext(context);
   const headerStyle = {
     backgroundColor: preferences.settings.background_color,
@@ -24,6 +28,6 @@ function Header() {
       <div className="text-right text-white font-semibold text-3l w-3/12 p-3">Powerd By AIGID</div>
     </header>
   );
-}
+};
 
 export default Header;

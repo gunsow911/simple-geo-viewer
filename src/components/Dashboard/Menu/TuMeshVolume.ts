@@ -1,12 +1,14 @@
 import { GeoJsonLayer } from '@deck.gl/layers/typed';
 import { colorContinuous } from '@deck.gl/carto/typed';
-import { Feature, GeoJsonProperties, Geometry } from 'geojson';
+import { Feature } from 'geojson';
+import { DashboardLayerProps } from '../useDashboard';
 
-export const makeTuMeshVolumeLayer = () => {
-  const layer = new GeoJsonLayer<Feature<Geometry, GeoJsonProperties>>({
-    id: 'tu-mesh-volume',
+export const makeTuMeshVolumeHeatmapLayer = () => {
+  const layer = new GeoJsonLayer<Feature, DashboardLayerProps>({
+    id: 'tu-mesh-volume-heatmap',
+    dashboardMenuId: 'tu-mesh-volume',
     data: '/data/nanto/tu-mesh-volume.json',
-    visible: true,
+    visible: false,
     pickable: true,
     stroked: false,
     filled: true,
@@ -15,11 +17,10 @@ export const makeTuMeshVolumeLayer = () => {
       attr: 'v',
       domain: [0, 40],
       colors: [
-        [0, 243, 255, 200],
-        [255, 57, 0, 200],
+        [0, 243, 255, 170],
+        [255, 57, 0, 170],
       ],
     }),
   });
-
   return layer;
 };

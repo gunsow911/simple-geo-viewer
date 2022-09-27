@@ -6,8 +6,8 @@ import { filterCheckedData } from '@/components/LayerFilter/sideBar';
  * ダッシュボードのレイヤーであるかどうか
  * @param レイヤー
  */
-const isDashbordLayer = (layer: { id: string }) => {
-  if (layer.id === 'tu-mesh-volume') {
+const isDashbordLayer = (layer: any) => {
+  if (layer.props?.dashboardMenuId === 'tu-mesh-volume') {
     return layer;
   }
 };
