@@ -26,6 +26,8 @@ type TContext = {
   mouseTooltipData: MouseTooltipData | null;
   setMouseTooltipData: React.Dispatch<React.SetStateAction<MouseTooltipData | null>>;
   preferences: Preferences;
+  currentDisaster: string;
+  setCurrentDisaster: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const useContextValues = (): Omit<TContext, 'preferences'> => {
@@ -36,6 +38,7 @@ const useContextValues = (): Omit<TContext, 'preferences'> => {
   );
   const [isDefault, setIsDefault] = useState<boolean>(true);
   const [mouseTooltipData, setMouseTooltipData] = useState<MouseTooltipData | null>(null);
+  const [currentDisaster, setCurrentDisaster] = useState<string>('');
 
   return {
     checkedLayerTitleList,
@@ -48,6 +51,8 @@ const useContextValues = (): Omit<TContext, 'preferences'> => {
     setIsDefault,
     mouseTooltipData,
     setMouseTooltipData,
+    currentDisaster,
+    setCurrentDisaster
   };
 };
 

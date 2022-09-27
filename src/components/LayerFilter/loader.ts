@@ -1,9 +1,10 @@
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Menu } from './menu';
 import { Config } from './config';
 import { RasterSource } from 'maplibre-gl';
 import { route } from 'next/dist/server/router';
+import { context } from '@/pages';
 
 /**
  * settings.json
@@ -34,6 +35,20 @@ export type InitialView = {
   };
 };
 
+
+export type disaster = {
+  text: string;
+  value: string; 
+} 
+
+/**
+ * disasters.json
+ */
+export type disasters = {
+    default: number;
+    data: disaster[];
+}
+
 /**
  * 複数の設定ファイルJSONを読み込んだ結果を格納するデータ型
  */
@@ -43,9 +58,33 @@ export type Preferences = {
   config: Config;
   backgrounds: Backgrounds;
   initialView: InitialView;
+  disasters?: disasters;
 };
 
-const fetchJson = async (url: string) => await (await fetch(url)).json();
+export const fetchJson = async (url: string) => await (await fetch(url)).json();
+
+export const fetchJsons = async(preferencesPath: string) => {
+  const results = await Promise.all([
+    fetchJson(`${preferencesPath}/settings.json`),
+    fetchJson(`${preferencesPath}/menu.json`),
+    fetchJson(`${preferencesPath}/config.json`),
+    fetchJson(`${preferencesPath}/backgrounds.json`),
+    fetchJson(`${preferencesPath}/initial_view.json`),
+  ]);
+
+  const loadedPreferences: Preferences = {
+    settings: results[0] as Settings,
+    menu: results[1] as Menu,
+    config: results[2] as Config,
+    backgrounds: results[3] as Backgrounds,
+    initialView: results[4] as InitialView,
+  };
+  return loadedPreferences
+}
+
+export const getPreferrence = async (dir: string) => {
+  
+}
 
 /**
  * リモートにある設定ファイルJSON群を取得しstateを返す
@@ -54,7 +93,8 @@ const fetchJson = async (url: string) => await (await fetch(url)).json();
  */
 export const usePreferences = () => {
   const router = useRouter();
-  const [preferences, setPreferences] = useState<Preferences | null>(null);
+  const [ preferences, setPreferences ] = useState<Preferences | null>(null);
+  const { currentDisaster, setCurrentDisaster } = useContext(context);
   useEffect(() => {
     // preferencesが指定されているがqueryとして読み込みが完了していない場合はJSONの取得処理の開始を保留する
     if (router.asPath.includes('preferences=') && typeof router.query.preferences === 'undefined')
@@ -67,25 +107,23 @@ export const usePreferences = () => {
       if (typeof preferencesPath === 'undefined') {
         preferencesPath = `${router.basePath}/defaultPreferences`;
       }
-
-      const results = await Promise.all([
-        fetchJson(`${preferencesPath}/settings.json`),
-        fetchJson(`${preferencesPath}/menu.json`),
-        fetchJson(`${preferencesPath}/config.json`),
-        fetchJson(`${preferencesPath}/backgrounds.json`),
-        fetchJson(`${preferencesPath}/initial_view.json`),
-      ]);
-
-      const loadedPreferences: Preferences = {
-        settings: results[0] as Settings,
-        menu: results[1] as Menu,
-        config: results[2] as Config,
-        backgrounds: results[3] as Backgrounds,
-        initialView: results[4] as InitialView,
-      };
-
+      let loadedPreferences: Preferences;
+      const isDisaster = router.query.isDisaster as boolean | undefined;
+      if (isDisaster) {
+        preferencesPath = `${router.basePath}/disaster`;
+        const disasters = await fetchJson(`${preferencesPath}/disasters.json`);
+        const disastersPath = disasters.data[disasters.default].value;
+        if (currentDisaster === '') {
+          setCurrentDisaster(disastersPath);
+        }
+        preferencesPath = `${preferencesPath}/${disastersPath}`;
+        loadedPreferences = await fetchJsons(preferencesPath);
+        loadedPreferences.disasters = disasters as disasters;
+      }else{
+        loadedPreferences = await fetchJsons(preferencesPath);
+      }
       setPreferences(() => loadedPreferences);
     })();
   }, [router.query.preferences]);
-  return { preferences };
+  return { preferences, setPreferences };
 };

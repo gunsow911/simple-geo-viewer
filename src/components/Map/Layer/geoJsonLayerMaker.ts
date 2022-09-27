@@ -361,10 +361,7 @@ class GeoJsonArrowLayerCreator {
         parameters: {
           depthTest: false,
         },
-        getIconAngle: d => {
-          console.dir(d);
-          return this.getAngle(d)
-        },
+        getIconAngle: d => "方向" in d.properties ? (d.properties.方向 === null ? 0 : 360.0-d.properties.方向) : 0,
         ...config,
       });
     });
@@ -372,10 +369,6 @@ class GeoJsonArrowLayerCreator {
 
     return result
   }
-
-  getAngle = (d: any) => {
-    return "方向" in d.properties ? (d.properties.方向 === null ? 0 : 360.0-d.properties.方向) : 0
-  };
 
   extractLayerConfig = (layerConfig: GeojsonIconLayerConfig) => {
     const { type, source, ...otherConfig } = layerConfig;
