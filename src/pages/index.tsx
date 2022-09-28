@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import Sidebar from '@/components/SideBar';
 import Header from '@/components/Header';
@@ -67,6 +67,7 @@ const App: NextPage = () => {
 
   const contextValues = useContextValues();
   const { preferences } = usePreferences();
+  useEffect(() => {console.log(preferences)}, [preferences]);
   if (preferences === null) {
     return <div>loading</div>;
   }

@@ -112,18 +112,20 @@ export const usePreferences = () => {
       if (isDisaster) {
         preferencesPath = `${router.basePath}/disaster`;
         const disasters = await fetchJson(`${preferencesPath}/disasters.json`);
-        const disastersPath = disasters.data[disasters.default].value;
-        if (currentDisaster === '') {
-          setCurrentDisaster(disastersPath);
-        }
+        const disastersPath = disasters.data[disasters.default].value as string;
         preferencesPath = `${preferencesPath}/${disastersPath}`;
+        if (typeof currentDisaster !== 'undefined' && typeof setCurrentDisaster !== 'undefined' && currentDisaster !== '') {
+          preferencesPath = preferencesPath.replace(`/${disastersPath}`,'');
+          preferencesPath = `${preferencesPath}/${currentDisaster}`;
+        };
         loadedPreferences = await fetchJsons(preferencesPath);
         loadedPreferences.disasters = disasters as disasters;
       }else{
         loadedPreferences = await fetchJsons(preferencesPath);
       }
+      
       setPreferences(() => loadedPreferences);
     })();
-  }, [router.query.preferences]);
-  return { preferences, setPreferences };
+  }, [router.query.preferences, setCurrentDisaster, currentDisaster]);
+  return { preferences };
 };
