@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { getMenuItems } from '@/components/Dashboard/Menu/MenuItemList';
+import { getMenuItems, MenuItem } from '@/components/Dashboard/Menu/MenuItemList';
 import { Layer } from '@deck.gl/core/typed';
 import { makeTuMeshVolumeHeatmapLayer } from '@/components/Dashboard/Menu/TuMeshVolume';
 
@@ -8,7 +8,15 @@ export type DashboardLayerProps = {
   dashboardMenuId?: string;
 };
 
-const useDashboard = () => {
+export type UseDashboardReturn = {
+  menuItems: MenuItem[];
+  selectedMenuId?: string;
+  layers: Layer[];
+  show: (menuId: string) => void;
+  hide: () => void;
+};
+
+const useDashboard = (): UseDashboardReturn => {
   const [selectedMenuId, setSelectedMenuId] = useState<string>();
   const [cachedMenuIdList, setCachedMenuIdList] = useState<string[]>([]);
   const [layers, setLayers] = useState<Layer<DashboardLayerProps>[]>([]);

@@ -1,18 +1,14 @@
 import React, { useEffect } from 'react';
 import settings from '@/assets/settings.json';
-import useDashboard from '../useDashboard';
 import { MenuItem } from './MenuItemList';
+import { useDashboardContext } from '../useDashboardContext';
 
 const DashboardMenu = () => {
-  const { menuItems, selectedMenuId, show, hide, layers } = useDashboard();
+  const { menuItems, selectedMenuId, show, hide, layers } = useDashboardContext();
 
   const backgroundStyle = {
     backgroundColor: settings.background_color,
   };
-
-  useEffect(() => {
-    console.log(layers);
-  }, [layers]);
 
   const onMenuItemClick = (id: string) => {
     if (selectedMenuId === id) {

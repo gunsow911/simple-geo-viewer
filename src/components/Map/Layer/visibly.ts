@@ -7,9 +7,11 @@ import { filterCheckedData } from '@/components/LayerFilter/sideBar';
  * @param レイヤー
  */
 const isDashbordLayer = (layer: any) => {
-  if (layer.props?.dashboardMenuId === 'tu-mesh-volume') {
-    return layer;
+  // dashboardMenuIdが存在すればダッシュボードのレイヤー
+  if (layer.props?.dashboardMenuId) {
+    return true;
   }
+  return false;
 };
 
 /**
@@ -32,23 +34,24 @@ export function toggleVisibly(originalLayers: any[], targetLayerIdList: string[]
   const visibleLayerIdList = filterIds(menu, getVisiblyLayerIdList(targetLayerIdList, menu));
 
   //上記リストでdeck.glの可視状態を変更したレイヤーの配列を返す
-  return originalLayers.map((layer: any) => {
-    if (!layer) return;
+  return originalLayers
+    .filter((layer: any) => {
+      if (!layer) return false;
+      return !isDashbordLayer(layer);
+    })
+    .map((layer: any) => {
+      if (!layer) return;
 
-    if (isDashbordLayer(layer)) {
-      return layer;
-    }
-
-    if (visibleLayerIdList.includes(layer.id)) {
-      return layer.clone({
-        visible: true,
-      });
-    } else {
-      return layer.clone({
-        visible: false,
-      });
-    }
-  });
+      if (visibleLayerIdList.includes(layer.id)) {
+        return layer.clone({
+          visible: true,
+        });
+      } else {
+        return layer.clone({
+          visible: false,
+        });
+      }
+    });
 }
 
 /**

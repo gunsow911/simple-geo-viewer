@@ -3,7 +3,7 @@ import React, { Dispatch, SetStateAction, useContext, useEffect, useRef } from '
 import { Map, Style, NavigationControl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-import { Deck } from 'deck.gl';
+import { Deck } from '@deck.gl/core/typed';
 
 import { context } from '@/pages';
 import { useFlyTo } from '@/components/Map/Animation/flyTo';
@@ -22,7 +22,7 @@ import { Menu } from '@/components/LayerFilter/menu';
 import { TEMPORAL_LAYER_TYPES } from '@/components/Map/Layer/temporalLayerMaker';
 import { Preferences, Backgrounds } from '@/components/LayerFilter/loader';
 import { resolveUrl } from '@loaders.gl/gltf/src/lib/gltf-utils/resolve-url';
-import { makeDashboardLayers } from '../Dashboard/makeDashboardLayers';
+import { useDashboardContext } from '../Dashboard/useDashboardContext';
 
 let map: Map;
 let deck: Deck;
@@ -147,6 +147,7 @@ const useToggleVisibly = (menu: Menu, config: Config) => {
     });
   deck.setProps({ layers: priorityViewLayer });
   visLayers.setlayerList(checkedLayerTitleList);
+  return priorityViewLayer;
 };
 
 type Props = {
@@ -158,6 +159,7 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData, setsetTooltipPosition 
   const maplibreContainer = useRef<HTMLDivElement | null>(null);
   const deckglContainer = useRef<HTMLCanvasElement | null>(null);
   const { preferences } = useContext(context);
+  const { layers: dashboardLayers } = useDashboardContext();
 
   const visibleLayerTypes = getFilteredLayerConfig(preferences.menu, preferences.config).map(
     (item) => {
@@ -180,16 +182,20 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData, setsetTooltipPosition 
         preferences.menu,
         preferences.config
       );
-      makeDashboardLayers(deck);
       checkZoomVisible();
     });
   }, []);
 
   //layerの可視状態を変更
-  useToggleVisibly(preferences.menu, preferences.config);
+  const visibleLayers = useToggleVisibly(preferences.menu, preferences.config);
 
   //クリックされたレイヤに画面移動
   useFlyTo(deck);
+
+  // ダッシュボードのレイヤーと統合
+  if (deck) {
+    deck.setProps({ layers: [...(visibleLayers ?? []), ...dashboardLayers] });
+  }
 
   return (
     <>

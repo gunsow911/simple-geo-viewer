@@ -8,7 +8,7 @@ export const makeTuMeshVolumeHeatmapLayer = () => {
     id: 'tu-mesh-volume-heatmap',
     dashboardMenuId: 'tu-mesh-volume',
     data: '/data/nanto/tu-mesh-volume.json',
-    visible: false,
+    visible: true,
     pickable: true,
     stroked: false,
     filled: true,
