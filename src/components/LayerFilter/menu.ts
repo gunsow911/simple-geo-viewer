@@ -75,8 +75,11 @@ export const getCategoryByTitle = (menu: Menu, title: string) =>
  * dataのtitleからidを取得
  * @param title
  */
-export const getIdByDataTitle = (menu: Menu, title: string) =>
-  getDataList(menu).filter((data) => data.title === title)[0].id;
+export const getIdByDataTitle = (menu: Menu, title: string) => {
+  const targetMenu = getDataList(menu).filter((data) => data.title === title)[0];
+  return typeof targetMenu === 'undefined' ? undefined : getDataList(menu).filter((data) => data.title === title)[0].id;
+}
+  
 
 /**
  * 指定したidのresourceを取得

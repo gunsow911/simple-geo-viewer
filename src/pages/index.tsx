@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState, useContext } from 'react';
 import { NextPage } from 'next';
 import Sidebar from '@/components/SideBar';
 import Header from '@/components/Header';
@@ -9,10 +9,10 @@ import { Tooltip } from '@/components/Tooltip/content';
 import { removeExistingTooltip } from '@/components/Tooltip/show';
 import MouseTooltip, { MouseTooltipData } from '@/components/MouseTooltip';
 import { useRouter } from 'next/router';
-import { usePreferences, Preferences } from '@/components/LayerFilter/loader';
+import { usePreferences, Preferences, fetchJson, fetchJsons } from '@/components/LayerFilter/loader';
 import Head from 'next/head';
 import { closeIcon } from '@/components/SideBar/Icon';
-import { Backgrounds } from '../components/LayerFilter/loader';
+import { Backgrounds, Disasters } from '../components/LayerFilter/loader';
 
 type TContext = {
   checkedLayerTitleList: string[];
@@ -26,8 +26,11 @@ type TContext = {
   mouseTooltipData: MouseTooltipData | null;
   setMouseTooltipData: React.Dispatch<React.SetStateAction<MouseTooltipData | null>>;
   preferences: Preferences;
-  currentDisaster: string;
   setCurrentDisaster: React.Dispatch<React.SetStateAction<string>>;
+  isDisaster: boolean;
+  setIsDisaster: React.Dispatch<React.SetStateAction<boolean>>;
+  disasters: Disasters |  null;
+  setDisasters: React.Dispatch<React.SetStateAction<Disasters>>;
 };
 
 const useContextValues = (): Omit<TContext, 'preferences'> => {
@@ -39,7 +42,8 @@ const useContextValues = (): Omit<TContext, 'preferences'> => {
   const [isDefault, setIsDefault] = useState<boolean>(true);
   const [mouseTooltipData, setMouseTooltipData] = useState<MouseTooltipData | null>(null);
   const [currentDisaster, setCurrentDisaster] = useState<string>('');
-
+  const [isDisaster, setIsDisaster] = useState<boolean | undefined>(false);
+  const [disasters, setDisasters] = useState<Disasters | null>(null);
   return {
     checkedLayerTitleList,
     setCheckedLayerTitleList,
@@ -52,7 +56,11 @@ const useContextValues = (): Omit<TContext, 'preferences'> => {
     mouseTooltipData,
     setMouseTooltipData,
     currentDisaster,
-    setCurrentDisaster
+    setCurrentDisaster,
+    isDisaster,
+    setIsDisaster,
+    disasters,
+    setDisasters,
   };
 };
 
@@ -66,11 +74,59 @@ const App: NextPage = () => {
   const [setTooltipPosition, setsetTooltipPosition] = useState<any>({});
 
   const contextValues = useContextValues();
-  const { preferences } = usePreferences();
-  useEffect(() => {console.log(preferences)}, [preferences]);
+  const router = useRouter();
+  const { preferences, setPreferences } = usePreferences();
+  const { currentDisaster, setCurrentDisaster } = useContextValues();
+  const { setDisasters } = useContextValues();
+  const { isDisaster, setIsDisaster } = useContextValues();
+
+  useEffect(() => {
+    
+    if (router.asPath.includes('preferences=') && typeof router.query.preferences === 'undefined')
+      return;
+    (async () => {
+      // クエリパラメータでpreferencesが指定されていればそのURLを
+      // 指定されていなければデフォルト設定を読み込む
+      let preferencesPath = router.query.preferences as string | undefined;
+      if (typeof preferencesPath === 'undefined') {
+        preferencesPath = `${router.basePath}/defaultPreferences`;
+      };
+      let loadedPreferences: Preferences;
+      const isdisaster = router.query.isDisaster as boolean | undefined;
+      
+      
+      if (isdisaster) {
+        if (typeof setDisasters === 'undefined'){
+          return;
+        }
+        setIsDisaster(isdisaster);
+        preferencesPath = `${router.basePath}/disaster`;
+        const disastersData = await fetchJson(`${preferencesPath}/disasters.json`);
+        setDisasters(disastersData);
+        const disastersPath = disastersData.data[disastersData.default].value as string;
+        preferencesPath = `${preferencesPath}/${disastersPath}`;
+        if (typeof currentDisaster !== 'undefined' && typeof setCurrentDisaster !== 'undefined' && currentDisaster !== '') {
+          preferencesPath = preferencesPath.replace(`/${disastersPath}`,'');
+          preferencesPath = `${preferencesPath}/${currentDisaster}`;
+        };
+        loadedPreferences = await fetchJsons(preferencesPath);
+      }else{
+        loadedPreferences = await fetchJsons(preferencesPath);
+      }
+      setPreferences(() => loadedPreferences);
+    })();
+  },[router.asPath, router.query.preferences, currentDisaster]);
+  
   if (preferences === null) {
-    return <div>loading</div>;
+    return (
+      <>
+        <div>loading</div>
+      </>
+    );
   }
+  
+  // const isdisaster = router.query.isDisaster as boolean | undefined;
+  // setIsDisaster(isDisaster);
 
   const toolChipBaseStyle: any = {
     backgroundColor: preferences.settings.tooltip_background_color,

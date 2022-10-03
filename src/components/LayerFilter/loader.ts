@@ -3,7 +3,6 @@ import { useContext, useEffect, useState } from 'react';
 import { Menu } from './menu';
 import { Config } from './config';
 import { RasterSource } from 'maplibre-gl';
-import { route } from 'next/dist/server/router';
 import { context } from '@/pages';
 
 /**
@@ -36,7 +35,7 @@ export type InitialView = {
 };
 
 
-export type disaster = {
+export type Disaster = {
   text: string;
   value: string; 
 } 
@@ -44,9 +43,9 @@ export type disaster = {
 /**
  * disasters.json
  */
-export type disasters = {
+export type Disasters = {
     default: number;
-    data: disaster[];
+    data: Disaster[];
 }
 
 /**
@@ -58,7 +57,6 @@ export type Preferences = {
   config: Config;
   backgrounds: Backgrounds;
   initialView: InitialView;
-  disasters?: disasters;
 };
 
 export const fetchJson = async (url: string) => await (await fetch(url)).json();
@@ -82,50 +80,7 @@ export const fetchJsons = async(preferencesPath: string) => {
   return loadedPreferences
 }
 
-export const getPreferrence = async (dir: string) => {
-  
-}
-
-/**
- * リモートにある設定ファイルJSON群を取得しstateを返す
- * @param router
- * @returns
- */
 export const usePreferences = () => {
-  const router = useRouter();
   const [ preferences, setPreferences ] = useState<Preferences | null>(null);
-  const { currentDisaster, setCurrentDisaster } = useContext(context);
-  useEffect(() => {
-    // preferencesが指定されているがqueryとして読み込みが完了していない場合はJSONの取得処理の開始を保留する
-    if (router.asPath.includes('preferences=') && typeof router.query.preferences === 'undefined')
-      return;
-
-    (async () => {
-      // クエリパラメータでpreferencesが指定されていればそのURLを
-      // 指定されていなければデフォルト設定を読み込む
-      let preferencesPath = router.query.preferences as string | undefined;
-      if (typeof preferencesPath === 'undefined') {
-        preferencesPath = `${router.basePath}/defaultPreferences`;
-      }
-      let loadedPreferences: Preferences;
-      const isDisaster = router.query.isDisaster as boolean | undefined;
-      if (isDisaster) {
-        preferencesPath = `${router.basePath}/disaster`;
-        const disasters = await fetchJson(`${preferencesPath}/disasters.json`);
-        const disastersPath = disasters.data[disasters.default].value as string;
-        preferencesPath = `${preferencesPath}/${disastersPath}`;
-        if (typeof currentDisaster !== 'undefined' && typeof setCurrentDisaster !== 'undefined' && currentDisaster !== '') {
-          preferencesPath = preferencesPath.replace(`/${disastersPath}`,'');
-          preferencesPath = `${preferencesPath}/${currentDisaster}`;
-        };
-        loadedPreferences = await fetchJsons(preferencesPath);
-        loadedPreferences.disasters = disasters as disasters;
-      }else{
-        loadedPreferences = await fetchJsons(preferencesPath);
-      }
-      
-      setPreferences(() => loadedPreferences);
-    })();
-  }, [router.query.preferences, setCurrentDisaster, currentDisaster]);
-  return { preferences };
-};
+  return { preferences, setPreferences };
+}

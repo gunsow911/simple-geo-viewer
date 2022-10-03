@@ -127,6 +127,7 @@ const useInitializeMap = (
 
 const useToggleVisibly = (menu: Menu, config: Config) => {
   const { checkedLayerTitleList } = useContext(context);
+  const { currentDisaster } = useContext(context);
 
   if (!deck) return;
   const deckGlLayers = deck.props.layers;
@@ -171,6 +172,7 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData, setsetTooltipPosition 
   //対象のレイヤを全て作成してdeckに登録
   useEffect(() => {
     map.on('load', () => {
+      
       makeDeckGlLayers(map, deck, setTooltipData, setsetTooltipPosition, preferences.menu, preferences.config);
       checkZoomVisible();
     });
