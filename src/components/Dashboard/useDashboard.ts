@@ -1,13 +1,15 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { getMenuItems, MenuItem } from '@/components/Dashboard/Menu/MenuItemList';
 import { Layer } from '@deck.gl/core/typed';
-import { makeTuMeshVolumeHeatmapLayer } from '@/components/Dashboard/Menu/TuMeshVolume';
+import useTuMeshVolume from './Menu/TuMeshVolume/useTuMeshVolume';
+import { DashboardAsset, UseMenuReturn } from './Menu/DashboardAsset';
 
 // ダッシュボード専用レイヤープロパティ
 export type DashboardLayerProps = {
   dashboardMenuId?: string;
 };
 
+// ダッシュボードフック返却値
 export type UseDashboardReturn = {
   menuItems: MenuItem[];
   selectedMenuId?: string;
@@ -18,45 +20,37 @@ export type UseDashboardReturn = {
 
 const useDashboard = (): UseDashboardReturn => {
   const [selectedMenuId, setSelectedMenuId] = useState<string>();
-  const [cachedMenuIdList, setCachedMenuIdList] = useState<string[]>([]);
   const [layers, setLayers] = useState<Layer<DashboardLayerProps>[]>([]);
   const menuItems = useMemo(getMenuItems, []);
 
+  // メニューフックリスト
+  const menuList: UseMenuReturn[] = [useTuMeshVolume()];
+
+  // 各メニューのアセットが変化したらレイヤーを更新する
+  useEffect(() => {
+    const newLayers = menuList
+      .map((menu) => menu.asset)
+      .filter((asset): asset is DashboardAsset => asset !== undefined)
+      .reduce<Layer<DashboardLayerProps>[]>((prev, asset) => {
+        prev.push(...asset.layers);
+        return prev;
+      }, []);
+    setLayers(newLayers);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [...menuList.map((menu) => menu.asset)]);
+
   const show = (menuId: string) => {
     setSelectedMenuId(menuId);
-
-    const newLayers: Layer<DashboardLayerProps>[] = [];
-    if (!cachedMenuIdList.find((id) => id === menuId)) {
-      setCachedMenuIdList([...cachedMenuIdList, menuId]);
-      // 簡易ファクトリ
-      if (menuId === 'tu-mesh-volume') {
-        newLayers.push(makeTuMeshVolumeHeatmapLayer());
-      }
-    }
-    // 選択されたメニューに所属するレイヤーのみ表示
-    const updatedLayers = layers.map((layer) => {
-      if (layer.props.dashboardMenuId === menuId) {
-        return layer.clone({
-          visible: true,
-        });
-      }
-      return layer.clone({
-        visible: false,
-      });
+    menuList.forEach((menu) => {
+      menuId === menu.menuId ? menu.show() : menu.hide();
     });
-
-    // レイヤー統合
-    setLayers([...updatedLayers, ...newLayers]);
   };
 
   const hide = () => {
     setSelectedMenuId(undefined);
-    const newLayers = layers.map<Layer>((layer) => {
-      return layer.clone({
-        visible: false,
-      });
+    menuList.forEach((menu) => {
+      menu.hide();
     });
-    setLayers(newLayers);
   };
 
   return {

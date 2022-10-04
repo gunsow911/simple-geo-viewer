@@ -4,18 +4,14 @@ import { MenuItem } from './MenuItemList';
 import { useDashboardContext } from '../useDashboardContext';
 
 const DashboardMenu = () => {
-  const { menuItems, selectedMenuId, show, hide, layers } = useDashboardContext();
+  const { menuItems, selectedMenuId, show, hide } = useDashboardContext();
 
   const backgroundStyle = {
     backgroundColor: settings.background_color,
   };
 
   const onMenuItemClick = (id: string) => {
-    if (selectedMenuId === id) {
-      hide();
-    } else {
-      show(id);
-    }
+    selectedMenuId === id ? hide() : show(id);
   };
 
   const generateMenu = (item: MenuItem) => {
