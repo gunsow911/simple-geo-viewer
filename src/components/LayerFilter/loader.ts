@@ -64,6 +64,10 @@ export const usePreferences = () => {
       // クエリパラメータでpreferencesが指定されていればそのURLを
       // 指定されていなければデフォルト設定を読み込む
       let preferencesPath = router.query.preferences as string | undefined;
+      if (preferencesPath === '') {
+        alert('preferences=に設定ファイルのあるフォルダを指定してください。');
+        return;
+      }
       if (typeof preferencesPath === 'undefined') {
         preferencesPath = `${router.basePath}/defaultPreferences`;
       }
