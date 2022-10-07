@@ -1,4 +1,4 @@
-import { Dispatch, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { GeoJsonLayer } from '@deck.gl/layers/typed';
 import { PickingInfo, Layer } from '@deck.gl/core/typed';
 import { Feature } from 'geojson';
@@ -7,15 +7,9 @@ import { DashboardAsset, UseMenuReturn } from '../DashboardAsset';
 import { colorContinuous } from '@deck.gl/carto/typed';
 import { japanmesh } from 'japanmesh';
 
-type DateSelectList = {
-  [key: string]: string;
-};
-
 export type TuMeshVolumeInfo = {
   selectedCode?: string;
-  dateSelectList: DateSelectList;
-  selectedDate: string;
-  setSelectedDate: Dispatch<string>;
+  setDate: (value: string) => void;
 };
 
 /**
@@ -23,27 +17,14 @@ export type TuMeshVolumeInfo = {
  */
 const useTuMeshVolume = (): UseMenuReturn => {
   const [asset, setAsset] = useState<DashboardAsset<TuMeshVolumeInfo> | undefined>();
-  const [selectedDate, setSelectedDate] = useState<string>('2019-10-13');
   const assetRef = useRef<DashboardAsset<TuMeshVolumeInfo> | undefined>(undefined);
   assetRef.current = asset;
   const isLoading = asset === undefined;
   const menuId = 'tu-mesh-volume';
 
-  const dateSelectList: DateSelectList = {
-    '2019-10-13': '2019年10月13日(月)',
-    '2019-10-14': '2019年10月14日(火)',
-    '2019-10-15': '2019年10月15日(水)',
-    '2019-10-16': '2019年10月16日(木)',
-    '2019-10-17': '2019年10月17日(金)',
-    '2019-10-18': '2019年10月18日(土)',
-    '2019-10-19': '2019年10月19日(日)',
-    '2020-10-11': '2020年10月11日(日)',
-    '2020-10-12': '2020年10月12日(月)',
-    '2020-10-13': '2020年10月13日(火)',
-    '2020-10-14': '2020年10月14日(水)',
-    '2020-10-15': '2020年10月15日(木)',
-    '2020-10-16': '2020年10月16日(金)',
-    '2020-10-17': '2020年10月17日(土)',
+  // 日付変更時
+  const setDate = (value: string) => {
+    console.log(value);
   };
 
   // レイヤークリック時
@@ -72,9 +53,7 @@ const useTuMeshVolume = (): UseMenuReturn => {
       ],
       info: {
         selectedCode: code,
-        dateSelectList,
-        selectedDate,
-        setSelectedDate,
+        setDate,
       },
     });
   };
@@ -127,9 +106,7 @@ const useTuMeshVolume = (): UseMenuReturn => {
       layers: [...layers.slice(0, index), newLayer, ...layers.slice(index + 1)],
       info: {
         selectedCode: undefined,
-        dateSelectList,
-        selectedDate,
-        setSelectedDate,
+        setDate,
       },
     });
   };
@@ -145,9 +122,7 @@ const useTuMeshVolume = (): UseMenuReturn => {
       layers: hideLayers,
       info: {
         selectedCode: undefined,
-        dateSelectList,
-        selectedDate,
-        setSelectedDate,
+        setDate,
       },
     });
   };
