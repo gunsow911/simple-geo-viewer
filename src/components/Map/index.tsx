@@ -23,6 +23,7 @@ import { TEMPORAL_LAYER_TYPES } from '@/components/Map/Layer/temporalLayerMaker'
 import { Preferences, Backgrounds } from '@/components/LayerFilter/loader';
 import { resolveUrl } from '@loaders.gl/gltf/src/lib/gltf-utils/resolve-url';
 import { useDashboardContext } from '../Dashboard/useDashboardContext';
+import DashboardPanelManager from '../Dashboard/DashboardPanelManager';
 
 let map: Map;
 let deck: Deck;
@@ -213,6 +214,7 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData, setsetTooltipPosition 
             <TimeSlider deck={deck} map={map} setTooltipData={setTooltipData} />
           ) : null}
         </div>
+        <DashboardPanelManager />
       </div>
     </>
   );
