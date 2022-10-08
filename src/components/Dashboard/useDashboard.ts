@@ -52,14 +52,6 @@ const useDashboard = (): UseDashboardReturn => {
   }, [...menuList.map((menu) => menu.asset)]);
 
   /**
-   * メニューのアセットを取得する
-   * @param menuId 取得するメニューID
-   */
-  const getAsset = (menuId: string) => {
-    menuList.find((menu) => menu.menuId === menuId);
-  };
-
-  /**
    * メニューを表示させる
    * @param menuId 表示させるメニューID
    */

@@ -1,6 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useDashboardContext } from '../../useDashboardContext';
 import { TuMeshVolumeInfo } from './useTuMeshVolume';
+import { Bar } from 'react-chartjs-2';
+import {
+  Chart,
+  ChartData,
+  ChartOptions,
+  BarElement,
+  LinearScale,
+  TimeScale,
+  Legend,
+} from 'chart.js';
+import dayjs from 'dayjs';
+import 'chartjs-adapter-dayjs';
+Chart.register(BarElement, LinearScale, TimeScale, Legend);
 
 type DateSelectList = {
   [key: string]: string;
@@ -29,13 +42,66 @@ const TuMeshVolumePanel = () => {
   };
 
   const { menuInfo } = useDashboardContext();
-  const [date, setDate] = useState<string>('2019-10-13');
+  const [date, setDate] = useState<string>();
   const info = menuInfo as TuMeshVolumeInfo | undefined;
 
   const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setDate(e.target.value);
     if (!info) return;
-    info.setDate(e.target.value);
+    info.onChangeDate(e.target.value);
+  };
+
+  const labelData = useMemo(() => {
+    if (!info) return [];
+    return info.volumes.map((v) => dayjs(v.d).format('YYYY-MM-DD HH:mm'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [info?.volumes]);
+
+  const volumeData = useMemo(() => {
+    if (!info) return [];
+    return info.volumes.map((v) => Number.parseFloat(v.a));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [info?.volumes]);
+
+  const options: ChartOptions<'bar'> = {
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+    animation: {
+      duration: 500,
+    },
+    scales: {
+      x: {
+        type: 'time',
+        min: '00:00',
+        max: '24:00',
+        time: {
+          unit: 'hour',
+          tooltipFormat: 'H:mm',
+          displayFormats: {
+            hour: 'H:mm',
+          },
+        },
+      },
+      y: {
+        ticks: {
+          stepSize: 10,
+        },
+      },
+    },
+  };
+
+  const data: ChartData<'bar'> = {
+    labels: labelData,
+    datasets: [
+      {
+        backgroundColor: 'rgb(9, 98, 155)',
+        borderColor: 'rgb(9, 98, 155)',
+        data: volumeData,
+      },
+    ],
   };
 
   return (
@@ -53,7 +119,7 @@ const TuMeshVolumePanel = () => {
               );
             })}
           </select>
-          {info.selectedCode ? <div className="">{info.selectedCode}</div> : <></>}
+          {info.selectedCode && <Bar data={data} options={options} />}
         </div>
       )}
     </>

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { GeoJsonLayer } from '@deck.gl/layers/typed';
 import { PickingInfo, Layer } from '@deck.gl/core/typed';
 import { Feature } from 'geojson';
@@ -6,10 +6,21 @@ import { DashboardLayerProps } from '../../useDashboard';
 import { DashboardAsset, UseMenuReturn } from '../DashboardAsset';
 import { colorContinuous } from '@deck.gl/carto/typed';
 import { japanmesh } from 'japanmesh';
+import dayjs from 'dayjs';
 
 export type TuMeshVolumeInfo = {
   selectedCode?: string;
-  setDate: (value: string) => void;
+  volumes: TuMeshVolume[];
+  onChangeDate: (value: string) => void;
+};
+
+type TuMeshVolume = {
+  d: string;
+  a: string;
+};
+
+type TuMeshVolumeData = {
+  [code: string]: TuMeshVolume[];
 };
 
 /**
@@ -17,14 +28,40 @@ export type TuMeshVolumeInfo = {
  */
 const useTuMeshVolume = (): UseMenuReturn => {
   const [asset, setAsset] = useState<DashboardAsset<TuMeshVolumeInfo> | undefined>();
+  const [data, setData] = useState<TuMeshVolumeData | undefined>();
+  const [date, setDate] = useState<string>('2019-10-13');
   const assetRef = useRef<DashboardAsset<TuMeshVolumeInfo> | undefined>(undefined);
   assetRef.current = asset;
   const isLoading = asset === undefined;
   const menuId = 'tu-mesh-volume';
 
+  useEffect(() => {
+    // 人口計算
+    const code = asset?.info.selectedCode;
+    if (!code || !date || !data || !assetRef.current) return;
+
+    const start = dayjs(date).startOf('day');
+    const end = dayjs(date).endOf('day');
+    const volumes =
+      data[code].filter((v) => {
+        const d = dayjs(v.d);
+        return start <= d && end >= d;
+      }) ?? [];
+
+    setAsset({
+      ...assetRef.current,
+      info: {
+        ...assetRef.current.info,
+        volumes: volumes,
+      },
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [date, asset?.info.selectedCode]);
+
   // 日付変更時
-  const setDate = (value: string) => {
-    console.log(value);
+  const onChangeDate = (value: string) => {
+    setDate(value);
   };
 
   // レイヤークリック時
@@ -52,8 +89,8 @@ const useTuMeshVolume = (): UseMenuReturn => {
         ...assetRef.current.layers.slice(index + 1),
       ],
       info: {
+        ...assetRef.current.info,
         selectedCode: code,
-        setDate,
       },
     });
   };
@@ -61,6 +98,8 @@ const useTuMeshVolume = (): UseMenuReturn => {
   // ロード時
   const load = (): Layer<DashboardLayerProps>[] => {
     if (asset) return asset.layers;
+
+    // 選択レイヤーを構築
     const selectedLayer = new GeoJsonLayer<Feature, DashboardLayerProps>({
       id: 'tu-mesh-volume-selected',
       dashboardMenuId: menuId,
@@ -72,10 +111,21 @@ const useTuMeshVolume = (): UseMenuReturn => {
       getFillColor: [0, 0, 255, 120],
     });
 
+    // データをロード
+    fetch('/data/nanto/tu-mesh-volume-data.json')
+      .then((data) => {
+        return data.json();
+      })
+      .then((value) => {
+        const data = value as TuMeshVolumeData;
+        setData(data);
+      });
+
+    // ヒートマップをロード
     const loadedHeatmap = new GeoJsonLayer<Feature, DashboardLayerProps>({
       id: 'tu-mesh-volume-heatmap',
       dashboardMenuId: menuId,
-      data: '/data/nanto/tu-mesh-volume.json',
+      data: '/data/nanto/tu-mesh-volume-heatmap.json',
       visible: true,
       pickable: true,
       stroked: false,
@@ -83,7 +133,7 @@ const useTuMeshVolume = (): UseMenuReturn => {
       // @ts-ignore
       getFillColor: colorContinuous({
         attr: 'v',
-        domain: [0, 40],
+        domain: [0, 300],
         colors: [
           [0, 243, 255, 170],
           [255, 57, 0, 170],
@@ -94,6 +144,7 @@ const useTuMeshVolume = (): UseMenuReturn => {
     return [loadedHeatmap, selectedLayer];
   };
 
+  // メニューの表示
   const show = () => {
     const layers = asset ? asset.layers : load();
 
@@ -106,11 +157,13 @@ const useTuMeshVolume = (): UseMenuReturn => {
       layers: [...layers.slice(0, index), newLayer, ...layers.slice(index + 1)],
       info: {
         selectedCode: undefined,
-        setDate,
+        onChangeDate,
+        volumes: [],
       },
     });
   };
 
+  // メニューの非表示
   const hide = () => {
     const layers = asset ? asset.layers : load();
     const hideLayers = layers.map((layer) => {
@@ -122,7 +175,8 @@ const useTuMeshVolume = (): UseMenuReturn => {
       layers: hideLayers,
       info: {
         selectedCode: undefined,
-        setDate,
+        onChangeDate,
+        volumes: [],
       },
     });
   };
