@@ -3,6 +3,7 @@ import { getMenuItems, MenuItem } from '@/components/Dashboard/Menu/MenuItemList
 import { Layer } from '@deck.gl/core/typed';
 import useTuMeshVolume from './Menu/TuMeshVolume/useTuMeshVolume';
 import { DashboardAsset, UseMenuReturn } from './Menu/DashboardAsset';
+import useLinkVolume from './Menu/LinkVolume/useLinkVolume';
 
 // ダッシュボード専用レイヤープロパティ
 export type DashboardLayerProps = {
@@ -26,7 +27,7 @@ const useDashboard = (): UseDashboardReturn => {
   const menuItems = useMemo(getMenuItems, []);
 
   // メニューフックリスト
-  const menuList: UseMenuReturn[] = [useTuMeshVolume()];
+  const menuList: UseMenuReturn[] = [useTuMeshVolume(), useLinkVolume()];
 
   useEffect(() => {
     // 各メニューのアセットの変更を検知

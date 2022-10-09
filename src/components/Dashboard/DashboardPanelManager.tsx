@@ -1,4 +1,5 @@
 import React from 'react';
+import LinkVolumePanel from './Menu/LinkVolume/LinkVolumePanel';
 import TuMeshVolumePanel from './Menu/TuMeshVolume/TuMeshVolumePanel';
 import { useDashboardContext } from './useDashboardContext';
 
@@ -11,6 +12,9 @@ const DashboardPanelManager = () => {
 
   if (selectedMenuId === 'tu-mesh-volume') {
     return <TuMeshVolumePanel />;
+  }
+  if (selectedMenuId === 'link-volume') {
+    return <LinkVolumePanel />;
   }
 
   return <></>;
