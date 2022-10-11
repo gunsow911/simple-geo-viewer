@@ -13,6 +13,7 @@ import {
 } from 'chart.js';
 import dayjs from 'dayjs';
 import 'chartjs-adapter-dayjs';
+import CloseButton from '@/components/Utils/CloseButton';
 Chart.register(BarElement, LinearScale, TimeScale, Legend);
 
 type DateSelectList = {
@@ -41,7 +42,7 @@ const TuMeshVolumePanel = () => {
     '2020-10-17': '2020年10月17日(土)',
   };
 
-  const { menuInfo } = useDashboardContext();
+  const { menuInfo, hide } = useDashboardContext();
   const [date, setDate] = useState<string>();
   const info = menuInfo as TuMeshVolumeInfo | undefined;
 
@@ -108,6 +109,9 @@ const TuMeshVolumePanel = () => {
     <>
       {info && (
         <div className="z-10 absolute top-2 left-2 bg-white p-2 opacity-80">
+          <div className="absolute top-1 right-1">
+            <CloseButton onClick={() => hide()} />
+          </div>
           <div className="text-lg">メッシュ人口</div>
           <div>地図をクリックすると、そのメッシュ内の人口グラフが表示されます。</div>
           <select value={date} onChange={onChange}>

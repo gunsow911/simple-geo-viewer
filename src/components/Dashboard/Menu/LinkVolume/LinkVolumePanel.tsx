@@ -14,6 +14,7 @@ import 'chartjs-adapter-dayjs';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { LinkVolumeInfo } from './useLinkVolume';
+import CloseButton from '@/components/Utils/CloseButton';
 Chart.register(BarElement, LinearScale, TimeScale, Legend);
 dayjs.extend(utc);
 
@@ -22,7 +23,7 @@ dayjs.extend(utc);
  * リンク通行量パネル
  */
 const LinkVolumePanel = () => {
-  const { menuInfo } = useDashboardContext();
+  const { menuInfo, hide } = useDashboardContext();
   const info = menuInfo as LinkVolumeInfo | undefined;
 
   const volumeData = useMemo(() => {
@@ -82,6 +83,9 @@ const LinkVolumePanel = () => {
     <>
       {info && (
         <div className="z-10 absolute top-2 left-2 bg-white p-2 opacity-80">
+          <div className="absolute top-1 right-1">
+            <CloseButton onClick={() => hide()} />
+          </div>
           <div className="text-lg">時間あたり通行人数推定</div>
           <div>路線をクリックすると、その路線内の予測グラフが表示されます。</div>
           {info.selectedLinkId && <Bar data={data} options={options} />}
