@@ -12,11 +12,10 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-dayjs';
 import dayjs from 'dayjs';
-import 'dayjs/locale/ja';
+import utc from 'dayjs/plugin/utc';
 import { LinkVolumeInfo } from './useLinkVolume';
 Chart.register(BarElement, LinearScale, TimeScale, Legend);
-
-dayjs.locale('ja');
+dayjs.extend(utc);
 
 /**
  *
@@ -28,11 +27,10 @@ const LinkVolumePanel = () => {
 
   const volumeData = useMemo(() => {
     if (!info) return [];
-    const today = dayjs().hour(0).minute(0).second(0);
-    console.log(today);
+    const today = dayjs.utc().hour(0).minute(0).second(0);
     return info.volumes.map((volume, index) => {
-      console.log(today.add(index, 'hours'));
-      return { x: today.add(index, 'hours'), y: volume };
+      const hour = today.add(index, 'hours');
+      return { x: hour, y: volume };
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [info?.volumes]);
