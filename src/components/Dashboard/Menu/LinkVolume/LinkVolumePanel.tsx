@@ -28,10 +28,12 @@ const LinkVolumePanel = () => {
   const volumeData = useMemo(() => {
     if (!info) return [];
     const today = dayjs.utc().hour(0).minute(0).second(0);
-    return info.volumes.map((volume, index) => {
-      const hour = today.add(index, 'hours');
-      return { x: hour, y: volume };
-    });
+    return (
+      info.volumes?.map((volume, index) => {
+        const hour = today.add(index, 'hours');
+        return { x: hour, y: volume };
+      }) ?? []
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [info?.volumes]);
 

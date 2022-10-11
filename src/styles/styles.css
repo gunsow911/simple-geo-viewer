@@ -107,3 +107,13 @@
 .dropdown:hover .dropdown-menu {
   display: block;
 }
+
+.dashboard .menuitem{
+  cursor: pointer;
+}
+.dashboard .menuitem:hover {
+  filter: brightness(110%);
+}
+.dashboard .menuitem.selected {
+  filter: brightness(130%);
+}
