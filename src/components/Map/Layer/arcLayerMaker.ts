@@ -48,7 +48,6 @@ class ArcLayerCreator {
 
     const result: ArcLayer<any>[] = targetLayerConfigs.map((layerConfig) => {
       const config = this.extractLayerConfig(layerConfig);
-      console.log();
       
       return new ArcLayer({
         id: layerConfig.id,
