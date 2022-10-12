@@ -48,11 +48,12 @@ class ArcLayerCreator {
 
     const result: ArcLayer<any>[] = targetLayerConfigs.map((layerConfig) => {
       const config = this.extractLayerConfig(layerConfig);
+      
       return new ArcLayer({
         id: layerConfig.id,
         visible: init,
         pickable: true,
-        data: layerConfig.data,
+        data: layerConfig.source,
         getWidth: layerConfig.width,
         getSourcePosition: (d) => d.from.coordinates,
         getTargetPosition: (d) => d.to.coordinates,
