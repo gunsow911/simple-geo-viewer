@@ -175,7 +175,11 @@ const useLinkVolume = (props: Props): UseMenuReturn => {
 
   // メニューの非表示
   const hide = () => {
-    const layers = asset ? asset.layers : load();
+    const layers = asset?.layers;
+    if (layers === undefined) {
+      setAsset(undefined);
+      return;
+    }
     const hideLayers = layers.map((layer) => {
       return layer.clone({
         visible: false,
