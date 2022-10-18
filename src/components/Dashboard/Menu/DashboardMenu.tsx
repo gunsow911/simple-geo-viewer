@@ -22,6 +22,10 @@ const DashboardMenu = () => {
     return result ? 'selected' : '';
   };
 
+  const isDisabled = (item: Item) => {
+    return item.disabled === true;
+  };
+
   const selectedClass = (item: Item) => {
     return selectedMenuId === item.id ? 'selected' : '';
   };
@@ -31,21 +35,21 @@ const DashboardMenu = () => {
       <>
         <div className="flex-col">
           <button
-            className={'peer mr-1 py-1 px-3 menuitem ' + selectedChildrenClass(item.subList)}
+            className={`peer mr-1 py-1 px-3 menuitem ${selectedChildrenClass(item.subList)}`}
             style={backgroundStyle}
           >
-            <span className="mr-1 text-white">{item.name}</span>
+            <span className={`mr-1 text-white`}>{item.name}</span>
           </button>
           <div className="hidden absolute peer-hover:flex hover:flex z-50 flex-col">
             {item.subList.map((sub) => {
               return (
                 <div
                   key={sub.id}
-                  className={'py-1 px-3 menuitem ' + selectedClass(sub)}
+                  className={`py-1 px-3 ${isDisabled(sub) ? '' : 'menuitem'} ${selectedClass(sub)}`}
                   style={backgroundStyle}
                   onClick={() => onMenuItemClick(sub)}
                 >
-                  <a className="text-white" href="#">
+                  <a className={`${isDisabled(sub) ? 'text-gray-300' : 'text-white'}`} href="#">
                     {sub.name}
                   </a>
                 </div>
@@ -57,11 +61,13 @@ const DashboardMenu = () => {
     ) : (
       <li
         key={item.id}
-        className={'mr-1 hover:bg-sky-700 menuitem ' + selectedClass(item)}
+        className={`mr-1 ${isDisabled(item) ? '' : 'menuitem'} ${selectedClass(item)}`}
         onClick={() => onMenuItemClick(item)}
       >
         <a
-          className="block whitespace-no-wrap py-1 px-3 text-white"
+          className={`block whitespace-no-wrap py-1 px-3 ${
+            isDisabled(item) ? 'text-gray-300' : 'text-white'
+          }`}
           href="#"
           style={backgroundStyle}
         >
