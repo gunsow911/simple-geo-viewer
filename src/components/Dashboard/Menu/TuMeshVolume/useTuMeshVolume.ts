@@ -100,7 +100,7 @@ const useTuMeshVolume = (props: Props): UseMenuReturn => {
     });
 
     // データをロード
-    fetch('/data/nanto/tu-mesh-volume-data.jsonl')
+    fetch('/data/dashboard/tu-mesh-volume-data.jsonl')
       .then((data) => data.text())
       .then((t) => {
         const result = t
@@ -118,7 +118,7 @@ const useTuMeshVolume = (props: Props): UseMenuReturn => {
     const loadedHeatmap = new GeoJsonLayer<Feature, DashboardLayerProps>({
       id: 'tu-mesh-volume-heatmap',
       dashboardMenuId: menuId,
-      data: '/data/nanto/tu-mesh-volume-heatmap.json',
+      data: '/data/dashboard/tu-mesh-volume-heatmap.json',
       visible: true,
       pickable: true,
       stroked: false,
