@@ -6,21 +6,14 @@ import { DashboardLayerProps } from '../../useDashboard';
 import { DashboardAsset, UseMenuReturn } from '../DashboardAsset';
 import { colorContinuous } from '@deck.gl/carto/typed';
 import { japanmesh } from 'japanmesh';
-import dayjs from 'dayjs';
 
 export type TuMeshVolumeInfo = {
   selectedCode?: string;
-  volumes: TuMeshVolume[];
-  onChangeDate: (value: string) => void;
-};
-
-type TuMeshVolume = {
-  d: string;
-  a: string;
+  volumes: number[];
 };
 
 type TuMeshVolumeData = {
-  [code: string]: TuMeshVolume[];
+  [code: string]: number[];
 };
 
 type Props = {
@@ -33,7 +26,6 @@ type Props = {
 const useTuMeshVolume = (props: Props): UseMenuReturn => {
   const [asset, setAsset] = useState<DashboardAsset<TuMeshVolumeInfo> | undefined>();
   const [data, setData] = useState<TuMeshVolumeData | undefined>();
-  const [date, setDate] = useState<string>('2019-10-13');
   const assetRef = useRef<DashboardAsset<TuMeshVolumeInfo> | undefined>(undefined);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -46,15 +38,8 @@ const useTuMeshVolume = (props: Props): UseMenuReturn => {
   useEffect(() => {
     // 人口計算
     const code = asset?.info.selectedCode;
-    if (!code || !date || !data || !assetRef.current) return;
-
-    const start = dayjs(date).startOf('day');
-    const end = dayjs(date).endOf('day');
-    const volumes =
-      data[code].filter((v) => {
-        const d = dayjs(v.d);
-        return start <= d && end >= d;
-      }) ?? [];
+    if (!code || !data || !assetRef.current) return;
+    const volumes = data[code] ?? [];
 
     setAsset({
       ...assetRef.current,
@@ -65,12 +50,7 @@ const useTuMeshVolume = (props: Props): UseMenuReturn => {
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [date, asset?.info.selectedCode]);
-
-  // 日付変更時
-  const onChangeDate = (value: string) => {
-    setDate(value);
-  };
+  }, [asset?.info.selectedCode]);
 
   // レイヤークリック時
   const onLayerClick = (pickingInfo: PickingInfo) => {
@@ -120,13 +100,18 @@ const useTuMeshVolume = (props: Props): UseMenuReturn => {
     });
 
     // データをロード
-    fetch('/data/nanto/tu-mesh-volume-data.json')
-      .then((data) => {
-        return data.json();
-      })
-      .then((value) => {
-        const data = value as TuMeshVolumeData;
-        setData(data);
+    fetch('/data/nanto/tu-mesh-volume-data.jsonl')
+      .then((data) => data.text())
+      .then((t) => {
+        const result = t
+          .split('\n')
+          .filter((json) => json.length > 0)
+          .reduce<TuMeshVolumeData>((current, json) => {
+            const v = JSON.parse(json) as { code: string; values: number[] };
+            current[v.code] = v.values;
+            return current;
+          }, {});
+        setData(result);
       });
 
     // ヒートマップをロード
@@ -165,7 +150,6 @@ const useTuMeshVolume = (props: Props): UseMenuReturn => {
       layers: [...layers.slice(0, index), newLayer, ...layers.slice(index + 1)],
       info: {
         selectedCode: undefined,
-        onChangeDate,
         volumes: [],
       },
     });
@@ -183,7 +167,6 @@ const useTuMeshVolume = (props: Props): UseMenuReturn => {
       layers: hideLayers,
       info: {
         selectedCode: undefined,
-        onChangeDate,
         volumes: [],
       },
     });

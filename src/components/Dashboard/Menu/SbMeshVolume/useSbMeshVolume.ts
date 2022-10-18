@@ -6,14 +6,21 @@ import { DashboardLayerProps } from '../../useDashboard';
 import { DashboardAsset, UseMenuReturn } from '../DashboardAsset';
 import { colorContinuous } from '@deck.gl/carto/typed';
 import { japanmesh } from 'japanmesh';
+import dayjs from 'dayjs';
 
 export type SbMeshVolumeInfo = {
   selectedCode?: string;
-  volumes: number[];
+  volumes: SbMeshVolume[];
+  onChangeDate: (value: string) => void;
+};
+
+type SbMeshVolume = {
+  d: string;
+  a: string;
 };
 
 type SbMeshVolumeData = {
-  [code: string]: number[];
+  [code: string]: SbMeshVolume[];
 };
 
 type Props = {
@@ -26,6 +33,7 @@ type Props = {
 const useSbMeshVolume = (props: Props): UseMenuReturn => {
   const [asset, setAsset] = useState<DashboardAsset<SbMeshVolumeInfo> | undefined>();
   const [data, setData] = useState<SbMeshVolumeData | undefined>();
+  const [date, setDate] = useState<string>('2019-10-13');
   const assetRef = useRef<DashboardAsset<SbMeshVolumeInfo> | undefined>(undefined);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -38,8 +46,15 @@ const useSbMeshVolume = (props: Props): UseMenuReturn => {
   useEffect(() => {
     // 人口計算
     const code = asset?.info.selectedCode;
-    if (!code || !data || !assetRef.current) return;
-    const volumes = data[code] ?? [];
+    if (!code || !date || !data || !assetRef.current) return;
+
+    const start = dayjs(date).startOf('day');
+    const end = dayjs(date).endOf('day');
+    const volumes =
+      data[code].filter((v) => {
+        const d = dayjs(v.d);
+        return start <= d && end >= d;
+      }) ?? [];
 
     setAsset({
       ...assetRef.current,
@@ -50,7 +65,12 @@ const useSbMeshVolume = (props: Props): UseMenuReturn => {
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [asset?.info.selectedCode]);
+  }, [date, asset?.info.selectedCode]);
+
+  // 日付変更時
+  const onChangeDate = (value: string) => {
+    setDate(value);
+  };
 
   // レイヤークリック時
   const onLayerClick = (pickingInfo: PickingInfo) => {
@@ -100,18 +120,13 @@ const useSbMeshVolume = (props: Props): UseMenuReturn => {
     });
 
     // データをロード
-    fetch('/data/nanto/sb-mesh-volume-data.jsonl')
-      .then((data) => data.text())
-      .then((t) => {
-        const result = t
-          .split('\n')
-          .filter((json) => json.length > 0)
-          .reduce<SbMeshVolumeData>((current, json) => {
-            const v = JSON.parse(json) as { code: string; values: number[] };
-            current[v.code] = v.values;
-            return current;
-          }, {});
-        setData(result);
+    fetch('/data/nanto/sb-mesh-volume-data.json')
+      .then((data) => {
+        return data.json();
+      })
+      .then((value) => {
+        const data = value as SbMeshVolumeData;
+        setData(data);
       });
 
     // ヒートマップをロード
@@ -150,6 +165,7 @@ const useSbMeshVolume = (props: Props): UseMenuReturn => {
       layers: [...layers.slice(0, index), newLayer, ...layers.slice(index + 1)],
       info: {
         selectedCode: undefined,
+        onChangeDate,
         volumes: [],
       },
     });
@@ -167,6 +183,7 @@ const useSbMeshVolume = (props: Props): UseMenuReturn => {
       layers: hideLayers,
       info: {
         selectedCode: undefined,
+        onChangeDate,
         volumes: [],
       },
     });
