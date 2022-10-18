@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { GeoJsonLayer } from '@deck.gl/layers/typed';
 import { PickingInfo, Layer } from '@deck.gl/core/typed';
 import { Feature, Geometry } from 'geojson';
@@ -20,16 +20,23 @@ type LinkVolumeData = {
   [id: string]: number[];
 };
 
+type Props = {
+  maxVolume?: number;
+};
+
 /**
  * リンク通行量フック
  */
-const useLinkVolume = (): UseMenuReturn => {
+const useLinkVolume = (props: Props): UseMenuReturn => {
   const [asset, setAsset] = useState<DashboardAsset<LinkVolumeInfo> | undefined>();
   const [data, setData] = useState<LinkVolumeData | undefined>();
   const assetRef = useRef<DashboardAsset<LinkVolumeInfo> | undefined>(undefined);
   assetRef.current = asset;
   const isLoading = asset === undefined;
   const menuId = 'link-volume';
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const maxVolume = useMemo<number>(() => props?.maxVolume ?? 100, []);
 
   useEffect(() => {
     const linkId = asset?.info.selectedLinkId;
@@ -123,7 +130,7 @@ const useLinkVolume = (): UseMenuReturn => {
         // @ts-ignore
         getLineColor: colorContinuous({
           attr: 'max',
-          domain: [0, 100],
+          domain: [0, maxVolume],
           colors: [
             [0, 243, 255, 170],
             [255, 57, 0, 170],

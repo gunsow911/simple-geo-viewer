@@ -27,7 +27,10 @@ const useDashboard = (): UseDashboardReturn => {
   const menuItems = useMemo(getMenuItems, []);
 
   // メニューフックリスト
-  const menuList: UseMenuReturn[] = [useTuMeshVolume(), useLinkVolume()];
+  const menuList: UseMenuReturn[] = [
+    useTuMeshVolume({ maxVolume: 300 }),
+    useLinkVolume({ maxVolume: 300 }),
+  ];
 
   useEffect(() => {
     // 各メニューのアセットの変更を検知

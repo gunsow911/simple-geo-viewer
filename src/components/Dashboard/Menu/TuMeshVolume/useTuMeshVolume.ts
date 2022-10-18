@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { GeoJsonLayer } from '@deck.gl/layers/typed';
 import { PickingInfo, Layer } from '@deck.gl/core/typed';
 import { Feature } from 'geojson';
@@ -23,14 +23,22 @@ type TuMeshVolumeData = {
   [code: string]: TuMeshVolume[];
 };
 
+type Props = {
+  maxVolume?: number;
+};
+
 /**
  * 東京大学メッシュ人口フック
  */
-const useTuMeshVolume = (): UseMenuReturn => {
+const useTuMeshVolume = (props: Props): UseMenuReturn => {
   const [asset, setAsset] = useState<DashboardAsset<TuMeshVolumeInfo> | undefined>();
   const [data, setData] = useState<TuMeshVolumeData | undefined>();
   const [date, setDate] = useState<string>('2019-10-13');
   const assetRef = useRef<DashboardAsset<TuMeshVolumeInfo> | undefined>(undefined);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const maxVolume = useMemo<number>(() => props?.maxVolume ?? 100, []);
+
   assetRef.current = asset;
   const isLoading = asset === undefined;
   const menuId = 'tu-mesh-volume';
@@ -133,7 +141,7 @@ const useTuMeshVolume = (): UseMenuReturn => {
       // @ts-ignore
       getFillColor: colorContinuous({
         attr: 'v',
-        domain: [0, 300],
+        domain: [0, maxVolume],
         colors: [
           [0, 243, 255, 170],
           [255, 57, 0, 170],
