@@ -20,7 +20,6 @@ export const getMenuItems = (): MenuItem[] => {
         {
           id: 'sb-mesh-volume',
           name: 'ソフトバンクデータ',
-          disabled: true,
         },
         {
           id: 'tu-mesh-volume',

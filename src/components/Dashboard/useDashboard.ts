@@ -4,6 +4,7 @@ import { Layer } from '@deck.gl/core/typed';
 import useTuMeshVolume from './Menu/TuMeshVolume/useTuMeshVolume';
 import { DashboardAsset, UseMenuReturn } from './Menu/DashboardAsset';
 import useLinkVolume from './Menu/LinkVolume/useLinkVolume';
+import useSbMeshVolume from './Menu/SbMeshVolume/useSbMeshVolume';
 
 // ダッシュボード専用レイヤープロパティ
 export type DashboardLayerProps = {
@@ -28,6 +29,7 @@ const useDashboard = (): UseDashboardReturn => {
 
   // メニューフックリスト
   const menuList: UseMenuReturn[] = [
+    useSbMeshVolume({ maxVolume: 300 }),
     useTuMeshVolume({ maxVolume: 300 }),
     useLinkVolume({ maxVolume: 300 }),
   ];
