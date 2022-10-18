@@ -1,6 +1,5 @@
 {
-  "title": "デジタル南砺",
+  "title": "Simple Geo Viewer",
   "background_color": "#17a2b8",
-  "tooltip_background_color": "#ffffff",
-  "dashboard_enable": false
+  "tooltip_background_color": "#ffffb0"
 }
