@@ -1,5 +1,6 @@
 {
   "title": "デジタル南砺",
   "background_color": "#17a2b8",
-  "tooltip_background_color": "#ffffff"
+  "tooltip_background_color": "#ffffff",
+  "dashboard_enable": false
 }

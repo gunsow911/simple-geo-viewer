@@ -101,7 +101,7 @@ const useLinkVolume = (props: Props): UseMenuReturn => {
     });
 
     // データをロード
-    fetch('/data/dashboard/link-volume-data.jsonl')
+    fetch('/dashboard/data/link-volume-data.jsonl')
       .then((data) => data.text())
       .then((t) => {
         const result = t
@@ -120,7 +120,7 @@ const useLinkVolume = (props: Props): UseMenuReturn => {
       {
         id: 'link-volume-heatmap',
         dashboardMenuId: menuId,
-        data: loadJsonl('/data/dashboard/link-volume-heatmap.jsonl'),
+        data: loadJsonl('/dashboard/data/link-volume-heatmap.jsonl'),
         visible: true,
         pickable: true,
         stroked: false,

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getMenuItems, MenuItem } from '@/components/Dashboard/Menu/MenuItemList';
 import { Layer } from '@deck.gl/core/typed';
 import { DashboardAsset, UseMenuReturn } from './Menu/DashboardAsset';
@@ -13,19 +13,44 @@ export type DashboardLayerProps = {
 
 // ダッシュボードフック返却値
 export type UseDashboardReturn = {
+  /**
+   * メニューアイテムリスト
+   */
   menuItems: MenuItem[];
-  menuInfo: any;
+  /**
+   * 選択中のメニュー情報
+   * 各種メニューコンポーネントで適宜キャストを行う
+   * 選択していない場合、undefined
+   */
+  menuInfo?: any;
+  /**
+   * 選択中のメニューID
+   */
   selectedMenuId?: string;
+  /**
+   * ダッシュボードが所持しているレイヤーリスト
+   */
   layers: Layer[];
+  /**
+   * メニューのダッシュボードを表示させる
+   * @param menuId メニューID
+   */
   show: (menuId: string) => void;
+  /**
+   * メニューのダッシュボードを非表示にさせる
+   */
   hide: () => void;
 };
 
+/**
+ * ダッシュボードフック
+ * ダッシュボード全体のデータを提供する
+ */
 const useDashboard = (): UseDashboardReturn => {
   const [selectedMenuId, setSelectedMenuId] = useState<string>();
   const [layers, setLayers] = useState<Layer<DashboardLayerProps>[]>([]);
   const [menuInfo, setMenuInfo] = useState<any | undefined>(undefined);
-  const menuItems = useMemo(getMenuItems, []);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
   // メニューフックリスト
   const menuList: UseMenuReturn[] = [
@@ -33,6 +58,11 @@ const useDashboard = (): UseDashboardReturn => {
     useTuMeshVolume({ maxVolume: 300 }),
     useLinkVolume({ maxVolume: 300 }),
   ];
+
+  // メニュー設定をロード
+  useEffect(() => {
+    getMenuItems().then(setMenuItems);
+  }, []);
 
   useEffect(() => {
     // 各メニューのアセットの変更を検知
