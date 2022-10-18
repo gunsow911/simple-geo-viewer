@@ -2,11 +2,7 @@ import React, { useContext } from 'react';
 import { context } from '@/pages';
 import DashboardMenu from '@/components/Dashboard/Menu/DashboardMenu';
 
-type Props = {
-  onDashboardMenuClick?: (id: string) => void;
-};
-
-const Header = (props: Props) => {
+const Header = () => {
   const { preferences } = useContext(context);
   const headerStyle = {
     backgroundColor: preferences.settings.background_color,
