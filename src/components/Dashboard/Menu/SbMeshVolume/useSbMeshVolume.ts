@@ -24,6 +24,7 @@ type SbMeshVolumeData = {
 };
 
 type Props = {
+  subDirectoryPath: string;
   maxVolume?: number;
 };
 
@@ -120,7 +121,7 @@ const useSbMeshVolume = (props: Props): UseMenuReturn => {
     });
 
     // データをロード
-    fetch('/dashboard/data/sb-mesh-volume-data.json')
+    fetch(`${props.subDirectoryPath}/dashboard/data/sb-mesh-volume-data.json`)
       .then((data) => {
         return data.json();
       })
@@ -133,7 +134,7 @@ const useSbMeshVolume = (props: Props): UseMenuReturn => {
     const loadedHeatmap = new GeoJsonLayer<Feature, DashboardLayerProps>({
       id: 'sb-mesh-volume-heatmap',
       dashboardMenuId: menuId,
-      data: '/dashboard/data/sb-mesh-volume-heatmap.json',
+      data: `${props.subDirectoryPath}/dashboard/data/sb-mesh-volume-heatmap.json`,
       visible: true,
       pickable: true,
       stroked: false,

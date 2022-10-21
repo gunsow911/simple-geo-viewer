@@ -5,6 +5,7 @@ import { DashboardAsset, UseMenuReturn } from './Menu/DashboardAsset';
 import useLinkVolume from './Menu/LinkVolume/useLinkVolume';
 import useTuMeshVolume from './Menu/TuMeshVolume/useTuMeshVolume';
 import useSbMeshVolume from './Menu/SbMeshVolume/useSbMeshVolume';
+import { useRouter } from 'next/router';
 
 // ダッシュボード専用レイヤープロパティ
 export type DashboardLayerProps = {
@@ -51,17 +52,20 @@ const useDashboard = (): UseDashboardReturn => {
   const [layers, setLayers] = useState<Layer<DashboardLayerProps>[]>([]);
   const [menuInfo, setMenuInfo] = useState<any | undefined>(undefined);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const router = useRouter();
+  const subDirectoryPath = router.basePath;
 
   // メニューフックリスト
   const menuList: UseMenuReturn[] = [
-    useSbMeshVolume({ maxVolume: 300 }),
-    useTuMeshVolume({ maxVolume: 300 }),
-    useLinkVolume({ maxVolume: 300 }),
+    useSbMeshVolume({ maxVolume: 300, subDirectoryPath }),
+    useTuMeshVolume({ maxVolume: 300, subDirectoryPath }),
+    useLinkVolume({ maxVolume: 300, subDirectoryPath }),
   ];
 
   // メニュー設定をロード
   useEffect(() => {
-    getMenuItems().then(setMenuItems);
+    getMenuItems(subDirectoryPath).then(setMenuItems);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
