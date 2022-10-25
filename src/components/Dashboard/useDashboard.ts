@@ -57,8 +57,8 @@ const useDashboard = (): UseDashboardReturn => {
 
   // メニューフックリスト
   const menuList: UseMenuReturn[] = [
-    useSbMeshVolume({ maxVolume: 300, subDirectoryPath }),
-    useTuMeshVolume({ maxVolume: 300, subDirectoryPath }),
+    useSbMeshVolume({ maxVolume: 800, subDirectoryPath }),
+    useTuMeshVolume({ maxVolume: 500, subDirectoryPath }),
     useLinkVolume({ maxVolume: 300, subDirectoryPath }),
   ];
 
