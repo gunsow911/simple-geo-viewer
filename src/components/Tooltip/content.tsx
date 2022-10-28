@@ -111,7 +111,7 @@ const TooltipDefaultBody: VFC<TooltipBodyProps> = ({ properties, labels }) => {
 
           return (
             <tr key={key}>
-              <td className="whitespace-nowrap font-bold align-top">{key}</td>
+              <td className="whitespace-nomal font-bold align-top w-24">{key}</td>
               <td className="whitespace-nomal break-all" style={tdStyle}>
                 {content}
               </td>
@@ -171,7 +171,7 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
             src={imageValue}
             style={{
               objectFit: 'cover',
-              objectPosition: '0% 50%',
+              objectPosition: '50% 50%',
               height: 'calc(50%)',
             }}
           />
@@ -251,7 +251,7 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
 
                 return (
                   <tr key={key}>
-                    <td className="whitespace-nomal font-bold align-top">{key}</td>
+                    <td className="whitespace-nomal font-bold align-top w-24">{key}</td>
                     <td className="whitespace-nomal break-all" style={tdStyle}>
                       {content}
                     </td>
@@ -317,7 +317,7 @@ const TooltipTableBody: VFC<TooltipTableBodyProps> = ({ properties, labels, id }
 
             return (
               <tr key={key}>
-                <td className="whitespace-nowrap font-bold align-top">{key}</td>
+                <td className="whitespace-nomal font-bold align-top w-24">{key}</td>
                 <td className="whitespace-nomal break-all" style={tdStyle}>
                   {content}
                 </td>
