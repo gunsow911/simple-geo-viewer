@@ -251,7 +251,7 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
 
                 return (
                   <tr key={key}>
-                    <td className="whitespace-nowrap font-bold align-top">{key}</td>
+                    <td className="whitespace-nomal font-bold align-top">{key}</td>
                     <td className="whitespace-nomal break-all" style={tdStyle}>
                       {content}
                     </td>
