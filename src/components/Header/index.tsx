@@ -1,15 +1,15 @@
 import React, { useContext, useEffect } from 'react';
 import { context } from '@/pages';
 import DisasterSelector  from "@/components/Header/DisasterSelector";
+import { useRouter } from 'next/router';
 
 function Header() {
   const { preferences } = useContext(context);
-  const { isDisaster } = useContext(context)
+  const router = useRouter();
+  const isDisaster  = router.query.isDisaster as boolean | undefined;
   const headerStyle = {
     backgroundColor: preferences.settings.background_color,
   };
-  
-  console.log(isDisaster);
   
   return (
     <header style={headerStyle} className="h-full flex justify-left items-center">

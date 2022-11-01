@@ -77,7 +77,7 @@ const App: NextPage = () => {
   const router = useRouter();
   const { preferences, setPreferences } = usePreferences();
   const { currentDisaster, setCurrentDisaster } = useContextValues();
-  const { setDisasters } = useContextValues();
+  const { disasters, setDisasters } = useContextValues();
   const { isDisaster, setIsDisaster } = useContextValues();
 
   useEffect(() => {
@@ -99,10 +99,10 @@ const App: NextPage = () => {
         if (typeof setDisasters === 'undefined'){
           return;
         }
-        setIsDisaster(isdisaster);
+        setIsDisaster(() => isdisaster);
         preferencesPath = `${router.basePath}/disaster`;
         const disastersData = await fetchJson(`${preferencesPath}/disasters.json`);
-        setDisasters(disastersData);
+        setDisasters(() => disastersData);
         const disastersPath = disastersData.data[disastersData.default].value as string;
         preferencesPath = `${preferencesPath}/${disastersPath}`;
         if (typeof currentDisaster !== 'undefined' && typeof setCurrentDisaster !== 'undefined' && currentDisaster !== '') {
@@ -110,6 +110,7 @@ const App: NextPage = () => {
           preferencesPath = `${preferencesPath}/${currentDisaster}`;
         };
         loadedPreferences = await fetchJsons(preferencesPath);
+        setCurrentDisaster(() => disastersPath);
       }else{
         loadedPreferences = await fetchJsons(preferencesPath);
       }

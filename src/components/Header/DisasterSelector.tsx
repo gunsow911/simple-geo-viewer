@@ -17,11 +17,15 @@ const DisasterSelector = () => {
   const entries: disaster[] = disasters?.data;
   return (
     <select onChange={(e) => updateCurrentDisaster(e)}>
-      {entries.map((disaster) => (
-        <option key={disaster.value} value={disaster.value}>
-          {disaster.text}
-        </option>
-      ))}
+      {
+        entries !== undefined ? (
+          entries.map((disaster) => (
+            <option key={disaster.value} value={disaster.value}>
+              {disaster.text}
+            </option>
+          ))
+        ) : null
+      }
     </select>
   );
 };
