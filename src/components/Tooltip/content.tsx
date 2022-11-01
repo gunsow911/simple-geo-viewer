@@ -86,7 +86,7 @@ const TooltipDefaultBody: VFC<TooltipBodyProps> = ({ properties, labels }) => {
             content = 'N/A';
             if (value.startsWith('http')) content = <img src={value} />; // 値がURLではない場合があるのでチェック
           }
-          if (key === 'URL' || key === '関連URL') {
+          if ((key === 'URL' || key === '関連URL') && value !== 'null') {
             content = (
               <a
                 className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
@@ -226,7 +226,7 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
 
                 let content: JSX.Element | string;
                 content = value;
-                if (key === 'URL' || key === '関連URL') {
+                if ((key === 'URL' || key === '関連URL') && value !== 'null') {
                   content = (
                     <a
                       className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
