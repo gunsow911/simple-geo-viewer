@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 export type SbMeshVolumeInfo = {
   selectedCode?: string;
   volumes: SbMeshVolume[];
+  date?: string;
   onChangeDate: (value: string) => void;
 };
 
@@ -62,6 +63,7 @@ const useSbMeshVolume = (props: Props): UseMenuReturn => {
       info: {
         ...assetRef.current.info,
         volumes: volumes,
+        date: dayjs(date).format('YYYY-MM-DD'),
       },
     });
 
@@ -166,6 +168,7 @@ const useSbMeshVolume = (props: Props): UseMenuReturn => {
       layers: [...layers.slice(0, index), newLayer, ...layers.slice(index + 1)],
       info: {
         selectedCode: undefined,
+        date: undefined,
         onChangeDate,
         volumes: [],
       },
@@ -188,6 +191,7 @@ const useSbMeshVolume = (props: Props): UseMenuReturn => {
       layers: hideLayers,
       info: {
         selectedCode: undefined,
+        date: undefined,
         onChangeDate,
         volumes: [],
       },

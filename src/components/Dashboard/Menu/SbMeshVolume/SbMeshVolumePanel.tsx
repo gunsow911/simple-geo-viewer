@@ -43,11 +43,9 @@ const SbMeshVolumePanel = () => {
   };
 
   const { menuInfo, hide } = useDashboardContext();
-  const [date, setDate] = useState<string>();
   const info = menuInfo as SbMeshVolumeInfo | undefined;
 
   const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setDate(e.target.value);
     if (!info) return;
     info.onChangeDate(e.target.value);
   };
@@ -114,7 +112,7 @@ const SbMeshVolumePanel = () => {
           </div>
           <div className="text-lg">メッシュ人口</div>
           <div>地図をクリックすると、そのメッシュ内の人口グラフが表示されます。</div>
-          <select value={date} onChange={onChange}>
+          <select value={info.date} onChange={onChange}>
             {Object.keys(dateSelectList).map((key) => {
               return (
                 <option key={key} value={key}>
