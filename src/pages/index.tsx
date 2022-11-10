@@ -6,7 +6,7 @@ import Map from '@/components/Map';
 import { clickedLayerViewState } from '@/components/Map/types';
 import { defaultLegendId } from '@/components/Map/Legend/layerIds';
 import { Tooltip } from '@/components/Tooltip/content';
-import { removeExistingTooltip } from '@/components/Tooltip/show';
+import { removeExistingTooltip, dragStartToolchip, onDragOverToolchip, onDropToolchip } from '@/components/Tooltip/show';
 import MouseTooltip, { MouseTooltipData } from '@/components/MouseTooltip';
 import { useRouter } from 'next/router';
 import { usePreferences, Preferences } from '@/components/LayerFilter/loader';
@@ -59,7 +59,7 @@ const App: NextPage = () => {
   });
 
   const [setTooltipPosition, setsetTooltipPosition] = useState<any>({});
-
+  const [modalOpen, setModalOpen] = useState<any>({modalIsOpen: false});
   const contextValues = useContextValues();
   const { preferences } = usePreferences();
   if (preferences === null) {
@@ -97,12 +97,17 @@ const App: NextPage = () => {
                 </div>
               ) : undefined}
             </div>
-            <div id="MapArea" className="relative w-4/5 m-2 pb-5 h-full">
+            <div id="MapArea" className="relative w-4/5 m-2 pb-5 h-full" 
+                 onDragOver = { (event) => {onDragOverToolchip(event)}}
+                 onDrop = { (event) => {onDropToolchip(event)}}>
               <Map setTooltipData={setTooltipData} setsetTooltipPosition={setsetTooltipPosition} />
               {tooltipData.tooltip ? (
                 <div
                   className="w-1/4 border-2 border-black z-50"
                   style={{ ...setTooltipPosition, ...toolChipBaseStyle }}
+                  id="toolchip"
+                  draggable="true"
+                  onDragStart = { (event) => {dragStartToolchip(event);}}
                 >
                   {tooltipData.tooltip ? <Tooltip {...tooltipData.tooltip} /> : undefined}
                   <div className="text-right absolute top-0 right-2">
