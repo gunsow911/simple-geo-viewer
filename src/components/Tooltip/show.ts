@@ -50,6 +50,7 @@ export const onDragOverToolchip = function(event: DragEvent){
 export const onDropToolchip = function(event: DragEvent){
   event.preventDefault();
   let toolchip = document.getElementById("toolchip");
+  if (toolchip === null) return;
   const parent = document.getElementById("MapArea");
   const body = document.getElementsByTagName("body")[0];
   const tooltipWidth = body.clientWidth * 0.25;
