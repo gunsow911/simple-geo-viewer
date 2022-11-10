@@ -38,34 +38,3 @@ export const show = (
     };
   });
 };
-
-export const dragStartToolchip = function (event: any) {};
-
-export const onDragOverToolchip = function (event: any) {
-  event.preventDefault();
-};
-
-export const onDropToolchip = function (event: any) {
-  event.preventDefault();
-  let toolchip = document.getElementById('toolchip');
-  if (toolchip === null) return;
-  const parent = document.getElementById('MapArea');
-  const body = document.getElementsByTagName('body')[0];
-  const tooltipWidth = body.clientWidth * 0.25;
-  const tooltipHeight = body.clientHeight * 0.25;
-  const parentWidth = parent !== null ? parent.clientWidth : 10;
-  const parentHeight = parent !== null ? parent.clientHeight : 10;
-
-  let x = event.pageX - toolchip.offsetLeft;
-  let y = event.pageY - toolchip.offsetTop;
-
-  // if (x + tooltipWidth +40 > parentWidth) {
-  //   x = parentWidth -tooltipWidth -40;
-  // }
-
-  // if (y + tooltipHeight +300 > parentHeight) {
-  //   y = parentHeight - tooltipHeight -300;
-  // }
-  toolchip.style.top = `${String(y)}px`;
-  toolchip.style.left = `${String(x)}px`;
-};
