@@ -60,7 +60,6 @@ const App: NextPage = () => {
   });
 
   const [setTooltipPosition, setsetTooltipPosition] = useState<any>({});
-  const [modalOpen, setModalOpen] = useState<any>({ modalIsOpen: false });
   const contextValues = useContextValues();
   const { preferences } = usePreferences();
   if (preferences === null) {
@@ -101,11 +100,12 @@ const App: NextPage = () => {
             <div id="MapArea" className="relative w-4/5 m-2 pb-5 h-full">
               <Map setTooltipData={setTooltipData} setsetTooltipPosition={setsetTooltipPosition} />
               {tooltipData.tooltip ? (
-                <Draggable>
+                <Draggable bounds="parent" handle="#handle">
                   <div
                     className="w-1/4 border-2 border-black z-50"
                     style={{ ...setTooltipPosition, ...toolChipBaseStyle }}
                   >
+                    <div id="handle" className="h-7 w-full bg-gray-400"></div>
                     {tooltipData.tooltip ? <Tooltip {...tooltipData.tooltip} /> : undefined}
                     <div className="text-right absolute top-0 right-2">
                       <button
