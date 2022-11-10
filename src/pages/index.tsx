@@ -105,8 +105,6 @@ const App: NextPage = () => {
                   <div
                     className="w-1/4 border-2 border-black z-50"
                     style={{ ...setTooltipPosition, ...toolChipBaseStyle }}
-                    id="toolchip"
-                    draggable="true"
                   >
                     {tooltipData.tooltip ? <Tooltip {...tooltipData.tooltip} /> : undefined}
                     <div className="text-right absolute top-0 right-2">
