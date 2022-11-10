@@ -58,7 +58,7 @@ export const onDropToolchip = function(event: DragEvent){
   const parentHeight = parent !== null ? (parent.clientHeight) : 10 ;
 
   let x = event.pageX - toolchip.offsetLeft;
-  let y = event.pageY - toolchip?.offsetTop;
+  let y = event.pageY - toolchip.offsetTop;
 
   // if (x + tooltipWidth +40 > parentWidth) {
   //   x = parentWidth -tooltipWidth -40;
