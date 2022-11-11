@@ -105,7 +105,6 @@ const App: NextPage = () => {
                     className="w-1/4 border-2 border-black z-50"
                     style={{ ...setTooltipPosition, ...toolChipBaseStyle }}
                   >
-                    <div id="handle" className="h-7 w-full bg-gray-400"></div>
                     {tooltipData.tooltip ? <Tooltip {...tooltipData.tooltip} /> : undefined}
                     <div className="text-right absolute top-0 right-2">
                       <button
