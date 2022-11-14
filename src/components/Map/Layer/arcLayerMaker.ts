@@ -5,7 +5,6 @@ import { ArcLayer } from '@deck.gl/layers';
 import { show } from '@/components/Tooltip/show';
 import { Dispatch, SetStateAction } from 'react';
 
-
 type ArcLayerConfig = {
   id: string;
   type: string;
@@ -24,7 +23,13 @@ type ArcLayerConfig = {
  * @param setTooltipData Click時に表示するsetTooltipData関数
  * @param setsetTooltipPosition ポップアップのスタイルをセットする関数
  */
-export function makeArcLayers(map: Map, layerConfig, init: boolean, setTooltipData, setsetTooltipPosition) {
+export function makeArcLayers(
+  map: Map,
+  layerConfig,
+  init: boolean,
+  setTooltipData,
+  setsetTooltipPosition
+) {
   const ArcCreator = new ArcLayerCreator(layerConfig, map, setTooltipData, setsetTooltipPosition);
   return ArcCreator.makeDeckGlLayers(init);
 }
@@ -48,7 +53,7 @@ class ArcLayerCreator {
 
     const result: ArcLayer<any>[] = targetLayerConfigs.map((layerConfig) => {
       const config = this.extractLayerConfig(layerConfig);
-      
+
       return new ArcLayer({
         id: layerConfig.id,
         visible: init,
@@ -83,29 +88,35 @@ class ArcLayerCreator {
     if (!coordinate) return;
     if (!object) return;
     // @ts-ignore
-    const { layer: { props:{ tooltipType } } } = info;
-    const { layer: { id } } = info;
-    
-    const parent = document.getElementById("MapArea");
-    const body = document.getElementsByTagName("body")[0];
+    const {
+      layer: {
+        props: { tooltipType },
+      },
+    } = info;
+    const {
+      layer: { id },
+    } = info;
+
+    const parent = document.getElementById('MapArea');
+    const body = document.getElementsByTagName('body')[0];
     const tooltipWidth = body.clientWidth * 0.25;
     const tooltipHeight = body.clientHeight * 0.25;
-    const parentWidth = parent !== null ? (parent.clientWidth) : 10 ;
-    const parentHeight = parent !== null ? (parent.clientHeight) : 10 ;
+    const parentWidth = parent !== null ? parent.clientWidth : 10;
+    const parentHeight = parent !== null ? parent.clientHeight : 10;
 
     let x = info.x;
     let y = info.y;
 
-    if (x + tooltipWidth +40 > parentWidth) {
-      x = parentWidth -tooltipWidth -40;
+    if (x + tooltipWidth + 40 > parentWidth) {
+      x = parentWidth - tooltipWidth - 40;
     }
 
-    if (y + tooltipHeight +300 > parentHeight) {
-      y = parentHeight - tooltipHeight -300;
+    if (y + tooltipHeight + 300 > parentHeight) {
+      y = parentHeight - tooltipHeight - 300;
     }
     this.setsetTooltipPosition({
       top: `${String(y)}px`,
-      left: `${String(x)}px`
+      left: `${String(x)}px`,
     });
     show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
   };

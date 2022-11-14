@@ -8,11 +8,10 @@ import { defaultLegendId } from '@/components/Map/Legend/layerIds';
 import { Tooltip } from '@/components/Tooltip/content';
 import { removeExistingTooltip } from '@/components/Tooltip/show';
 import MouseTooltip, { MouseTooltipData } from '@/components/MouseTooltip';
-import { useRouter } from 'next/router';
 import { usePreferences, Preferences } from '@/components/LayerFilter/loader';
 import Head from 'next/head';
 import { closeIcon } from '@/components/SideBar/Icon';
-import { Backgrounds } from '../components/LayerFilter/loader';
+import { DashboardProvider } from '@/components/Dashboard/useDashboardContext';
 
 type TContext = {
   checkedLayerTitleList: string[];
@@ -83,41 +82,46 @@ const App: NextPage = () => {
       </Head>
       <div className="h-screen">
         <context.Provider value={{ ...contextValues, preferences }}>
-          <div className="h-12">
-            <Header />
-          </div>
-          <div className="flex content" style={{ overflow: 'hidden' }}>
-            <div className="w-1/5 flex flex-col h-full ml-4 mr-2 mt-4 pb-10">
-              <div id="sideBar" className="overflow-auto relative flex-1">
-                <Sidebar />
-              </div>
-              {contextValues.mouseTooltipData !== null ? (
-                <div className="relative">
-                  <MouseTooltip mouseTooltipData={contextValues.mouseTooltipData} />
-                </div>
-              ) : undefined}
+          <DashboardProvider>
+            <div className="h-12">
+              <Header />
             </div>
-            <div id="MapArea" className="relative w-4/5 m-2 pb-5 h-full">
-              <Map setTooltipData={setTooltipData} setsetTooltipPosition={setsetTooltipPosition} />
-              {tooltipData.tooltip ? (
-                <div
-                  className="w-1/4 border-2 border-black z-50"
-                  style={{ ...setTooltipPosition, ...toolChipBaseStyle }}
-                >
-                  {tooltipData.tooltip ? <Tooltip {...tooltipData.tooltip} /> : undefined}
-                  <div className="text-right absolute top-0 right-2">
-                    <button
-                      className="text-2xl"
-                      onClick={() => removeExistingTooltip(setTooltipData)}
-                      style={{ backgroundColor: toolChipBaseStyle.backgroundColor }}
-                    >
-                      {closeIcon()}
-                    </button>
+            <div className="flex content" style={{ overflow: 'hidden' }}>
+              <div className="w-1/5 flex flex-col h-full ml-4 mr-2 mt-4 pb-10">
+                <div id="sideBar" className="overflow-auto relative flex-1">
+                  <Sidebar />
+                </div>
+                {contextValues.mouseTooltipData !== null ? (
+                  <div className="relative">
+                    <MouseTooltip mouseTooltipData={contextValues.mouseTooltipData} />
                   </div>
-                </div>
-              ) : undefined}
+                ) : undefined}
+              </div>
+              <div id="MapArea" className="relative w-4/5 m-2 pb-5 h-full">
+                <Map
+                  setTooltipData={setTooltipData}
+                  setsetTooltipPosition={setsetTooltipPosition}
+                />
+                {tooltipData.tooltip ? (
+                  <div
+                    className="w-1/4 border-2 border-black z-50"
+                    style={{ ...setTooltipPosition, ...toolChipBaseStyle }}
+                  >
+                    {tooltipData.tooltip ? <Tooltip {...tooltipData.tooltip} /> : undefined}
+                    <div className="text-right absolute top-0 right-2">
+                      <button
+                        className="text-2xl"
+                        onClick={() => removeExistingTooltip(setTooltipData)}
+                        style={{ backgroundColor: toolChipBaseStyle.backgroundColor }}
+                      >
+                        {closeIcon()}
+                      </button>
+                    </div>
+                  </div>
+                ) : undefined}
+              </div>
             </div>
-          </div>
+          </DashboardProvider>
         </context.Provider>
       </div>
     </>

@@ -1,7 +1,13 @@
-const isProd = process.env.BUILD_OPTION === 'production';
+/* 公開時のサブディレクトリ */
+const SUB_DIRECTORY = '/viewer-private';
+
+/* 本番環境と開発環境の分岐用のフラグ */
+const isProd = process.env.NODE_ENV == 'production';
 
 module.exports = {
-  reactStrictMode: true,
-  distDir: 'build',
-  assetPrefix: isProd ? 'https://example.com/' : '.',
+  basePath: isProd ? SUB_DIRECTORY : '',
+  assetPrefix: isProd ? SUB_DIRECTORY : '',
+  publicRuntimeConfig: {
+    basePath: isProd ? SUB_DIRECTORY : '',
+  },
 };
