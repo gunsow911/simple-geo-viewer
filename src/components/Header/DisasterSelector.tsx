@@ -1,17 +1,26 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, Dispatch, SetStateAction } from 'react';
 import { context } from '@/pages';
-import { disaster } from '@/components/LayerFilter/loader';
+// import { disaster } from '@/components/LayerFilter/loader';
 import { useRouter } from 'next/router';
+import { Disasters } from '@/components/LayerFilter/loader';
+import { Preferences, fetchJsons } from '@/components/LayerFilter/loader';
 
-const DisasterSelector = () => {
+type Props = {
+  disasters: Disasters;
+  setPreferrences: Dispatch<SetStateAction<Preferences | null>>
+};
+
+const DisasterSelector: React.FC<Props> = ({ disasters, setPreferrences}) => {
   
-  const { setCurrentDisaster } = useContext(context);
-  const { disasters } = useContext(context);
 
+  const router = useRouter();
+  
   const updateCurrentDisaster = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const disastersPath = e.target.value;
+    const preferencesPath = `${router.basePath}/disaster/${disastersPath}`;
     console.log(disastersPath)
-    setCurrentDisaster(disastersPath);
+    const loadedPreferences = await fetchJsons(preferencesPath);
+    setPreferrences(loadedPreferences);
   };
 
   const entries: disaster[] = disasters?.data;

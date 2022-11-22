@@ -77,10 +77,12 @@ export const fetchJsons = async(preferencesPath: string) => {
     backgrounds: results[3] as Backgrounds,
     initialView: results[4] as InitialView,
   };
+  
   return loadedPreferences
+  
 }
 
-export const usePreferences = () => {
-  const [ preferences, setPreferences ] = useState<Preferences | null>(null);
-  return { preferences, setPreferences };
-}
+// export const usePreferences = () => {
+//   const [ preferences, setPreferences ] = useState<Preferences | null>(null);
+//   return { preferences, setPreferences };
+// }

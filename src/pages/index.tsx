@@ -9,7 +9,7 @@ import { Tooltip } from '@/components/Tooltip/content';
 import { removeExistingTooltip } from '@/components/Tooltip/show';
 import MouseTooltip, { MouseTooltipData } from '@/components/MouseTooltip';
 import { useRouter } from 'next/router';
-import { usePreferences, Preferences, fetchJson, fetchJsons } from '@/components/LayerFilter/loader';
+import { Preferences, fetchJson, fetchJsons } from '@/components/LayerFilter/loader';
 import Head from 'next/head';
 import { closeIcon } from '@/components/SideBar/Icon';
 import { Backgrounds, Disasters } from '../components/LayerFilter/loader';
@@ -26,6 +26,8 @@ type TContext = {
   mouseTooltipData: MouseTooltipData | null;
   setMouseTooltipData: React.Dispatch<React.SetStateAction<MouseTooltipData | null>>;
   preferences: Preferences;
+  setPreferences : React.Dispatch<React.SetStateAction<Preferences | null>>;
+  currentDisaster: string;
   setCurrentDisaster: React.Dispatch<React.SetStateAction<string>>;
   isDisaster: boolean;
   setIsDisaster: React.Dispatch<React.SetStateAction<boolean>>;
@@ -33,7 +35,7 @@ type TContext = {
   setDisasters: React.Dispatch<React.SetStateAction<Disasters>>;
 };
 
-const useContextValues = (): Omit<TContext, 'preferences'> => {
+const useContextValues = (): TContext => {
   const [checkedLayerTitleList, setCheckedLayerTitleList] = useState<string[]>([]);
   const [displayedLegendLayerId, setDisplayedLegendLayerId] = useState<string>(defaultLegendId);
   const [clickedLayerViewState, setClickedLayerViewState] = useState<clickedLayerViewState | null>(
@@ -42,8 +44,10 @@ const useContextValues = (): Omit<TContext, 'preferences'> => {
   const [isDefault, setIsDefault] = useState<boolean>(true);
   const [mouseTooltipData, setMouseTooltipData] = useState<MouseTooltipData | null>(null);
   const [currentDisaster, setCurrentDisaster] = useState<string>('');
+
   const [isDisaster, setIsDisaster] = useState<boolean | undefined>(false);
   const [disasters, setDisasters] = useState<Disasters | null>(null);
+  
   return {
     checkedLayerTitleList,
     setCheckedLayerTitleList,
@@ -60,7 +64,7 @@ const useContextValues = (): Omit<TContext, 'preferences'> => {
     isDisaster,
     setIsDisaster,
     disasters,
-    setDisasters,
+    setDisasters
   };
 };
 
@@ -72,15 +76,15 @@ const App: NextPage = () => {
   });
 
   const [setTooltipPosition, setsetTooltipPosition] = useState<any>({});
-
   const contextValues = useContextValues();
   const router = useRouter();
-  const { preferences, setPreferences } = usePreferences();
+  const [ preferences, setPreferences ] = useState<Preferences | null>(null);
   const { currentDisaster, setCurrentDisaster } = useContextValues();
   const { disasters, setDisasters } = useContextValues();
   const { isDisaster, setIsDisaster } = useContextValues();
 
   useEffect(() => {
+    console.log(currentDisaster);
     
     if (router.asPath.includes('preferences=') && typeof router.query.preferences === 'undefined')
       return;
@@ -109,6 +113,7 @@ const App: NextPage = () => {
           preferencesPath = preferencesPath.replace(`/${disastersPath}`,'');
           preferencesPath = `${preferencesPath}/${currentDisaster}`;
         };
+        
         loadedPreferences = await fetchJsons(preferencesPath);
         setCurrentDisaster(() => disastersPath);
       }else{
@@ -116,9 +121,10 @@ const App: NextPage = () => {
       }
       setPreferences(() => loadedPreferences);
     })();
-  },[router.asPath, router.query.preferences, currentDisaster]);
+  },[router.asPath, router.query.preferences]);
   
   if (preferences === null) {
+
     return (
       <>
         <div>loading</div>
@@ -147,7 +153,7 @@ const App: NextPage = () => {
       <div className="h-screen">
         <context.Provider value={{ ...contextValues, preferences }}>
           <div className="h-12">
-            <Header />
+            <Header disasters={disasters} setPreferrence={setPreferences}/>
           </div>
           <div className="flex content" style={{ overflow: 'hidden' }}>
             <div className="w-1/5 flex flex-col h-full ml-4 mr-2 mt-4 pb-10">
