@@ -92,6 +92,7 @@ const useInitializeMap = (
     
     // @ts-ignore
     const gl = map.painter.context.gl;
+    // visLayers = new visiblyLayers(menu, initialView.map.zoom);
     deck = new Deck({
       initialViewState: {
         latitude: initialView.map.center[1],
@@ -147,6 +148,7 @@ const useToggleVisibly = (menu: Menu, config: Config) => {
     });
   deck.setProps({ layers: priorityViewLayer });
   visLayers.setlayerList(checkedLayerTitleList);
+  return priorityViewLayer;
 };
 
 type Props = {
@@ -171,16 +173,44 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData, setsetTooltipPosition 
 
   //対象のレイヤを全て作成してdeckに登録
   useEffect(() => {
-    if (map) {
-      visLayers = new visiblyLayers(preferences.menu, preferences.initialView.map.zoom);
+    if (deck) {
       deck.setProps({ layers: [] });
-      makeDeckGlLayers(map, deck, setTooltipData, setsetTooltipPosition, preferences.menu, preferences.config);
-      checkZoomVisible();
+      makeDeckGlLayers(
+        map,
+        deck,
+        setTooltipData,
+        setsetTooltipPosition,
+        preferences.menu,
+        preferences.config
+      );
+      visLayers = new visiblyLayers(preferences.menu, preferences.initialView.map.zoom);
     }
   }, [preferences]);
+  const visibleLayers = useToggleVisibly(preferences.menu, preferences.config);
+  if (deck) {
+    deck.setProps({ layers: [...(visibleLayers ?? [])] });
+  }
+  // useEffect(() => {
+  //   map.on('load', () => {
+  //     makeDeckGlLayers(
+  //       map,
+  //       deck,
+  //       setTooltipData,
+  //       setsetTooltipPosition,
+  //       preferences.menu,
+  //       preferences.config
+  //     );
+  //     checkZoomVisible();
+  //   });
+  // }, []);
 
   //layerの可視状態を変更
-  useToggleVisibly(preferences.menu, preferences.config);
+  
+  
+
+  
+
+
 
   //クリックされたレイヤに画面移動
   useFlyTo(deck);
