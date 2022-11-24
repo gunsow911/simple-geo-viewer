@@ -89,7 +89,7 @@ const useInitializeMap = (
       });
     }
 
-    visLayers = new visiblyLayers(menu, initialView.map.zoom);
+    
     // @ts-ignore
     const gl = map.painter.context.gl;
     deck = new Deck({
@@ -171,12 +171,13 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData, setsetTooltipPosition 
 
   //対象のレイヤを全て作成してdeckに登録
   useEffect(() => {
-    map.on('load', () => {
-      
+    if (map) {
+      visLayers = new visiblyLayers(preferences.menu, preferences.initialView.map.zoom);
+      deck.setProps({ layers: [] });
       makeDeckGlLayers(map, deck, setTooltipData, setsetTooltipPosition, preferences.menu, preferences.config);
       checkZoomVisible();
-    });
-  }, []);
+    }
+  }, [preferences]);
 
   //layerの可視状態を変更
   useToggleVisibly(preferences.menu, preferences.config);

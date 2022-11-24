@@ -81,8 +81,3 @@ export const fetchJsons = async(preferencesPath: string) => {
   return loadedPreferences
   
 }
-
-// export const usePreferences = () => {
-//   const [ preferences, setPreferences ] = useState<Preferences | null>(null);
-//   return { preferences, setPreferences };
-// }
