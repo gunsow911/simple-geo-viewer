@@ -26,7 +26,7 @@ export const getCheckedLayerIdByDataTitleList = (layerTitleList: string[], menu:
     for (const layerTitle of reverseLayerTitleList.reverse()) {
       const idList = getIdByDataTitle(menu, layerTitle);
       if (typeof idList === 'undefined') {
-        return;
+        return '';
       };
       if (havingLegendIdList.includes(idList[0])) {
         return idList[0];

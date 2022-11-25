@@ -14,6 +14,7 @@ type Props = {
 const Header: React.FC<Props> = ({ disasters, setPreferrence }) => {
   const { preferences } = useContext(context);
   const router = useRouter();
+  if (preferences === null) return null;
   const isDisaster  = router.query.isDisaster as boolean | undefined;
   const headerStyle = {
     backgroundColor: preferences.settings.background_color,

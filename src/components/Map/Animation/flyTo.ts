@@ -34,16 +34,19 @@ const getViewStateByLayerId = (
 
 export const useFlyTo = (deck?: Deck) => {
   const { clickedLayerViewState, preferences } = useContext(context);
+  
   useEffect(() => {
     if (!clickedLayerViewState || !deck) return;
-
+    if (preferences === null) return;
     const layerId = clickedLayerViewState.id;
     const viewState = getViewStateByLayerId(
       layerId,
       clickedLayerViewState,
       preferences.initialView
     );
+    
 
     deck.setProps({ initialViewState: viewState });
   }, [clickedLayerViewState]);
+  
 };

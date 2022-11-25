@@ -27,7 +27,7 @@ export const useGetClickedLayerId = () => {
     setIsDefault,
     preferences,
   } = useContext(context);
-
+  if (preferences === null) return '';
   const clickedId = getClickedLayerId(clickedLayerViewState);
 
   // 現在凡例が表示されている場合、そのタイトルを取得

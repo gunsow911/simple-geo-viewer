@@ -25,17 +25,17 @@ type TContext = {
   setIsDefault: React.Dispatch<React.SetStateAction<boolean>>;
   mouseTooltipData: MouseTooltipData | null;
   setMouseTooltipData: React.Dispatch<React.SetStateAction<MouseTooltipData | null>>;
-  preferences: Preferences;
+  preferences: Preferences | null;
   setPreferences : React.Dispatch<React.SetStateAction<Preferences | null>>;
   currentDisaster: string;
   setCurrentDisaster: React.Dispatch<React.SetStateAction<string>>;
   isDisaster: boolean;
   setIsDisaster: React.Dispatch<React.SetStateAction<boolean>>;
-  disasters: Disasters |  null;
+  disasters: Disasters;
   setDisasters: React.Dispatch<React.SetStateAction<Disasters>>;
 };
 
-const useContextValues = (): TContext => {
+const useContextValues =  (): TContext => {
   const [checkedLayerTitleList, setCheckedLayerTitleList] = useState<string[]>([]);
   const [displayedLegendLayerId, setDisplayedLegendLayerId] = useState<string>(defaultLegendId);
   const [clickedLayerViewState, setClickedLayerViewState] = useState<clickedLayerViewState | null>(
@@ -43,10 +43,13 @@ const useContextValues = (): TContext => {
   );
   const [isDefault, setIsDefault] = useState<boolean>(true);
   const [mouseTooltipData, setMouseTooltipData] = useState<MouseTooltipData | null>(null);
+  const [ preferences, setPreferences ] = useState<Preferences | null>(null);
+  
   const [currentDisaster, setCurrentDisaster] = useState<string>('');
-
-  const [isDisaster, setIsDisaster] = useState<boolean | undefined>(false);
-  const [disasters, setDisasters] = useState<Disasters | null>(null);
+  const [isDisaster, setIsDisaster] = useState<boolean>(false);
+  const defaultDisasters: Disasters =  {default:0,data:[]} 
+  const [disasters, setDisasters] = useState<Disasters>(defaultDisasters);
+  
   
   return {
     checkedLayerTitleList,
@@ -59,6 +62,8 @@ const useContextValues = (): TContext => {
     setIsDefault,
     mouseTooltipData,
     setMouseTooltipData,
+    preferences,
+    setPreferences,
     currentDisaster,
     setCurrentDisaster,
     isDisaster,
@@ -78,7 +83,7 @@ const App: NextPage = () => {
   const [setTooltipPosition, setsetTooltipPosition] = useState<any>({});
   const contextValues = useContextValues();
   const router = useRouter();
-  const [ preferences, setPreferences ] = useState<Preferences | null>(null);
+  const { preferences, setPreferences } = useContextValues();
   const { currentDisaster, setCurrentDisaster } = useContextValues();
   const { disasters, setDisasters } = useContextValues();
   const { isDisaster, setIsDisaster } = useContextValues();
@@ -142,6 +147,7 @@ const App: NextPage = () => {
   };
 
   return (
+    <>{preferences === null ? (<></>) : (
     <>
       <Head>
         <title>{preferences.settings.title}</title>
@@ -189,6 +195,7 @@ const App: NextPage = () => {
           </div>
         </context.Provider>
       </div>
+      </>)}
     </>
   );
 };

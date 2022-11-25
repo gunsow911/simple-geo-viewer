@@ -39,9 +39,11 @@ export const TimeSlider: VFC<Props> = memo(function TimeSlider({ map, deck, setT
 
   const { checkedLayerTitleList } = useContext(context);
   const { preferences } = useContext(context);
+  
 
   // Layerレンダリング用のCallback
   const renderCallback = (layerConfig, timestamp) => {
+    if (preferences === null) return;
     addRenderOption(
       makeTemporalLayers(layerConfig, true, timestamp, checkedLayerTitleList, preferences.menu)
     ).forEach((layer) => {
@@ -57,6 +59,7 @@ export const TimeSlider: VFC<Props> = memo(function TimeSlider({ map, deck, setT
   };
 
   const getLayerConfig = () => {
+    if (preferences === null) return;
     const { menu, config } = preferences;
     return getFilteredLayerConfig(menu, config).filter((layer) => {
       return getDataList(menu).some(

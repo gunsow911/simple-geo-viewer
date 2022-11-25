@@ -71,10 +71,11 @@ const checkZoomVisible = () => {
 const useInitializeMap = (
   maplibreContainer: React.MutableRefObject<HTMLDivElement | null>,
   deckglContainer: React.MutableRefObject<HTMLCanvasElement | null>,
-  preferences: Preferences
+  preferences: Preferences | null
 ) => {
-  const { backgrounds, initialView, menu } = preferences;
   useEffect(() => {
+    if (preferences === null) return;
+    const { backgrounds, initialView, menu } = preferences;
     if (!map) {
       if (!maplibreContainer.current) return;
       map = new Map({
@@ -89,7 +90,6 @@ const useInitializeMap = (
       });
     }
 
-    
     // @ts-ignore
     const gl = map.painter.context.gl;
     // visLayers = new visiblyLayers(menu, initialView.map.zoom);
@@ -126,10 +126,14 @@ const useInitializeMap = (
   }, []);
 };
 
-const useToggleVisibly = (menu: Menu, config: Config) => {
+const useToggleVisibly = (preferences: Preferences | null) => {
   const { checkedLayerTitleList } = useContext(context);
   const { currentDisaster } = useContext(context);
 
+  if (preferences === null) return;
+  const menu: Menu = preferences.menu;
+  const config: Config = preferences.config;
+  
   if (!deck) return;
   const deckGlLayers = deck.props.layers;
   const toggleVisibleLayers = toggleVisibly(deckGlLayers, checkedLayerTitleList, menu);
@@ -160,19 +164,22 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData, setsetTooltipPosition 
   const maplibreContainer = useRef<HTMLDivElement | null>(null);
   const deckglContainer = useRef<HTMLCanvasElement | null>(null);
   const { preferences } = useContext(context);
-
-  const visibleLayerTypes = getFilteredLayerConfig(preferences.menu, preferences.config).map(
-    (item) => {
-      return item.type;
-    }
-  );
-  const hasTimeSeries = !!visibleLayerTypes.find((item) => TEMPORAL_LAYER_TYPES.includes(item));
+  let hasTimeSeries = false;
+  if (preferences !== null) {
+    const visibleLayerTypes = getFilteredLayerConfig(preferences.menu, preferences.config).map(
+      (item) => {
+        return item.type;
+      }
+    );
+    hasTimeSeries = !!visibleLayerTypes.find((item) => TEMPORAL_LAYER_TYPES.includes(item));
+  }
 
   //map・deckインスタンスを初期化
   useInitializeMap(maplibreContainer, deckglContainer, preferences);
 
   //対象のレイヤを全て作成してdeckに登録
   useEffect(() => {
+    if (preferences === null) return;
     if (deck) {
       deck.setProps({ layers: [] });
       makeDeckGlLayers(
@@ -186,41 +193,23 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData, setsetTooltipPosition 
       visLayers = new visiblyLayers(preferences.menu, preferences.initialView.map.zoom);
     }
   }, [preferences]);
-  const visibleLayers = useToggleVisibly(preferences.menu, preferences.config);
+  
+  const visibleLayers = useToggleVisibly(preferences);
+
   if (deck) {
     deck.setProps({ layers: [...(visibleLayers ?? [])] });
   }
-  // useEffect(() => {
-  //   map.on('load', () => {
-  //     makeDeckGlLayers(
-  //       map,
-  //       deck,
-  //       setTooltipData,
-  //       setsetTooltipPosition,
-  //       preferences.menu,
-  //       preferences.config
-  //     );
-  //     checkZoomVisible();
-  //   });
-  // }, []);
-
-  //layerの可視状態を変更
   
-  
-
-  
-
-
-
-  //クリックされたレイヤに画面移動
   useFlyTo(deck);
+  const legendId = useGetClickedLayerId();
 
+  if (preferences === null) return <></>;
   return (
     <>
       <div className="h-full" ref={maplibreContainer}>
         <canvas className="z-10 absolute h-full" ref={deckglContainer}></canvas>
         <div className="z-10 absolute top-2 left-2 w-60">
-          <Legend id={useGetClickedLayerId()} />
+          <Legend id={legendId} />
         </div>
         <div className="z-10 absolute top-2 right-12 bg-white p-1">
           <div className="text-center font-bold">背景</div>

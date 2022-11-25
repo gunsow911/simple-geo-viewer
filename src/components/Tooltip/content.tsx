@@ -8,6 +8,7 @@ type BaseTooltipProps = { children: ReactNode };
 
 const BaseTooltip: VFC<BaseTooltipProps> = ({ children }) => {
   const { preferences } = useContext(context);
+  if (preferences === null) return null;
   const setTooltipPosition = {
     backgroundColor: preferences.settings.tooltip_background_color,
     overflow: 'scroll',
@@ -127,7 +128,7 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
   };
 
   const { preferences } = useContext(context);
-
+  if (preferences === null) return null;
   const { description, ..._summaryKey } = summaryKey;
   const summaryKeys = Object.keys(_summaryKey)
     .map((key) => {
@@ -262,6 +263,7 @@ const TooltipTableBody: VFC<TooltipTableBodyProps> = ({ properties, labels, id }
 
   const Summary = () => {
     const { preferences } = useContext(context);
+    if (preferences === null) return null;
     const layerTitle = getDataTitleById(preferences.menu, id);
     const layerCategory = getCategoryByTitle(preferences.menu, layerTitle);
 

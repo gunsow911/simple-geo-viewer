@@ -349,6 +349,7 @@ class GeoJsonArrowLayerCreator {
         autoHighlight: true,
         onClick: this.showToolTip,
         sizeScale: 8,
+        // @ts-ignore
         iconSizeScale: 60,
         pointType: 'icon',
         getIcon: (_) => ({

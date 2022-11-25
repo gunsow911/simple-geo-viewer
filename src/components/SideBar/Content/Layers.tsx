@@ -39,14 +39,17 @@ export const Layers = (props: LayersProps) => {
     setMouseTooltipData,
     preferences,
   } = useContext(context);
-
+  
   //最初の一度だけ、menuのcheckedを確認し、trueならcheckedLayerTitleListにset
   useEffect(() => {
+    if (preferences === null) return;
     setCheckedLayerTitleList(getDefaultVisiblyLayerTitles(preferences.menu));
+    
   }, []);
-
+  if (preferences === null) return null;
   const toggleSelectedResourceList = (resourceName: string, resourceId: string[]) => {
     // 既存のリストに対象リソースが入っていなければ格納
+    
     if (!isSelected(resourceName, checkedLayerTitleList)) {
       setCheckedLayerTitleList((prevList) => [...prevList, resourceName]);
       // クリックされたリソースの位置情報を保存する

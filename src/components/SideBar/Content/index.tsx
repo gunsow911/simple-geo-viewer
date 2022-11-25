@@ -73,7 +73,7 @@ export const Content: React.FC<LayerListProps> = ({ title, layers }) => {
   const [height, setHeight] = useState<number>(44);
 
   const { preferences, setMouseTooltipData } = useContext(context);
-
+  if (preferences === null) return null;
   const toggleAccordion = () => {
     setActive(!active);
     //リソースのdiv要素:36px(20+8+8) + リソース表示領域のpadding:8px(4+4) = 44px

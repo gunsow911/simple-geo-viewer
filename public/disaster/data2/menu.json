@@ -1,0 +1,74 @@
+[
+  {
+    "category": "アジア航測株式会社aaaaaaa",
+    "data": [
+      {
+        "title": "令和4年8月3日からの大雨【アジア航測】aaaaa",
+        "type": "icon",
+        "lng": 139.734491,
+        "lat": 38.0621,
+        "zoom": 12,
+        "id": [
+          "ia78d289f-60ed-4f25-abef-ead1ad42e404_dataset"
+        ],
+        "checked": true,
+        "icon": "images/arrow_blue.png",
+        "download_url": "https://www.geospatial.jp/ckan/dataset/aas-disaster-20220803"
+      }
+    ]
+  },
+  {
+    "category": "朝日航洋株式会社",
+    "data": [
+      {
+        "title": "令和4年8月3日からの大雨　斜め写真　【朝日航洋】",
+        "type": "icon",
+        "lng": 139.698243,
+        "lat": 38.039837,
+        "zoom": 12,
+        "id": [
+          "icf2273b2-ed68-41a5-9161-d78c7865b526_dataset"
+        ],
+        "checked": true,
+        "icon": "images/arrow_red.png",
+        "download_url": "https://www.geospatial.jp/ckan/dataset/aac-2022-08-03"
+      }
+    ]
+  },
+  {
+    "category": "国際航業株式会社",
+    "data": [
+      {
+        "title": "令和4年8月3日からの大雨　斜め写真　【国際航業株式会社】",
+        "type": "icon",
+        "lng": 139.639598,
+        "lat": 38.022254,
+        "zoom": 12,
+        "id": [
+          "id2074bcc-f930-4aff-b87c-1dbe12da3673_dataset"
+        ],
+        "checked": true,
+        "icon": "images/arrow_red.png",
+        "download_url": "https://www.geospatial.jp/ckan/dataset/4-8-3"
+      }
+    ]
+  },
+  {
+    "category": "株式会社パスコ",
+    "data": [
+      {
+        "title": "令和4年8月3日からの大雨　斜め写真　【株式会社パスコ】",
+        "type": "icon",
+        "lng": 140.01109,
+        "lat": 38.097076,
+        "zoom": 12,
+        "id": [
+          "ifbf83845-b15b-4ec9-a93c-0fa766853df2_dataset"
+        ],
+        "checked": true,
+        "icon": "images/arrow_yellow.png",
+        "download_url": "https://www.geospatial.jp/ckan/dataset/aigid-2022-08-pasco"
+      }
+    ]
+  }
+]
