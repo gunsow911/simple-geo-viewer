@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, SetStateAction, useContext, useEffect } from 'react';
+import React, { Dispatch, FC, SetStateAction, useCallback, useContext, useEffect } from 'react';
 import { context } from '@/pages';
 import { Data, Menu } from '@/components/LayerFilter/menu';
 import { getResourceIcon } from '@/components/SideBar/Icon';
@@ -40,31 +40,48 @@ export const Layers: FC<LayersProps> = ({ layers, setsetTooltipPosition, setTool
 
   const [deckGLLayers, setDeckGLLayers] = useRecoilState(LayersState);
   const [temporalLayerConfigs, setTemporalLayerConfigs] = useRecoilState(TemporalLayerConfigState);
-
+  const layerCreateById = useCallback(
+    (ids: string[]) => {
+      return ids.forEach((id) => {
+        const layerConfig = getLayerConfigById(id, preferences.config);
+        if (!layerConfig) {
+          return;
+        }
+        if (TEMPORAL_LAYER_TYPES.includes(layerConfig.type)) {
+          setTemporalLayerConfigs((currVal) => {
+            return [...currVal, layerConfig];
+          });
+        } else {
+          const deckGLlayer = makeDeckGLLayer(layerConfig, setTooltipData, setsetTooltipPosition);
+          if (deckGLlayer) {
+            setDeckGLLayers((currVal) => {
+              return [...currVal, deckGLlayer];
+            });
+          }
+        }
+      });
+    },
+    [
+      preferences.config,
+      setTemporalLayerConfigs,
+      setTooltipData,
+      setsetTooltipPosition,
+      setDeckGLLayers,
+    ]
+  );
   //最初の一度だけ、menuのcheckedを確認し、trueならcheckedLayerTitleListにset
   useEffect(() => {
+    layers
+      .filter((value) => value.checked)
+      .forEach((value) => {
+        layerCreateById(value.id);
+      });
     setCheckedLayerTitleList(
-      filterCheckedData(preferences.menu).map((value) => {
-        value.id.forEach((id) => {
-          const layerConfig = getLayerConfigById(id, preferences.config);
-          if (!layerConfig) {
-            return;
-          }
-          if (TEMPORAL_LAYER_TYPES.includes(layerConfig.type)) {
-            setTemporalLayerConfigs((currVal) => {
-              return [...currVal, layerConfig];
-            });
-          } else {
-            setDeckGLLayers((currVal) => {
-              return [
-                ...currVal,
-                makeDeckGLLayer(layerConfig, setTooltipData, setsetTooltipPosition),
-              ];
-            });
-          }
-        });
-        return value.title;
-      })
+      layers
+        .filter((value) => value.checked)
+        .map((value) => {
+          return value.title;
+        })
     );
   }, []);
 
@@ -74,25 +91,8 @@ export const Layers: FC<LayersProps> = ({ layers, setsetTooltipPosition, setTool
       setCheckedLayerTitleList((prevList) => [...prevList, resource.title]);
       // クリックされたリソースの位置情報を保存する
       setResourceViewState(resource, setClickedLayerViewState);
-      resource.id.forEach((id) => {
-        const layerConfig = getLayerConfigById(id, preferences.config);
-        console.log(layerConfig);
-        if (!layerConfig) {
-          return;
-        }
-        if (TEMPORAL_LAYER_TYPES.includes(layerConfig.type)) {
-          setTemporalLayerConfigs((currVal) => {
-            return [...currVal, layerConfig];
-          });
-        } else {
-          setDeckGLLayers((currVal) => {
-            return [
-              ...currVal,
-              makeDeckGLLayer(layerConfig, setTooltipData, setsetTooltipPosition),
-            ];
-          });
-        }
-      });
+
+      layerCreateById(resource.id);
 
       return;
     }
@@ -114,6 +114,7 @@ export const Layers: FC<LayersProps> = ({ layers, setsetTooltipPosition, setTool
         });
       } else {
         setDeckGLLayers((currVal) => {
+          console.log(currVal);
           return currVal.filter((value) => {
             return id !== value.id;
           });
