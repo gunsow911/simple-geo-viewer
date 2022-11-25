@@ -24,6 +24,7 @@ import { Preferences, Backgrounds } from '@/components/LayerFilter/loader';
 import { resolveUrl } from '@loaders.gl/gltf/src/lib/gltf-utils/resolve-url';
 import { useDashboardContext } from '../Dashboard/useDashboardContext';
 import DashboardPanelManager from '../Dashboard/DashboardPanelManager';
+import { useRouter } from 'next/router';
 
 let map: Map;
 let deck: Deck;
@@ -171,6 +172,7 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData, setsetTooltipPosition 
 
   //map・deckインスタンスを初期化
   useInitializeMap(maplibreContainer, deckglContainer, preferences);
+  const router = useRouter();
 
   //対象のレイヤを全て作成してdeckに登録
   useEffect(() => {
@@ -183,6 +185,9 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData, setsetTooltipPosition 
         preferences.menu,
         preferences.config
       );
+
+      let querySelecteLayerId = router.query.querySelecteLayerId as string | undefined;
+      alert(querySelecteLayerId);
       checkZoomVisible();
     });
   }, []);

@@ -1,9 +1,10 @@
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Menu } from './menu';
 import { Config } from './config';
 import { RasterSource } from 'maplibre-gl';
 import { route } from 'next/dist/server/router';
+import { context } from '@/pages';
 
 /**
  * settings.json
