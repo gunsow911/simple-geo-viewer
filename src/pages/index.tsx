@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { NextPage } from 'next';
 import Sidebar from '@/components/SideBar';
 import Header from '@/components/Header';
@@ -89,7 +89,10 @@ const App: NextPage = () => {
             <div className="flex content" style={{ overflow: 'hidden' }}>
               <div className="w-1/5 flex flex-col h-full ml-4 mr-2 mt-4 pb-10">
                 <div id="sideBar" className="overflow-auto relative flex-1">
-                  <Sidebar />
+                  <Sidebar
+                    setTooltipData={setTooltipData}
+                    setsetTooltipPosition={setsetTooltipPosition}
+                  />
                 </div>
                 {contextValues.mouseTooltipData !== null ? (
                   <div className="relative">
@@ -98,10 +101,7 @@ const App: NextPage = () => {
                 ) : undefined}
               </div>
               <div id="MapArea" className="relative w-4/5 m-2 pb-5 h-full">
-                <Map
-                  setTooltipData={setTooltipData}
-                  setsetTooltipPosition={setsetTooltipPosition}
-                />
+                <Map setTooltipData={setTooltipData} />
                 {tooltipData.tooltip ? (
                   <div
                     className="w-1/4 border-2 border-black z-50"

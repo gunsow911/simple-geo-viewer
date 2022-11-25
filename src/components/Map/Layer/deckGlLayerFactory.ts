@@ -5,12 +5,50 @@ import { makeMvtLayer } from '@/components/Map/Layer/mvtLayerMaker';
 import { makeGltfLayer } from '@/components/Map/Layer/gltfLayerMaker';
 import { makeTileLayer } from '@/components/Map/Layer/tileLayerMaker';
 import { addRenderOption } from '@/components/Map/Layer/renderOption';
-import { getFilteredLayerConfig, Config } from '@/components/LayerFilter/config';
+import {
+  getFilteredLayerConfig,
+  Config,
+  getLayerConfigById,
+} from '@/components/LayerFilter/config';
 import { makeIconLayer } from '@/components/Map/Layer/iconLayerMaker';
 import { Dispatch, SetStateAction } from 'react';
 import { Deck } from 'deck.gl';
 import { getDataList, Menu } from '@/components/LayerFilter/menu';
 import { makeTile3DLayer } from '@/components/Map/Layer/tile3DLayerMaker';
+
+export const makeDeckGLLayer = (
+  id: string,
+  config: Config,
+  setTooltipData: Dispatch<SetStateAction<any>>,
+  setsetTooltipPosition: Dispatch<SetStateAction<any>>
+) => {
+  const layerCreator = [
+    makeTileLayer,
+    makeArcLayer,
+    makeMvtLayer,
+    makeGltfLayer,
+    makeIconLayer,
+    makeTile3DLayer,
+    makeGeoJsonLayer,
+  ];
+  // ここでフィルタリングのidを求める
+  const layerConfig = getLayerConfigById(id, config);
+  if (!layerConfig) {
+    return;
+  }
+  const createdLayer = layerCreator
+    .map((func) => {
+      return addRenderOption(func(layerConfig, setTooltipData, setsetTooltipPosition));
+    })
+    .filter(Boolean);
+  if (createdLayer.length === 1) {
+    return createdLayer[0];
+  }
+  if (createdLayer.length >= 2) {
+    throw new Error('Layer Creation fail: Multi type layer generation detected');
+  }
+  return;
+};
 
 export const makeDeckGlLayers = (
   map: Map,
