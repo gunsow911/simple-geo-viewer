@@ -1,9 +1,6 @@
 import { PickInfo } from 'deck.gl';
 import { GeoJsonLayer } from '@deck.gl/layers';
 
-import { show } from '@/components/Tooltip/show';
-import { Dispatch, SetStateAction } from 'react';
-
 import {
   GeojsonIconLayerConfig,
   GeojsonLayerConfig,
@@ -122,13 +119,6 @@ class GeoJsonLinePolygonCreator {
       left: `${String(x)}px`,
     });
     const data = getPropertiesObj(object, tooltipType, id);
-    console.log({
-      lng: coordinate[0],
-      lat: coordinate[1],
-      tooltipType,
-      id,
-      data,
-    });
     this.setTooltipData({
       lng: coordinate[0],
       lat: coordinate[1],

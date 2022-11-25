@@ -38,7 +38,6 @@ export const makeDeckGLLayer = (
       return addRenderOption(func(layerConfig, setTooltipData, setTooltipPosition));
     })
     .filter(Boolean);
-  console.log(createdLayer);
   if (createdLayer.length === 1) {
     return createdLayer[0];
   }

@@ -116,7 +116,6 @@ export const Layers: FC<LayersProps> = ({ layers }) => {
         });
       } else {
         setDeckGLLayers((currVal) => {
-          console.log(currVal);
           return currVal.filter((value) => {
             return id !== value.id;
           });

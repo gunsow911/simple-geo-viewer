@@ -1,7 +1,6 @@
 import { ScenegraphLayer } from '@deck.gl/mesh-layers';
 import { GLTFLoader } from '@loaders.gl/gltf';
 import { fetchFile, parse } from '@loaders.gl/core';
-import { show } from '@/components/Tooltip/show';
 
 /**
  * GLTF Layerの作成

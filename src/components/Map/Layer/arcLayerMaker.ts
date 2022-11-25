@@ -1,7 +1,6 @@
 import { PickInfo, RGBAColor } from 'deck.gl';
 import { ArcLayer } from '@deck.gl/layers';
 
-import { Dispatch, SetStateAction } from 'react';
 import { getPropertiesObj } from '@/components/Tooltip/util';
 import { SetterOrUpdater } from 'recoil';
 

@@ -15,7 +15,7 @@ export const TEMPORAL_LAYER_TYPES: Array<TemporalLayerType | string> = [
 import { IconLayer, GeoJsonLayer } from '@deck.gl/layers';
 import { RGBAColor, TripsLayer } from 'deck.gl';
 import { MVTLayer } from '@deck.gl/geo-layers';
-import { getDataList, Menu } from '@/components/LayerFilter/menu';
+import { Menu } from '@/components/LayerFilter/menu';
 
 /**
  * 時系列アニメーションDeckGLレイヤーを作成する
@@ -66,19 +66,6 @@ abstract class TemporalLayerCreator {
     this._menu = menu;
   }
   abstract makeDeckGlLayer(timestamp): any;
-  //TODO なぜあるか確認する
-  isChecked(layerConfig) {
-    // レイヤーがチェックされているか判定
-    const dataList = getDataList(this._menu);
-    let flag = false;
-    for (const data of dataList) {
-      if (data.id.includes(layerConfig.id)) {
-        if (this.checkedLayerTitleList.includes(data.title)) flag = true;
-      }
-    }
-    return flag;
-  }
-
   /**
    * layersTypeに適合するレイヤーコンフィグを取り出し
    */
@@ -125,7 +112,7 @@ class BusTripLayerCreator extends TemporalLayerCreator {
       const TrackingL = new IconLayer({
         id: layerConfig.id,
         data: layerConfig.source,
-        visible: this.isChecked(layerConfig),
+        visible: true,
         lastPositions: {},
         getIcon: () => {
           return {
@@ -173,7 +160,7 @@ class TemporalPolygonLayerCreator extends TemporalLayerCreator {
       return new GeoJsonLayer({
         id: layerConfig.id,
         data: layerConfig.source,
-        visible: this.isChecked(layerConfig),
+        visible: true,
         extruded: true,
         getLineColor: () => [0, 0, 0, 0],
         getFillColor: (d: any) => {
@@ -219,7 +206,7 @@ class TemporalLineLayerCreator extends TemporalLayerCreator {
       return new GeoJsonLayer({
         id: layerConfig.id,
         data: layerConfig.source,
-        visible: this.isChecked(layerConfig),
+        visible: true,
         extruded: true,
         getLineColor: (d: any) => {
           const normalizedTimestamp = timestamp - (timestamp % d.properties.step);
@@ -258,7 +245,7 @@ class TripsJsonLayerCreator extends TemporalLayerCreator {
       return new TripsLayer({
         id: layerConfig.id,
         data: layerConfig.source,
-        visible: this.isChecked(layerConfig),
+        visible: true,
         getTimestamps: (d) => d.timestamps,
         getColor: layerConfig.color || [255, 0, 0],
         currentTime: timestamp,
@@ -305,7 +292,7 @@ class TripsDRMLayerCreator extends TemporalLayerCreator {
         },
         // 最低5Pixcl幅で表示
         lineWidthMinPixels: 5,
-        visible: this.isChecked(layerConfig),
+        visible: true,
         stroked: false,
         filled: true,
         updateTriggers: {

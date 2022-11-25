@@ -1,7 +1,5 @@
-import { Map } from 'maplibre-gl';
 import { TileLayer } from '@deck.gl/geo-layers';
 import { BitmapLayer } from '@deck.gl/layers';
-import { Dispatch, SetStateAction } from 'react';
 import { SetterOrUpdater } from 'recoil';
 
 type tileLayerConfig = {

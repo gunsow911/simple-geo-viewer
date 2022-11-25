@@ -1,9 +1,5 @@
-import { Map } from 'maplibre-gl';
 import { PickInfo } from 'deck.gl';
 import { IconLayer } from '@deck.gl/layers';
-import { show } from '@/components/Tooltip/show';
-import { Dispatch, SetStateAction } from 'react';
-import { GeojsonLayerConfig, LayerConfig } from '@/components/LayerFilter/config';
 import { getPropertiesObj } from '@/components/Tooltip/util';
 import { SetterOrUpdater } from 'recoil';
 

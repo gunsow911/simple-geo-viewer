@@ -1,8 +1,5 @@
-import { Map } from 'maplibre-gl';
 import { PickInfo } from 'deck.gl';
 import { MVTLayer } from '@deck.gl/geo-layers';
-import { show } from '@/components/Tooltip/show';
-import { Dispatch, SetStateAction } from 'react';
 import { getPropertiesObj } from '@/components/Tooltip/util';
 import { SetterOrUpdater } from 'recoil';
 
