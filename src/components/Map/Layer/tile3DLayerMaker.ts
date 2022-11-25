@@ -55,7 +55,7 @@ class Tile3DLayerCreator {
   }
 
   private extractLayerConfig = (layerConfig) => {
-    const { type, source, ...otherConfig } = layerConfig;
+    const { type, source, visible, ...otherConfig } = layerConfig;
     return otherConfig;
   };
 

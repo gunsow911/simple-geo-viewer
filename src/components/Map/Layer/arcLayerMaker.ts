@@ -40,6 +40,7 @@ class ArcLayerCreator {
     const { layerConfig } = this;
     if (this.isTargetConfig(layerConfig)) {
       const config = this.extractLayerConfig(layerConfig);
+      console.log(config);
       return new ArcLayer({
         id: layerConfig.id,
         visible: true,
@@ -58,7 +59,7 @@ class ArcLayerCreator {
   }
 
   private extractLayerConfig = (layerConfig) => {
-    const { type, source, ...otherConfig } = layerConfig;
+    const { type, source, visible, ...otherConfig } = layerConfig;
     return otherConfig;
   };
 

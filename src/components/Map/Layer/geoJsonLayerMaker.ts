@@ -69,7 +69,7 @@ class GeoJsonLinePolygonCreator {
   }
 
   private extractLayerConfig = (layerConfig: GeojsonLayerConfig) => {
-    const { type, source, ...otherConfig } = layerConfig;
+    const { type, source, visible, ...otherConfig } = layerConfig;
     return otherConfig;
   };
 
@@ -161,7 +161,7 @@ class GeoJsonIconLayerCreator {
   }
 
   extractLayerConfig = (layerConfig: GeojsonIconLayerConfig) => {
-    const { type, source, ...otherConfig } = layerConfig;
+    const { type, source, visible, ...otherConfig } = layerConfig;
     return otherConfig;
   };
 
@@ -283,7 +283,7 @@ class GeoJsonFeatureCollectionIconLayerCreator {
   }
 
   extractLayerConfig = (layerConfig: GeojsonIconLayerConfig) => {
-    const { type, source, ...otherConfig } = layerConfig;
+    const { type, source, visible, ...otherConfig } = layerConfig;
     return otherConfig;
   };
 
