@@ -269,6 +269,7 @@ class TripsJsonLayerCreator extends TemporalLayerCreator {
         },
       });
     }
+    return null;
   }
 }
 class TripsDRMLayerCreator extends TemporalLayerCreator {

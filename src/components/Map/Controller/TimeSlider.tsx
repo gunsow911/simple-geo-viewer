@@ -17,6 +17,8 @@ import { getDataList } from '@/components/LayerFilter/menu';
 import { addRenderOption } from '@/components/Map/Layer/renderOption';
 import { makeTemporalLayer, TEMPORAL_LAYER_TYPES } from '../Layer/temporalLayerMaker';
 import { Map } from 'maplibre-gl';
+import { useRecoilValue } from 'recoil';
+import { TemporalLayerConfigState } from '@/store/LayersState';
 
 type Props = {
   map: Map;
@@ -25,6 +27,7 @@ type Props = {
 };
 
 export const TimeSlider: VFC<Props> = memo(function TimeSlider({ map, deck, setTooltipData }) {
+  const temporalLayerConfigs = useRecoilValue(TemporalLayerConfigState);
   const [timestamp, setTimestamp] = useState<number>(() => {
     // 時間初期値
     const dateNow = new Date();
@@ -81,21 +84,20 @@ export const TimeSlider: VFC<Props> = memo(function TimeSlider({ map, deck, setT
 
   // callback関数に変更があった場合のみanimateを再生成する
   const animate = useCallback(() => {
-    const layerConfig = getLayerConfig();
     setTimestamp((prevState) => {
       if (prevState >= maxVal) {
-        layerConfig.forEach((lc) => {
+        temporalLayerConfigs.forEach((lc) => {
           renderCallback(lc, 0);
         });
         return 0;
       }
-      layerConfig.forEach((lc) => {
+      temporalLayerConfigs.forEach((lc) => {
         renderCallback(lc, prevState + (1 + speed));
       });
       return prevState + (1 + speed);
     });
     requestRef.current = requestAnimationFrame(animate);
-  }, [getLayerConfig, maxVal, renderCallback, speed]);
+  }, [temporalLayerConfigs, maxVal, renderCallback, speed]);
 
   // animate関数に変更があった場合は一度破棄して再度呼び出す
   useEffect(() => {
@@ -117,11 +119,12 @@ export const TimeSlider: VFC<Props> = memo(function TimeSlider({ map, deck, setT
   useEffect(() => {
     if (deck !== undefined) {
       // 初回レンダリング
-      getLayerConfig().forEach((lc) => {
+      temporalLayerConfigs.forEach((lc) => {
         renderCallback(lc, timestamp);
       });
     }
-  }, [deck]);
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deck, temporalLayerConfigs]);
 
   return (
     <div className={'mx-4 my-4'}>

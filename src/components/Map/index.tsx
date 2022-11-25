@@ -21,7 +21,7 @@ import { TEMPORAL_LAYER_TYPES } from '@/components/Map/Layer/temporalLayerMaker'
 import { Preferences, Backgrounds } from '@/components/LayerFilter/loader';
 import DashboardPanelManager from '../Dashboard/DashboardPanelManager';
 import { useRecoilValue } from 'recoil';
-import { LayersState } from '@/store/LayersState';
+import { LayersState, TemporalLayerConfigState } from '@/store/LayersState';
 import { makeDeckGlLayers } from '@/components/Map/Layer/deckGlLayerFactory';
 import { toggleVisibly, zoomVisibly } from '@/components/Map/Layer/visibly';
 
@@ -170,34 +170,9 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData, setsetTooltipPosition 
   const { preferences } = useContext(context);
   //const { layers: dashboardLayers } = useDashboardContext();
   const deckglLayers = useRecoilValue(LayersState);
-  const visibleLayerTypes = getFilteredLayerConfig(preferences.menu, preferences.config).map(
-    (item) => {
-      return item.type;
-    }
-  );
-  const hasTimeSeries = !!visibleLayerTypes.find((item) => TEMPORAL_LAYER_TYPES.includes(item));
-
+  const temporalLayerConfigs = useRecoilValue(TemporalLayerConfigState);
   //map・deckインスタンスを初期化
   const { deckGLRef, mapRef } = useInitializeMap(maplibreContainer, deckglContainer, preferences);
-  /*
-  //対象のレイヤを全て作成してdeckに登録
-  useEffect(() => {
-    mapRef.current.on('load', () => {
-      makeDeckGlLayers(
-        mapRef.current,
-        deckGLRef.current,
-        setTooltipData,
-        setsetTooltipPosition,
-        preferences.menu,
-        preferences.config
-      );
-      checkZoomVisible();
-    });
-  }, []);
-
-  //layerの可視状態を変更
-  const visibleLayers = useToggleVisibly(preferences.menu, preferences.config, deckGLRef.current);
-*/
   //クリックされたレイヤに画面移動
   useFlyTo(deckGLRef.current);
 
@@ -218,7 +193,7 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData, setsetTooltipPosition 
           <BackgroundSelector map={mapRef.current} />
         </div>
         <div className="z-10 absolute bottom-0 left-0 w-2/5 bg-white">
-          {hasTimeSeries ? (
+          {temporalLayerConfigs.length ? (
             <TimeSlider
               deck={deckGLRef.current}
               map={mapRef.current}
