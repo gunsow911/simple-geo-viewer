@@ -11,13 +11,19 @@ import Legend, { useGetClickedLayerId } from '@/components/Map/Legend';
 
 import BackgroundSelector from './Controller/BackgroundSelector';
 import { TimeSlider } from '@/components/Map/Controller/TimeSlider';
-import { getFilteredLayerConfig, Config } from '@/components/LayerFilter/config';
+import {
+  getFilteredLayerConfig,
+  Config,
+  getLayerConfigById,
+} from '@/components/LayerFilter/config';
 import { Menu } from '@/components/LayerFilter/menu';
 import { TEMPORAL_LAYER_TYPES } from '@/components/Map/Layer/temporalLayerMaker';
 import { Preferences, Backgrounds } from '@/components/LayerFilter/loader';
 import DashboardPanelManager from '../Dashboard/DashboardPanelManager';
 import { useRecoilValue } from 'recoil';
 import { LayersState } from '@/store/LayersState';
+import { makeDeckGlLayers } from '@/components/Map/Layer/deckGlLayerFactory';
+import { toggleVisibly, zoomVisibly } from '@/components/Map/Layer/visibly';
 
 //let map: Map;
 //let deck: Deck;
@@ -129,15 +135,14 @@ const useInitializeMap = (
   };
 };
 
-const useToggleVisibly = (menu: Menu, config: Config) => {
-  /*
+const useToggleVisibly = (menu: Menu, config: Config, deck: any) => {
   const { checkedLayerTitleList } = useContext(context);
 
   if (!deck) return;
   const deckGlLayers = deck.props.layers;
   const toggleVisibleLayers = toggleVisibly(deckGlLayers, checkedLayerTitleList, menu);
-  const zoomVisibleLayers = zoomVisibly(toggleVisibleLayers, visLayers);
-  const priorityViewLayer = zoomVisibleLayers
+  //const zoomVisibleLayers = zoomVisibly(toggleVisibleLayers, visLayers);
+  const priorityViewLayer = toggleVisibleLayers
     .map((layer) => {
       if (getLayerConfigById(layer.id, config)?.type === 'geojsonicon') {
         return { index: 1, layer: layer };
@@ -150,17 +155,16 @@ const useToggleVisibly = (menu: Menu, config: Config) => {
       return obj.layer;
     });
   deck.setProps({ layers: priorityViewLayer });
-  visLayers.setlayerList(checkedLayerTitleList);
+  //visLayers.setlayerList(checkedLayerTitleList);
   return priorityViewLayer;
-
-   */
 };
 
 type Props = {
   setTooltipData: Dispatch<SetStateAction<any>>;
+  setsetTooltipPosition: Dispatch<SetStateAction<any>>;
 };
 
-const MapComponent: React.VFC<Props> = ({ setTooltipData }) => {
+const MapComponent: React.VFC<Props> = ({ setTooltipData, setsetTooltipPosition }) => {
   const maplibreContainer = useRef<HTMLDivElement | null>(null);
   const deckglContainer = useRef<HTMLCanvasElement | null>(null);
   const { preferences } = useContext(context);
@@ -178,10 +182,10 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData }) => {
   /*
   //対象のレイヤを全て作成してdeckに登録
   useEffect(() => {
-    map.on('load', () => {
+    mapRef.current.on('load', () => {
       makeDeckGlLayers(
-        map,
-        deck,
+        mapRef.current,
+        deckGLRef.current,
         setTooltipData,
         setsetTooltipPosition,
         preferences.menu,
@@ -192,17 +196,15 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData }) => {
   }, []);
 
   //layerの可視状態を変更
-  const visibleLayers = useToggleVisibly(preferences.menu, preferences.config);
-  */
-
+  const visibleLayers = useToggleVisibly(preferences.menu, preferences.config, deckGLRef.current);
+*/
   //クリックされたレイヤに画面移動
   useFlyTo(deckGLRef.current);
+
   // ダッシュボードのレイヤーと統合
-  useEffect(() => {
-    if (deckGLRef.current) {
-      deckGLRef.current.setProps({ layers: [...(deckglLayers ?? [])] });
-    }
-  }, [deckGLRef, deckglLayers]);
+  if (deckGLRef.current) {
+    deckGLRef.current.setProps({ layers: [...(deckglLayers ?? [])] });
+  }
 
   return (
     <>

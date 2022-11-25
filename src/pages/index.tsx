@@ -101,7 +101,10 @@ const App: NextPage = () => {
                 ) : undefined}
               </div>
               <div id="MapArea" className="relative w-4/5 m-2 pb-5 h-full">
-                <Map setTooltipData={setTooltipData} />
+                <Map
+                  setTooltipData={setTooltipData}
+                  setsetTooltipPosition={setsetTooltipPosition}
+                />
                 {tooltipData.tooltip ? (
                   <div
                     className="w-1/4 border-2 border-black z-50"
