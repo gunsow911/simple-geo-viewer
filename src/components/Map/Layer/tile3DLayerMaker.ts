@@ -13,42 +13,35 @@ type tile3DLayerConfig = {
 
 /**
  * Tile3DLayerの作成
- * @param map mapインスタンス
  * @param layerConfig 作成したいlayerのコンフィグ
- * @param init 初期表示レイヤー生成かどうか
  * @param setTooltipData Click時に表示するsetTooltipData関数
  * @param setsetTooltipPosition ポップアップのスタイルをセットする関数
  */
-export function makeTile3DLayers(map: Map, layerConfig, init: boolean, setTooltipData, setsetTooltipPosition) {
-  const tile3DCreator = new Tile3DLayerCreator(layerConfig, map, setTooltipData, setsetTooltipPosition);
-  return tile3DCreator.makeDeckGlLayers(init);
+export function makeTile3DLayer(layerConfig, setTooltipData, setsetTooltipPosition) {
+  const tile3DCreator = new Tile3DLayerCreator(layerConfig, setTooltipData, setsetTooltipPosition);
+  return tile3DCreator.makeDeckGlLayer();
 }
 
 class Tile3DLayerCreator {
-  private readonly map: Map;
-  private readonly layerConfig: any[];
-  private readonly layersType: string = '3dtiles';
+  private readonly layerConfig: any;
+  private readonly layerType: string = '3dtiles';
   private readonly setTooltipData: Dispatch<SetStateAction<any>>;
   private readonly setsetTooltipPosition: Dispatch<SetStateAction<any>>;
 
-  constructor(layerConfig: any[], map: Map, setTooltipData, setsetTooltipPosition) {
+  constructor(layerConfig: any, setTooltipData, setsetTooltipPosition) {
     this.layerConfig = layerConfig;
-    this.map = map;
     this.setTooltipData = setTooltipData;
     this.setsetTooltipPosition = setsetTooltipPosition;
   }
 
-  makeDeckGlLayers(init) {
-    const targetLayerConfigs = this.extractTargetConfig();
-
-    const result: Tile3DLayer<any>[] = targetLayerConfigs.map((layerConfig) => {
+  makeDeckGlLayer() {
+    const { layerConfig } = this;
+    if (this.isTargetConfig(layerConfig)) {
       const config = this.extractLayerConfig(layerConfig);
-
-      console.log(layerConfig.source);
 
       return new Tile3DLayer({
         data: layerConfig.source,
-        visible: init,
+        visible: true,
         pickable: true,
         autoHighlight: true,
         onClick: this.showToolTip,
@@ -57,9 +50,8 @@ class Tile3DLayerCreator {
         },
         ...config,
       });
-    });
-
-    return result;
+    }
+    return null;
   }
 
   private extractLayerConfig = (layerConfig) => {
@@ -67,10 +59,8 @@ class Tile3DLayerCreator {
     return otherConfig;
   };
 
-  private extractTargetConfig() {
-    return this.layerConfig.filter((layer: tile3DLayerConfig) => {
-      return layer.type === this.layersType;
-    });
+  private isTargetConfig(layerConfig: any): layerConfig is tile3DLayerConfig {
+    return layerConfig.type === this.layerType;
   }
 
   private showToolTip = (info: PickInfo<any>) => {
@@ -79,30 +69,38 @@ class Tile3DLayerCreator {
     if (!coordinate) return;
     if (!object) return;
     // @ts-ignore
-    const { layer: { props:{ tooltipType } } } = info;
-    const { layer: { id } } = info;
-    
-    const parent = document.getElementById("MapArea");
-    const body = document.getElementsByTagName("body")[0];
+    const {
+      layer: {
+        props: { tooltipType },
+      },
+    } = info;
+    const {
+      layer: { id },
+    } = info;
+
+    const parent = document.getElementById('MapArea');
+    const body = document.getElementsByTagName('body')[0];
     const tooltipWidth = body.clientWidth * 0.25;
     const tooltipHeight = body.clientHeight * 0.25;
-    const parentWidth = parent !== null ? (parent.clientWidth) : 10 ;
-    const parentHeight = parent !== null ? (parent.clientHeight) : 10 ;
+    const parentWidth = parent !== null ? parent.clientWidth : 10;
+    const parentHeight = parent !== null ? parent.clientHeight : 10;
 
     let x = info.x;
     let y = info.y;
 
-    if (x + tooltipWidth +40 > parentWidth) {
-      x = parentWidth -tooltipWidth -40;
+    if (x + tooltipWidth + 40 > parentWidth) {
+      x = parentWidth - tooltipWidth - 40;
     }
 
-    if (y + tooltipHeight +300 > parentHeight) {
-      y = parentHeight - tooltipHeight -300;
+    if (y + tooltipHeight + 300 > parentHeight) {
+      y = parentHeight - tooltipHeight - 300;
     }
     this.setsetTooltipPosition({
       top: `${String(y)}px`,
-      left: `${String(x)}px`
+      left: `${String(x)}px`,
     });
+    /*  TODO Tooltipをrecoilベースに変更する
     show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
+    */
   };
 }

@@ -1,16 +1,16 @@
 import { Map } from 'maplibre-gl';
-import { makeGeoJsonLayers } from '@/components/Map/Layer/geoJsonLayerMaker';
-import { makeArcLayers } from '@/components/Map/Layer/arcLayerMaker';
-import { makeMvtLayers } from '@/components/Map/Layer/mvtLayerMaker';
-import { makeGltfLayers } from '@/components/Map/Layer/gltfLayerMaker';
-import { makeTileLayers } from '@/components/Map/Layer/tileLayerMaker';
+import { makeGeoJsonLayer } from '@/components/Map/Layer/geoJsonLayerMaker';
+import { makeArcLayer } from '@/components/Map/Layer/arcLayerMaker';
+import { makeMvtLayer } from '@/components/Map/Layer/mvtLayerMaker';
+import { makeGltfLayer } from '@/components/Map/Layer/gltfLayerMaker';
+import { makeTileLayer } from '@/components/Map/Layer/tileLayerMaker';
 import { addRenderOption } from '@/components/Map/Layer/renderOption';
 import { getFilteredLayerConfig, Config } from '@/components/LayerFilter/config';
-import { makeIconLayers } from '@/components/Map/Layer/iconLayerMaker';
+import { makeIconLayer } from '@/components/Map/Layer/iconLayerMaker';
 import { Dispatch, SetStateAction } from 'react';
 import { Deck } from 'deck.gl';
 import { getDataList, Menu } from '@/components/LayerFilter/menu';
-import { makeTile3DLayers } from '@/components/Map/Layer/tile3DLayerMaker';
+import { makeTile3DLayer } from '@/components/Map/Layer/tile3DLayerMaker';
 
 export const makeDeckGlLayers = (
   map: Map,
@@ -28,21 +28,23 @@ export const makeDeckGlLayers = (
     });
   };
   const layerCreator = [
-    makeTileLayers,
-    makeArcLayers,
-    makeMvtLayers,
-    makeGltfLayers,
-    makeIconLayers,
-    makeTile3DLayers,
-    makeGeoJsonLayers,
+    makeTileLayer,
+    makeArcLayer,
+    makeMvtLayer,
+    makeGltfLayer,
+    makeIconLayer,
+    makeTile3DLayer,
+    makeGeoJsonLayer,
   ];
   // ここでフィルタリングのidを求める
   const layerConfig = getFilteredLayerConfig(menu, config).filter((layer) => {
     // check状態になっているものを取り出し
     return getDataList(menu).some((value) => value.checked && value.id.includes(layer.id));
   });
-  layerCreator.forEach((func) => {
-    addRenderOption(func(map, layerConfig, true, setTooltipData, setsetTooltipPosition)).forEach(LayerLoader);
+  layerConfig.forEach((lc) => {
+    layerCreator.forEach((func) => {
+      LayerLoader(addRenderOption(func(lc, setTooltipData, setsetTooltipPosition)));
+    });
   });
 
   // 初期表示のレイヤーのロード完了を検知する方法がないため1sec初期表示以外のレイヤーのロードを遅らせる
@@ -50,8 +52,10 @@ export const makeDeckGlLayers = (
     const layerConfig = getFilteredLayerConfig(menu, config).filter((layer) => {
       return getDataList(menu).some((value) => !value.checked && value.id.includes(layer.id));
     });
-    layerCreator.forEach((func) => {
-      addRenderOption(func(map, layerConfig, false, setTooltipData, setsetTooltipPosition)).forEach(LayerLoader);
+    layerConfig.forEach((lc) => {
+      layerCreator.forEach((func) => {
+        LayerLoader(addRenderOption(func(lc, setTooltipData, setsetTooltipPosition)));
+      });
     });
   }, 1000);
 };

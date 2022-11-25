@@ -1,8 +1,6 @@
-import { Map } from 'maplibre-gl';
 import { PickInfo, RGBAColor } from 'deck.gl';
 import { ArcLayer } from '@deck.gl/layers';
 
-import { show } from '@/components/Tooltip/show';
 import { Dispatch, SetStateAction } from 'react';
 
 type ArcLayerConfig = {
@@ -17,46 +15,34 @@ type ArcLayerConfig = {
 
 /**
  * makeArcLayersの作成
- * @param map mapインスタンス
  * @param layerConfig 作成したいlayerのコンフィグ
- * @param init 初期表示レイヤー生成かどうか
  * @param setTooltipData Click時に表示するsetTooltipData関数
  * @param setsetTooltipPosition ポップアップのスタイルをセットする関数
  */
-export function makeArcLayers(
-  map: Map,
-  layerConfig,
-  init: boolean,
-  setTooltipData,
-  setsetTooltipPosition
-) {
-  const ArcCreator = new ArcLayerCreator(layerConfig, map, setTooltipData, setsetTooltipPosition);
-  return ArcCreator.makeDeckGlLayers(init);
+export function makeArcLayer(layerConfig, setTooltipData, setsetTooltipPosition) {
+  const ArcCreator = new ArcLayerCreator(layerConfig, setTooltipData, setsetTooltipPosition);
+  return ArcCreator.makeDeckGlLayer();
 }
 
 class ArcLayerCreator {
-  private layersType: string = 'Arc';
-  private readonly layerConfig: any[];
-  private readonly map: Map;
+  private layerType: string = 'Arc';
+  private readonly layerConfig: any;
   private readonly setTooltipData: Dispatch<SetStateAction<any>>;
   private readonly setsetTooltipPosition: Dispatch<SetStateAction<any>>;
 
-  constructor(layerConfig: any[], map: Map, setTooltipData, setsetTooltipPosition) {
+  constructor(layerConfig: any, setTooltipData, setsetTooltipPosition) {
     this.layerConfig = layerConfig;
-    this.map = map;
     this.setTooltipData = setTooltipData;
     this.setsetTooltipPosition = setsetTooltipPosition;
   }
 
-  makeDeckGlLayers(init) {
-    const targetLayerConfigs = this.extractTargetConfig();
-
-    const result: ArcLayer<any>[] = targetLayerConfigs.map((layerConfig) => {
+  makeDeckGlLayer() {
+    const { layerConfig } = this;
+    if (this.isTargetConfig(layerConfig)) {
       const config = this.extractLayerConfig(layerConfig);
-
       return new ArcLayer({
         id: layerConfig.id,
-        visible: init,
+        visible: true,
         pickable: true,
         data: layerConfig.source,
         getWidth: layerConfig.width,
@@ -66,9 +52,9 @@ class ArcLayerCreator {
         getTargetColor: layerConfig.targetColor,
         ...config,
       });
-    });
+    }
 
-    return result;
+    return null;
   }
 
   private extractLayerConfig = (layerConfig) => {
@@ -76,10 +62,8 @@ class ArcLayerCreator {
     return otherConfig;
   };
 
-  private extractTargetConfig() {
-    return this.layerConfig.filter((layer: ArcLayerConfig) => {
-      return layer.type === this.layersType;
-    });
+  private isTargetConfig(layerConfig: any): boolean {
+    return layerConfig.type === this.layerType;
   }
 
   private showToolTip = (info: PickInfo<any>) => {
@@ -118,6 +102,9 @@ class ArcLayerCreator {
       top: `${String(y)}px`,
       left: `${String(x)}px`,
     });
+    /* TODO Tooltipをrecoilベースに変更する
     show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
+
+     */
   };
 }

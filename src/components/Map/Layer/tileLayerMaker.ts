@@ -14,40 +14,35 @@ type tileLayerConfig = {
 
 /**
  * TileLayerの作成
- * @param map mapインスタンス
  * @param layerConfig 作成したいlayerのコンフィグ
- * @param init 初期表示レイヤー生成かどうか
  * @param setTooltipData  Click時に表示するsetTooltipData関数
  * @param setsetTooltipPosition ポップアップのスタイルをセットする関数
  */
-export function makeTileLayers(map: Map, layerConfig, init: boolean, setTooltipData, setsetTooltipPosition) {
-  const tileCreator = new tileLayerCreator(layerConfig, map, setTooltipData, setsetTooltipPosition);
-  return tileCreator.makeDeckGlLayers(init);
+export function makeTileLayer(layerConfig, setTooltipData, setsetTooltipPosition) {
+  const tileCreator = new tileLayerCreator(layerConfig, setTooltipData, setsetTooltipPosition);
+  return tileCreator.makeDeckGlLayer();
 }
 
 class tileLayerCreator {
-  private readonly map: Map;
-  private readonly layerConfig: any[];
-  private readonly layersType: string = 'raster';
+  private readonly layerConfig: any;
+  private readonly layerType: string = 'raster';
   private readonly setTooltipData: Dispatch<SetStateAction<any>>;
   private readonly setsetTooltipPosition: Dispatch<SetStateAction<any>>;
 
-  constructor(layerConfig: any[], map: Map, setTooltipData, setsetTooltipPosition) {
+  constructor(layerConfig: any, setTooltipData, setsetTooltipPosition) {
     this.layerConfig = layerConfig;
-    this.map = map;
     this.setTooltipData = setTooltipData;
     this.setsetTooltipPosition = setsetTooltipPosition;
   }
 
-  makeDeckGlLayers(init) {
-    const targetLayerConfigs = this.extractTargetConfig();
-
-    const result: TileLayer<any>[] = targetLayerConfigs.map((layerConfig) => {
+  makeDeckGlLayer() {
+    const { layerConfig } = this;
+    if (this.isTargetConfig(layerConfig)) {
       const config = this.extractLayerConfig(layerConfig);
 
       return new TileLayer({
         data: layerConfig.source,
-        visible: init,
+        visible: true,
         tileSize: 256,
 
         renderSubLayers: (props) => {
@@ -64,9 +59,8 @@ class tileLayerCreator {
 
         ...config,
       });
-    });
-
-    return result;
+    }
+    return null;
   }
 
   private extractLayerConfig = (layerConfig) => {
@@ -74,9 +68,7 @@ class tileLayerCreator {
     return otherConfig;
   };
 
-  private extractTargetConfig() {
-    return this.layerConfig.filter((layer: tileLayerConfig) => {
-      return layer.type === this.layersType;
-    });
+  private isTargetConfig(layerConfig: any): layerConfig is tileLayerConfig {
+    return layerConfig.type === this.layerType;
   }
 }

@@ -5,22 +5,19 @@ import { show } from '@/components/Tooltip/show';
 
 /**
  * GLTF Layerの作成
- * @param map {maplibregl.Map}
  * @param layerConfig {any}
- * @param init {boolean}
  * @param setTooltipData {Dispatch<SetStateAction<any>>}
  * @param setsetTooltipPosition ポップアップのスタイルをセットする関数
- * @returns {ScenegraphLayer[]}
+ * @returns {ScenegraphLayer}
  */
-export function makeGltfLayers(map, layerConfig, init, setTooltipData, setsetTooltipPosition) {
-  const gltfCreator = new gltfLayerCreator(layerConfig, map, setTooltipData, setsetTooltipPosition);
-  return gltfCreator.makeDeckGlLayers(init);
+export function makeGltfLayer(layerConfig, setTooltipData, setsetTooltipPosition) {
+  const gltfCreator = new gltfLayerCreator(layerConfig, setTooltipData, setsetTooltipPosition);
+  return gltfCreator.makeDeckGlLayer();
 }
 
 class gltfLayerCreator {
-  map;
   layerConfig;
-  layersType = 'gltf';
+  layerType = 'gltf';
   setTooltipData;
   setsetTooltipPosition;
 
@@ -30,21 +27,19 @@ class gltfLayerCreator {
    * @param map {maplibregl.Map}
    * @param setTooltipData {Dispatch<SetStateAction<any>>}
    */
-  constructor(layerConfig, map, setTooltipData, setsetTooltipPosition) {
+  constructor(layerConfig, setTooltipData, setsetTooltipPosition) {
     this.layerConfig = layerConfig;
-    this.map = map;
     this.setTooltipData = setTooltipData;
     this.setsetTooltipPosition = setsetTooltipPosition;
   }
 
   /**
    * DeckGLLayerの作成
-   * @param init {boolean} 初期表示レイヤーかどうか
-   * @returns {ScenegraphLayer[]}
+   * @returns {ScenegraphLayer}
    */
-  makeDeckGlLayers(init) {
-    const targetLayerConfigs = this.extractTargetConfig();
-    return targetLayerConfigs.map((layerConfig) => {
+  makeDeckGlLayer() {
+    const { layerConfig } = this;
+    if (this.isTargetConfig(layerConfig)) {
       const config = this.extractLayerConfig(layerConfig);
 
       const content = fetchFile(layerConfig.source);
@@ -53,7 +48,7 @@ class gltfLayerCreator {
 
       return new ScenegraphLayer({
         data: layerConfig.source,
-        visible: init,
+        visible: true,
         pickable: true,
         scenegraph: scenegraph,
         _lighting: 'flat',
@@ -61,7 +56,8 @@ class gltfLayerCreator {
         onClick: this.showToolTip,
         ...config,
       });
-    });
+    }
+    return null;
   }
 
   extractLayerConfig = (layerConfig) => {
@@ -69,14 +65,8 @@ class gltfLayerCreator {
     return otherConfig;
   };
 
-  /**
-   * layersTypeに適合するレイヤーコンフィグを取り出し
-   * @private
-   */
-  extractTargetConfig() {
-    return this.layerConfig.filter((layer) => {
-      return layer.type === this.layersType;
-    });
+  isTargetConfig(layer) {
+    return layer.type === this.layerType;
   }
 
   showToolTip = (info) => {
@@ -84,30 +74,39 @@ class gltfLayerCreator {
     if (!coordinate) return;
     if (!object) return;
     // @ts-ignore
-    const { layer: { props:{ tooltipType } } } = info;
-    const { layer: { id } } = info;
-    
-    const parent = document.getElementById("MapArea");
-    const body = document.getElementsByTagName("body")[0];
+    const {
+      layer: {
+        props: { tooltipType },
+      },
+    } = info;
+    const {
+      layer: { id },
+    } = info;
+
+    const parent = document.getElementById('MapArea');
+    const body = document.getElementsByTagName('body')[0];
     const tooltipWidth = body.clientWidth * 0.25;
     const tooltipHeight = body.clientHeight * 0.25;
-    const parentWidth = parent !== null ? (parent.clientWidth) : 10 ;
-    const parentHeight = parent !== null ? (parent.clientHeight) : 10 ;
+    const parentWidth = parent !== null ? parent.clientWidth : 10;
+    const parentHeight = parent !== null ? parent.clientHeight : 10;
 
     let x = info.x;
     let y = info.y;
 
-    if (x + tooltipWidth +40 > parentWidth) {
-      x = parentWidth -tooltipWidth -40;
+    if (x + tooltipWidth + 40 > parentWidth) {
+      x = parentWidth - tooltipWidth - 40;
     }
 
-    if (y + tooltipHeight +300 > parentHeight) {
-      y = parentHeight - tooltipHeight -300;
+    if (y + tooltipHeight + 300 > parentHeight) {
+      y = parentHeight - tooltipHeight - 300;
     }
     this.setsetTooltipPosition({
       top: `${String(y)}px`,
-      left: `${String(x)}px`
+      left: `${String(x)}px`,
     });
+    /* TODO Tooltipをrecoilベースに変更する
     show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
+
+     */
   };
 }

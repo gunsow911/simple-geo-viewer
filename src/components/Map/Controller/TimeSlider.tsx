@@ -12,10 +12,10 @@ import {
 import { context } from '@/pages';
 import Slider from 'react-rangeslider';
 import { Deck } from 'deck.gl';
-import { getFilteredLayerConfig } from '@/components/LayerFilter/config';
+import { getFilteredLayerConfig, LayerConfig } from '@/components/LayerFilter/config';
 import { getDataList } from '@/components/LayerFilter/menu';
 import { addRenderOption } from '@/components/Map/Layer/renderOption';
-import { makeTemporalLayers, TEMPORAL_LAYER_TYPES } from '../Layer/temporalLayerMaker';
+import { makeTemporalLayer, TEMPORAL_LAYER_TYPES } from '../Layer/temporalLayerMaker';
 import { Map } from 'maplibre-gl';
 
 type Props = {
@@ -41,18 +41,17 @@ export const TimeSlider: VFC<Props> = memo(function TimeSlider({ map, deck, setT
   const { preferences } = useContext(context);
 
   // Layerレンダリング用のCallback
-  const renderCallback = (layerConfig, timestamp) => {
-    addRenderOption(
-      makeTemporalLayers(layerConfig, true, timestamp, checkedLayerTitleList, preferences.menu)
-    ).forEach((layer) => {
-      deck.setProps({
-        layers: [
-          ...deck.props.layers.filter((l) => {
-            return l.id !== layer.id;
-          }),
-          layer,
-        ],
-      });
+  const renderCallback = (layerConfig: LayerConfig, timestamp) => {
+    const layer = addRenderOption(
+      makeTemporalLayer(layerConfig, timestamp, checkedLayerTitleList, preferences.menu)
+    );
+    deck.setProps({
+      layers: [
+        ...deck.props.layers.filter((l) => {
+          return l.id !== layer.id;
+        }),
+        layer,
+      ],
     });
   };
 
@@ -85,10 +84,14 @@ export const TimeSlider: VFC<Props> = memo(function TimeSlider({ map, deck, setT
     const layerConfig = getLayerConfig();
     setTimestamp((prevState) => {
       if (prevState >= maxVal) {
-        renderCallback(layerConfig, 0);
+        layerConfig.forEach((lc) => {
+          renderCallback(lc, 0);
+        });
         return 0;
       }
-      renderCallback(layerConfig, prevState + (1 + speed));
+      layerConfig.forEach((lc) => {
+        renderCallback(lc, prevState + (1 + speed));
+      });
       return prevState + (1 + speed);
     });
     requestRef.current = requestAnimationFrame(animate);
@@ -114,7 +117,9 @@ export const TimeSlider: VFC<Props> = memo(function TimeSlider({ map, deck, setT
   useEffect(() => {
     if (deck !== undefined) {
       // 初回レンダリング
-      renderCallback(getLayerConfig(), timestamp);
+      getLayerConfig().forEach((lc) => {
+        renderCallback(lc, timestamp);
+      });
     }
   }, [deck]);
 
@@ -128,7 +133,9 @@ export const TimeSlider: VFC<Props> = memo(function TimeSlider({ map, deck, setT
           }}
           onChange={(value) => {
             const layerConfig = getLayerConfig();
-            renderCallback(layerConfig, value);
+            layerConfig.forEach((lc) => {
+              renderCallback(lc, value);
+            });
             setTimestamp(value);
           }}
           orientation="horizontal"
