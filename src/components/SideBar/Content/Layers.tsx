@@ -9,6 +9,7 @@ import { LayersState, TemporalLayerConfigState } from '@/store/LayersState';
 import { makeDeckGLLayer } from '@/components/Map/Layer/deckGlLayerFactory';
 import { TEMPORAL_LAYER_TYPES } from '@/components/Map/Layer/temporalLayerMaker';
 import { getLayerConfigById, LayerConfig } from '@/components/LayerFilter/config';
+import { TooltipDataState, TooltipPositionState } from '@/store/TooltipState';
 
 const isSelected = (resourceName: string, selectedResourceNameList: string[]): boolean => {
   return selectedResourceNameList.includes(resourceName);
@@ -25,11 +26,9 @@ const setResourceViewState = (resource: Data, setClickedLayerViewState: any) => 
 
 type LayersProps = {
   layers: Data[];
-  setTooltipData: Dispatch<SetStateAction<any>>;
-  setsetTooltipPosition: Dispatch<SetStateAction<any>>;
 };
 
-export const Layers: FC<LayersProps> = ({ layers, setsetTooltipPosition, setTooltipData }) => {
+export const Layers: FC<LayersProps> = ({ layers }) => {
   const {
     checkedLayerTitleList,
     setCheckedLayerTitleList,
@@ -40,6 +39,9 @@ export const Layers: FC<LayersProps> = ({ layers, setsetTooltipPosition, setTool
 
   const [deckGLLayers, setDeckGLLayers] = useRecoilState(LayersState);
   const [temporalLayerConfigs, setTemporalLayerConfigs] = useRecoilState(TemporalLayerConfigState);
+  const [tooltipData, setTooltipData] = useRecoilState(TooltipDataState);
+  const [tooltipPosition, setTooltipPosition] = useRecoilState(TooltipPositionState);
+
   const layerCreateById = useCallback(
     (ids: string[]) => {
       return ids.forEach((id) => {
@@ -52,7 +54,7 @@ export const Layers: FC<LayersProps> = ({ layers, setsetTooltipPosition, setTool
             return [...currVal, layerConfig];
           });
         } else {
-          const deckGLlayer = makeDeckGLLayer(layerConfig, setTooltipData, setsetTooltipPosition);
+          const deckGLlayer = makeDeckGLLayer(layerConfig, setTooltipData, setTooltipPosition);
           if (deckGLlayer) {
             setDeckGLLayers((currVal) => {
               return [...currVal, deckGLlayer];
@@ -65,7 +67,7 @@ export const Layers: FC<LayersProps> = ({ layers, setsetTooltipPosition, setTool
       preferences.config,
       setTemporalLayerConfigs,
       setTooltipData,
-      setsetTooltipPosition,
+      setTooltipPosition,
       setDeckGLLayers,
     ]
   );

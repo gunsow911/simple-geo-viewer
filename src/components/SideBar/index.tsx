@@ -6,12 +6,7 @@ import { Layers } from '@/components/SideBar/Content/Layers';
 import { FilterLayerInput } from '@/components/SideBar/Content/FilterLayerInput';
 import { getFilteredMenu } from '@/components/LayerFilter/menu';
 
-type Props = {
-  setTooltipData: Dispatch<SetStateAction<any>>;
-  setsetTooltipPosition: Dispatch<SetStateAction<any>>;
-};
-
-const Sidebar: React.FC<Props> = (props) => {
+const Sidebar: React.FC = () => {
   const { preferences } = useContext(context);
   const [InputFilterKeyword, setInputFilterKeyword] = useState('');
   const filteredMenu = getFilteredMenu(preferences.menu, InputFilterKeyword);
@@ -23,7 +18,7 @@ const Sidebar: React.FC<Props> = (props) => {
       {visiblyContentList.map((content) => (
         <Content
           title={content.title}
-          layers={<Layers layers={content.layers} {...props} />}
+          layers={<Layers layers={content.layers} />}
           key={content.title}
         />
       ))}

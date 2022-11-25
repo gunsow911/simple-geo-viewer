@@ -3,6 +3,8 @@ import { PickInfo } from 'deck.gl';
 import { Tile3DLayer } from '@deck.gl/geo-layers';
 import { show } from '@/components/Tooltip/show';
 import { Dispatch, SetStateAction } from 'react';
+import { getPropertiesObj } from '@/components/Tooltip/util';
+import { SetterOrUpdater } from 'recoil';
 
 type tile3DLayerConfig = {
   id: string;
@@ -15,23 +17,29 @@ type tile3DLayerConfig = {
  * Tile3DLayerの作成
  * @param layerConfig 作成したいlayerのコンフィグ
  * @param setTooltipData Click時に表示するsetTooltipData関数
- * @param setsetTooltipPosition ポップアップのスタイルをセットする関数
+ * @param setTooltipPosition ポップアップのスタイルをセットする関数
  */
-export function makeTile3DLayer(layerConfig, setTooltipData, setsetTooltipPosition) {
-  const tile3DCreator = new Tile3DLayerCreator(layerConfig, setTooltipData, setsetTooltipPosition);
+export function makeTile3DLayer(layerConfig, setTooltipData, setTooltipPosition) {
+  const tile3DCreator = new Tile3DLayerCreator(layerConfig, setTooltipData, setTooltipPosition);
   return tile3DCreator.makeDeckGlLayer();
 }
 
 class Tile3DLayerCreator {
   private readonly layerConfig: any;
   private readonly layerType: string = '3dtiles';
-  private readonly setTooltipData: Dispatch<SetStateAction<any>>;
-  private readonly setsetTooltipPosition: Dispatch<SetStateAction<any>>;
+  private readonly setTooltipData: SetterOrUpdater<{
+    lng: number;
+    lat: number;
+    tooltipType: 'default' | 'thumbnail' | 'table';
+    id: string;
+    data: any;
+  } | null>;
+  private readonly setTooltipPosition: SetterOrUpdater<{ top: string; left: string } | null>;
 
-  constructor(layerConfig: any, setTooltipData, setsetTooltipPosition) {
+  constructor(layerConfig: any, setTooltipData, setTooltipPosition) {
     this.layerConfig = layerConfig;
     this.setTooltipData = setTooltipData;
-    this.setsetTooltipPosition = setsetTooltipPosition;
+    this.setTooltipPosition = setTooltipPosition;
   }
 
   makeDeckGlLayer() {
@@ -95,12 +103,18 @@ class Tile3DLayerCreator {
     if (y + tooltipHeight + 300 > parentHeight) {
       y = parentHeight - tooltipHeight - 300;
     }
-    this.setsetTooltipPosition({
+
+    this.setTooltipPosition({
       top: `${String(y)}px`,
       left: `${String(x)}px`,
     });
-    /*  TODO Tooltipをrecoilベースに変更する
-    show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
-    */
+    const data = getPropertiesObj(object, tooltipType, id);
+    this.setTooltipData({
+      lng: coordinate[0],
+      lat: coordinate[1],
+      tooltipType,
+      id,
+      data,
+    });
   };
 }

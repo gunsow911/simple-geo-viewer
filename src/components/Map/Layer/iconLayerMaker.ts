@@ -4,6 +4,8 @@ import { IconLayer } from '@deck.gl/layers';
 import { show } from '@/components/Tooltip/show';
 import { Dispatch, SetStateAction } from 'react';
 import { GeojsonLayerConfig, LayerConfig } from '@/components/LayerFilter/config';
+import { getPropertiesObj } from '@/components/Tooltip/util';
+import { SetterOrUpdater } from 'recoil';
 
 type iconLayerConfig = {
   id: string;
@@ -16,23 +18,29 @@ type iconLayerConfig = {
  * IconLayerの作成
  * @param layerConfig 作成したいlayerのコンフィグ
  * @param setTooltipData Click時に表示するsetTooltipData関数
- * @param setsetTooltipPosition ポップアップのスタイルをセットする関数
+ * @param setTooltipPosition ポップアップのスタイルをセットする関数
  */
-export function makeIconLayer(layerConfig, setTooltipData, setsetTooltipPosition) {
-  const iconLayerCreator = new IconLayerCreator(layerConfig, setTooltipData, setsetTooltipPosition);
+export function makeIconLayer(layerConfig, setTooltipData, setTooltipPosition) {
+  const iconLayerCreator = new IconLayerCreator(layerConfig, setTooltipData, setTooltipPosition);
   return iconLayerCreator.makeDeckGlLayer();
 }
 
 class IconLayerCreator {
   private readonly layerConfig: any;
   private readonly layerType: string = 'icon';
-  private readonly setTooltipData: Dispatch<SetStateAction<any>>;
-  private readonly setsetTooltipPosition: Dispatch<SetStateAction<any>>;
+  private readonly setTooltipData: SetterOrUpdater<{
+    lng: number;
+    lat: number;
+    tooltipType: 'default' | 'thumbnail' | 'table';
+    id: string;
+    data: any;
+  } | null>;
+  private readonly setTooltipPosition: SetterOrUpdater<{ top: string; left: string } | null>;
 
-  constructor(layerConfig: any, setTooltipData, setsetTooltipPosition) {
+  constructor(layerConfig: any, setTooltipData, setTooltipPosition) {
     this.layerConfig = layerConfig;
     this.setTooltipData = setTooltipData;
-    this.setsetTooltipPosition = setsetTooltipPosition;
+    this.setTooltipPosition = setTooltipPosition;
   }
 
   /**
@@ -107,12 +115,18 @@ class IconLayerCreator {
     if (y + tooltipHeight + 300 > parentHeight) {
       y = parentHeight - tooltipHeight - 300;
     }
-    this.setsetTooltipPosition({
+
+    this.setTooltipPosition({
       top: `${String(y)}px`,
       left: `${String(x)}px`,
     });
-    /* TODO Tooltipをrecoilベースに変更する
-    show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
-    */
+    const data = getPropertiesObj(object, tooltipType, id);
+    this.setTooltipData({
+      lng: coordinate[0],
+      lat: coordinate[1],
+      tooltipType,
+      id,
+      data,
+    });
   };
 }

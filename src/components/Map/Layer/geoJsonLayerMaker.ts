@@ -9,28 +9,30 @@ import {
   GeojsonLayerConfig,
   LayerConfig,
 } from '@/components/LayerFilter/config';
+import { getPropertiesObj } from '@/components/Tooltip/util';
+import { SetterOrUpdater } from 'recoil';
 
 /**
  * GeoJsonLayerの作成
  * @param layerConfig 作成したいlayerのコンフィグ
  * @param setTooltipData Click時に表示するsetTooltipData関数
- * @param setsetTooltipPosition ポップアップのスタイルをセットする関数
+ * @param setTooltipPosition ポップアップのスタイルをセットする関数
  */
-export function makeGeoJsonLayer(layerConfig: LayerConfig, setTooltipData, setsetTooltipPosition) {
+export function makeGeoJsonLayer(layerConfig: LayerConfig, setTooltipData, setTooltipPosition) {
   const geoJsonLinePolygonCreator = new GeoJsonLinePolygonCreator(
     layerConfig,
     setTooltipData,
-    setsetTooltipPosition
+    setTooltipPosition
   );
   const geoJsonIconCreator = new GeoJsonIconLayerCreator(
     layerConfig,
     setTooltipData,
-    setsetTooltipPosition
+    setTooltipPosition
   );
   const geoJsonFeatureCollectionIconCreator = new GeoJsonFeatureCollectionIconLayerCreator(
     layerConfig,
     setTooltipData,
-    setsetTooltipPosition
+    setTooltipPosition
   );
   const geoJsonLinePolygonLayer = geoJsonLinePolygonCreator.makeDeckGlLayer();
   const geoJsonIconLayer = geoJsonIconCreator.makeDeckGlLayer();
@@ -41,13 +43,19 @@ export function makeGeoJsonLayer(layerConfig: LayerConfig, setTooltipData, setse
 class GeoJsonLinePolygonCreator {
   layerType: string = 'geojson';
   private readonly layerConfig: LayerConfig;
-  private readonly setTooltipData: Dispatch<SetStateAction<any>>;
-  private readonly setsetTooltipPosition: Dispatch<SetStateAction<any>>;
+  private readonly setTooltipData: SetterOrUpdater<{
+    lng: number;
+    lat: number;
+    tooltipType: 'default' | 'thumbnail' | 'table';
+    id: string;
+    data: any;
+  } | null>;
+  private readonly setTooltipPosition: SetterOrUpdater<{ top: string; left: string } | null>;
 
-  constructor(layerConfig: LayerConfig, setTooltipData, setsetTooltipPosition) {
+  constructor(layerConfig: LayerConfig, setTooltipData, setTooltipPosition) {
     this.layerConfig = layerConfig;
     this.setTooltipData = setTooltipData;
-    this.setsetTooltipPosition = setsetTooltipPosition;
+    this.setTooltipPosition = setTooltipPosition;
   }
 
   makeDeckGlLayer() {
@@ -108,27 +116,45 @@ class GeoJsonLinePolygonCreator {
     if (y + tooltipHeight + 300 > parentHeight) {
       y = parentHeight - tooltipHeight - 300;
     }
-    this.setsetTooltipPosition({
+
+    this.setTooltipPosition({
       top: `${String(y)}px`,
       left: `${String(x)}px`,
     });
-    /* TODO Tooltipをrecoilベースに変更する
-    show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
-
-     */
+    const data = getPropertiesObj(object, tooltipType, id);
+    console.log({
+      lng: coordinate[0],
+      lat: coordinate[1],
+      tooltipType,
+      id,
+      data,
+    });
+    this.setTooltipData({
+      lng: coordinate[0],
+      lat: coordinate[1],
+      tooltipType,
+      id,
+      data,
+    });
   };
 }
 
 class GeoJsonIconLayerCreator {
   layerType: string = 'geojsonicon';
   private readonly layerConfig: LayerConfig;
-  private readonly setTooltipData: Dispatch<SetStateAction<any>>;
-  private readonly setsetTooltipPosition: Dispatch<SetStateAction<any>>;
+  private readonly setTooltipData: SetterOrUpdater<{
+    lng: number;
+    lat: number;
+    tooltipType: 'default' | 'thumbnail' | 'table';
+    id: string;
+    data: any;
+  } | null>;
+  private readonly setTooltipPosition: SetterOrUpdater<{ top: string; left: string } | null>;
 
-  constructor(layerConfig: LayerConfig, setTooltipData, setsetTooltipPosition) {
+  constructor(layerConfig: LayerConfig, setTooltipData, setTooltipPosition) {
     this.layerConfig = layerConfig;
     this.setTooltipData = setTooltipData;
-    this.setsetTooltipPosition = setsetTooltipPosition;
+    this.setTooltipPosition = setTooltipPosition;
   }
 
   makeDeckGlLayer() {
@@ -200,14 +226,18 @@ class GeoJsonIconLayerCreator {
     if (y + tooltipHeight + 300 > parentHeight) {
       y = parentHeight - tooltipHeight - 300;
     }
-    this.setsetTooltipPosition({
+    this.setTooltipPosition({
       top: `${String(y)}px`,
       left: `${String(x)}px`,
     });
-    /* TODO Tooltipをrecoilベースに変更する
-    show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
-
-     */
+    const data = getPropertiesObj(object, tooltipType, id);
+    this.setTooltipData({
+      lng: coordinate[0],
+      lat: coordinate[1],
+      tooltipType,
+      id,
+      data,
+    });
   };
 }
 
@@ -231,13 +261,19 @@ async function getJsonFeatures(
 class GeoJsonFeatureCollectionIconLayerCreator {
   layerType: string = 'geojsonfcicon';
   private readonly layerConfig: LayerConfig;
-  private readonly setTooltipData: Dispatch<SetStateAction<any>>;
-  private readonly setsetTooltipPosition: Dispatch<SetStateAction<any>>;
+  private readonly setTooltipData: SetterOrUpdater<{
+    lng: number;
+    lat: number;
+    tooltipType: 'default' | 'thumbnail' | 'table';
+    id: string;
+    data: any;
+  } | null>;
+  private readonly setTooltipPosition: SetterOrUpdater<{ top: string; left: string } | null>;
 
-  constructor(layerConfig: LayerConfig, setTooltipData, setsetTooltipPosition) {
+  constructor(layerConfig: LayerConfig, setTooltipData, setTooltipPosition) {
     this.layerConfig = layerConfig;
     this.setTooltipData = setTooltipData;
-    this.setsetTooltipPosition = setsetTooltipPosition;
+    this.setTooltipPosition = setTooltipPosition;
   }
 
   makeDeckGlLayer() {
@@ -322,13 +358,18 @@ class GeoJsonFeatureCollectionIconLayerCreator {
     if (y + tooltipHeight + 300 > parentHeight) {
       y = parentHeight - tooltipHeight - 300;
     }
-    this.setsetTooltipPosition({
+
+    this.setTooltipPosition({
       top: `${String(y)}px`,
       left: `${String(x)}px`,
     });
-    /*
-    show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
-
-     */
+    const data = getPropertiesObj(object, tooltipType, id);
+    this.setTooltipData({
+      lng: coordinate[0],
+      lat: coordinate[1],
+      tooltipType,
+      id,
+      data,
+    });
   };
 }

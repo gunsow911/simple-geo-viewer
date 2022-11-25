@@ -21,12 +21,10 @@ import { useRecoilValue } from 'recoil';
 import { TemporalLayerConfigState } from '@/store/LayersState';
 
 type Props = {
-  map: Map;
   deck: Deck;
-  setTooltipData: Dispatch<SetStateAction<any>>;
 };
 
-export const TimeSlider: VFC<Props> = memo(function TimeSlider({ map, deck, setTooltipData }) {
+export const TimeSlider: VFC<Props> = memo(function TimeSlider({ deck }) {
   const temporalLayerConfigs = useRecoilValue(TemporalLayerConfigState);
   const [timestamp, setTimestamp] = useState<number>(() => {
     // 時間初期値

@@ -3,6 +3,9 @@ import { context } from '@/pages';
 import Collapsible from 'react-collapsible';
 import { getDataById, getCategoryByTitle, getDataTitleById } from '@/components/LayerFilter/menu';
 import { largeDownloadIcon, shareIcon, linkIcon } from '@/components/SideBar/Icon';
+import { useRecoilValue } from 'recoil';
+import { TooltipDataState } from '@/store/TooltipState';
+import { getPropertiesObj } from '@/components/Tooltip/util';
 
 type BaseTooltipProps = { children: ReactNode };
 
@@ -24,13 +27,6 @@ const BaseTooltip: VFC<BaseTooltipProps> = ({ children }) => {
   );
 };
 
-type TooltipProps = {
-  properties: any;
-  labels: string[];
-  tooltipType: string;
-  id: string;
-};
-
 type TooltipBodyProps = {
   properties: any;
   labels: string[];
@@ -48,7 +44,17 @@ type TooltipTableBodyProps = {
   id: string;
 };
 
-export const Tooltip: VFC<TooltipProps> = ({ properties, labels, tooltipType, id }) => {
+export const Tooltip: VFC = () => {
+  const tooltipData = useRecoilValue(TooltipDataState);
+  if (!tooltipData) {
+    return null;
+  }
+  const {
+    data: { properties, labels },
+    tooltipType,
+    id,
+  } = tooltipData;
+
   return (
     <div className={'relative overflow-auto h-full '}>
       <BaseTooltip>

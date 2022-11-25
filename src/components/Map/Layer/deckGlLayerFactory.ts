@@ -11,11 +11,18 @@ import { Dispatch, SetStateAction } from 'react';
 import { Deck } from 'deck.gl';
 import { getDataList, Menu } from '@/components/LayerFilter/menu';
 import { makeTile3DLayer } from '@/components/Map/Layer/tile3DLayerMaker';
+import { SetterOrUpdater } from 'recoil';
 
 export const makeDeckGLLayer = (
   layerConfig: LayerConfig,
-  setTooltipData: Dispatch<SetStateAction<any>>,
-  setsetTooltipPosition: Dispatch<SetStateAction<any>>
+  setTooltipData: SetterOrUpdater<{
+    lng: number;
+    lat: number;
+    tooltipType: 'default' | 'thumbnail' | 'table';
+    id: string;
+    data: any;
+  } | null>,
+  setTooltipPosition: SetterOrUpdater<{ top: string; left: string } | null>
 ) => {
   const layerCreator = [
     makeTileLayer,
@@ -28,7 +35,7 @@ export const makeDeckGLLayer = (
   ];
   const createdLayer = layerCreator
     .map((func) => {
-      return addRenderOption(func(layerConfig, setTooltipData, setsetTooltipPosition));
+      return addRenderOption(func(layerConfig, setTooltipData, setTooltipPosition));
     })
     .filter(Boolean);
   console.log(createdLayer);
@@ -45,7 +52,7 @@ export const makeDeckGlLayers = (
   map: Map,
   deck: Deck,
   setTooltipData: Dispatch<SetStateAction<any>>,
-  setsetTooltipPosition: Dispatch<SetStateAction<any>>,
+  setTooltipPosition: Dispatch<SetStateAction<any>>,
   menu: Menu,
   config: Config
 ) => {
@@ -72,7 +79,7 @@ export const makeDeckGlLayers = (
   });
   layerConfig.forEach((lc) => {
     layerCreator.forEach((func) => {
-      LayerLoader(addRenderOption(func(lc, setTooltipData, setsetTooltipPosition)));
+      LayerLoader(addRenderOption(func(lc, setTooltipData, setTooltipPosition)));
     });
   });
 
@@ -83,7 +90,7 @@ export const makeDeckGlLayers = (
     });
     layerConfig.forEach((lc) => {
       layerCreator.forEach((func) => {
-        LayerLoader(addRenderOption(func(lc, setTooltipData, setsetTooltipPosition)));
+        LayerLoader(addRenderOption(func(lc, setTooltipData, setTooltipPosition)));
       });
     });
   }, 1000);

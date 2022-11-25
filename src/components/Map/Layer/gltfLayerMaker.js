@@ -7,11 +7,11 @@ import { show } from '@/components/Tooltip/show';
  * GLTF Layerの作成
  * @param layerConfig {any}
  * @param setTooltipData {Dispatch<SetStateAction<any>>}
- * @param setsetTooltipPosition ポップアップのスタイルをセットする関数
+ * @param setTooltipPosition ポップアップのスタイルをセットする関数
  * @returns {ScenegraphLayer}
  */
-export function makeGltfLayer(layerConfig, setTooltipData, setsetTooltipPosition) {
-  const gltfCreator = new gltfLayerCreator(layerConfig, setTooltipData, setsetTooltipPosition);
+export function makeGltfLayer(layerConfig, setTooltipData, setTooltipPosition) {
+  const gltfCreator = new gltfLayerCreator(layerConfig, setTooltipData, setTooltipPosition);
   return gltfCreator.makeDeckGlLayer();
 }
 
@@ -19,7 +19,7 @@ class gltfLayerCreator {
   layerConfig;
   layerType = 'gltf';
   setTooltipData;
-  setsetTooltipPosition;
+  setTooltipPosition;
 
   /**
    *
@@ -27,10 +27,10 @@ class gltfLayerCreator {
    * @param map {maplibregl.Map}
    * @param setTooltipData {Dispatch<SetStateAction<any>>}
    */
-  constructor(layerConfig, setTooltipData, setsetTooltipPosition) {
+  constructor(layerConfig, setTooltipData, setTooltipPosition) {
     this.layerConfig = layerConfig;
     this.setTooltipData = setTooltipData;
-    this.setsetTooltipPosition = setsetTooltipPosition;
+    this.setTooltipPosition = setTooltipPosition;
   }
 
   /**
@@ -100,13 +100,18 @@ class gltfLayerCreator {
     if (y + tooltipHeight + 300 > parentHeight) {
       y = parentHeight - tooltipHeight - 300;
     }
-    this.setsetTooltipPosition({
+
+    this.setTooltipPosition({
       top: `${String(y)}px`,
       left: `${String(x)}px`,
     });
-    /* TODO Tooltipをrecoilベースに変更する
-    show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
-
-     */
+    const data = getPropertiesObj(object, tooltipType, id);
+    this.setTooltipData({
+      lng: coordinate[0],
+      lat: coordinate[1],
+      tooltipType,
+      id,
+      data,
+    });
   };
 }

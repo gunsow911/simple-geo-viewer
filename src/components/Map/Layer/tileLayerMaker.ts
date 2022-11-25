@@ -2,6 +2,7 @@ import { Map } from 'maplibre-gl';
 import { TileLayer } from '@deck.gl/geo-layers';
 import { BitmapLayer } from '@deck.gl/layers';
 import { Dispatch, SetStateAction } from 'react';
+import { SetterOrUpdater } from 'recoil';
 
 type tileLayerConfig = {
   id: string;
@@ -16,23 +17,29 @@ type tileLayerConfig = {
  * TileLayerの作成
  * @param layerConfig 作成したいlayerのコンフィグ
  * @param setTooltipData  Click時に表示するsetTooltipData関数
- * @param setsetTooltipPosition ポップアップのスタイルをセットする関数
+ * @param setTooltipPosition ポップアップのスタイルをセットする関数
  */
-export function makeTileLayer(layerConfig, setTooltipData, setsetTooltipPosition) {
-  const tileCreator = new tileLayerCreator(layerConfig, setTooltipData, setsetTooltipPosition);
+export function makeTileLayer(layerConfig, setTooltipData, setTooltipPosition) {
+  const tileCreator = new tileLayerCreator(layerConfig, setTooltipData, setTooltipPosition);
   return tileCreator.makeDeckGlLayer();
 }
 
 class tileLayerCreator {
   private readonly layerConfig: any;
   private readonly layerType: string = 'raster';
-  private readonly setTooltipData: Dispatch<SetStateAction<any>>;
-  private readonly setsetTooltipPosition: Dispatch<SetStateAction<any>>;
+  private readonly setTooltipData: SetterOrUpdater<{
+    lng: number;
+    lat: number;
+    tooltipType: 'default' | 'thumbnail' | 'table';
+    id: string;
+    data: any;
+  } | null>;
+  private readonly setTooltipPosition: SetterOrUpdater<{ top: string; left: string } | null>;
 
-  constructor(layerConfig: any, setTooltipData, setsetTooltipPosition) {
+  constructor(layerConfig: any, setTooltipData, setTooltipPosition) {
     this.layerConfig = layerConfig;
     this.setTooltipData = setTooltipData;
-    this.setsetTooltipPosition = setsetTooltipPosition;
+    this.setTooltipPosition = setTooltipPosition;
   }
 
   makeDeckGlLayer() {

@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useContext, useEffect, useRef } from 'react';
 
-import { Map, Style, NavigationControl } from 'maplibre-gl';
+import { Map, Style, NavigationControl, Marker } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 import { Deck } from '@deck.gl/core/typed';
@@ -24,6 +24,8 @@ import { useRecoilValue } from 'recoil';
 import { LayersState, TemporalLayerConfigState } from '@/store/LayersState';
 import { makeDeckGlLayers } from '@/components/Map/Layer/deckGlLayerFactory';
 import { toggleVisibly, zoomVisibly } from '@/components/Map/Layer/visibly';
+import { TooltipDataState, TooltipPositionState } from '@/store/TooltipState';
+import { getPropertiesObj } from '@/components/Tooltip/util';
 
 //let map: Map;
 //let deck: Deck;
@@ -159,12 +161,26 @@ const useToggleVisibly = (menu: Menu, config: Config, deck: any) => {
   return priorityViewLayer;
 };
 
-type Props = {
-  setTooltipData: Dispatch<SetStateAction<any>>;
-  setsetTooltipPosition: Dispatch<SetStateAction<any>>;
+const useShowTooltip = (map: any) => {
+  const pointMarkerRef = useRef<any>();
+
+  const tooltipData = useRecoilValue(TooltipDataState);
+  useEffect(() => {
+    if (!tooltipData || !tooltipData.data) {
+      if (pointMarkerRef.current) {
+        pointMarkerRef.current.remove();
+      }
+    } else {
+      const { data, tooltipType, id, lat, lng } = tooltipData;
+      getPropertiesObj(data, !tooltipType ? 'default' : tooltipType, id);
+      if (map) {
+        pointMarkerRef.current = new Marker().setLngLat([lng, lat]).addTo(map);
+      }
+    }
+  }, [map, tooltipData]);
 };
 
-const MapComponent: React.VFC<Props> = ({ setTooltipData, setsetTooltipPosition }) => {
+const MapComponent: React.VFC = () => {
   const maplibreContainer = useRef<HTMLDivElement | null>(null);
   const deckglContainer = useRef<HTMLCanvasElement | null>(null);
   const { preferences } = useContext(context);
@@ -180,7 +196,7 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData, setsetTooltipPosition 
   if (deckGLRef.current) {
     deckGLRef.current.setProps({ layers: [...(deckglLayers ?? [])] });
   }
-
+  useShowTooltip(mapRef.current);
   return (
     <>
       <div className="h-full" ref={maplibreContainer}>
@@ -193,13 +209,7 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData, setsetTooltipPosition 
           <BackgroundSelector map={mapRef.current} />
         </div>
         <div className="z-10 absolute bottom-0 left-0 w-2/5 bg-white">
-          {temporalLayerConfigs.length ? (
-            <TimeSlider
-              deck={deckGLRef.current}
-              map={mapRef.current}
-              setTooltipData={setTooltipData}
-            />
-          ) : null}
+          {temporalLayerConfigs.length ? <TimeSlider deck={deckGLRef.current} /> : null}
         </div>
         <DashboardPanelManager />
       </div>
