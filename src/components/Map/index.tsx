@@ -3,10 +3,10 @@ import React, { Dispatch, SetStateAction, useContext, useEffect, useRef } from '
 import { Map, Style, NavigationControl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-import { Deck } from '@deck.gl/core/typed';
+import { Deck, FlyToInterpolator } from '@deck.gl/core/typed';
 
 import { context } from '@/pages';
-import { useFlyTo } from '@/components/Map/Animation/flyTo';
+import { useFlyTo, easeOutQuart } from '@/components/Map/Animation/flyTo';
 import { makeDeckGlLayers } from '@/components/Map/Layer/deckGlLayerFactory';
 import { toggleVisibly, zoomVisibly, visiblyLayers } from '@/components/Map/Layer/visibly';
 import Legend, { useGetClickedLayerId } from '@/components/Map/Legend';
@@ -18,7 +18,7 @@ import {
   getLayerConfigById,
   Config,
 } from '@/components/LayerFilter/config';
-import { Menu } from '@/components/LayerFilter/menu';
+import { Menu, getDataById } from '@/components/LayerFilter/menu';
 import { TEMPORAL_LAYER_TYPES } from '@/components/Map/Layer/temporalLayerMaker';
 import { Preferences, Backgrounds } from '@/components/LayerFilter/loader';
 import { resolveUrl } from '@loaders.gl/gltf/src/lib/gltf-utils/resolve-url';
@@ -187,7 +187,22 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData, setsetTooltipPosition 
       );
 
       let querySelecteLayerId = router.query.querySelecteLayerId as string | undefined;
-      alert(querySelecteLayerId);
+      querySelecteLayerId = querySelecteLayerId === undefined ? '' : querySelecteLayerId;
+      if (querySelecteLayerId !== '') {
+        const targetResource = getDataById(preferences.menu, [querySelecteLayerId]);
+
+        const viewState = {
+          longitude: targetResource.lng,
+          latitude: targetResource.lat,
+          zoom: targetResource.zoom,
+          id: targetResource.id[0],
+          pitch: preferences.initialView.map.pitch,
+          transitionDuration: 2000,
+          transitionEasing: easeOutQuart,
+          transitionInterpolator: new FlyToInterpolator(),
+        };
+        deck.setProps({ initialViewState: viewState });
+      }
       checkZoomVisible();
     });
   }, []);
