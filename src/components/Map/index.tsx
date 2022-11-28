@@ -15,7 +15,7 @@ import { getLayerConfigById } from '@/components/LayerFilter/config';
 import { Backgrounds, Preferences } from '@/components/LayerFilter/loader';
 import DashboardPanelManager from '../Dashboard/DashboardPanelManager';
 import { useRecoilValue } from 'recoil';
-import { LayersState, TemporalLayerConfigState } from '@/store/LayersState';
+import { LayersState, TemporalLayerConfigState, TemporalLayerState } from '@/store/LayersState';
 import { TooltipDataState } from '@/store/TooltipState';
 import { getPropertiesObj } from '@/components/Tooltip/util';
 
@@ -136,12 +136,18 @@ const useShowTooltip = (map: any) => {
 
 const useDeckGLLayer = (currentZoomLevel: number, config) => {
   const deckglLayers = useRecoilValue(LayersState);
+  const temporalLayers = useRecoilValue(TemporalLayerState);
   const dL = deckglLayers.map((layer) => {
     return layer.clone({
       visible: !layer.props || !layer.props.minzoom || layer.props.minzoom <= currentZoomLevel,
     });
   });
-  return dL
+  const tdL = temporalLayers.map((layer) => {
+    return layer.clone({
+      visible: !layer.props || !layer.props.minzoom || layer.props.minzoom <= currentZoomLevel,
+    });
+  });
+  return [...dL, ...tdL]
     .map((layer) => {
       if (getLayerConfigById(layer.id, config)?.type === 'geojsonicon') {
         return { index: 1, layer: layer };
@@ -173,9 +179,11 @@ const MapComponent: React.VFC = () => {
 
   // ダッシュボードのレイヤーと統合
   if (deckGLRef.current) {
-    deckGLRef.current.setProps({ layers: [...(deckglLayers ?? [])] });
+    deckGLRef.current.setProps({ layers: [...deckglLayers] });
   }
+
   useShowTooltip(mapRef.current);
+
   return (
     <>
       <div className="h-full" ref={maplibreContainer}>
@@ -188,7 +196,7 @@ const MapComponent: React.VFC = () => {
           <BackgroundSelector map={mapRef.current} />
         </div>
         <div className="z-10 absolute bottom-0 left-0 w-2/5 bg-white">
-          {temporalLayerConfigs.length ? <TimeSlider deck={deckGLRef.current} /> : null}
+          {temporalLayerConfigs.length ? <TimeSlider /> : null}
         </div>
         <DashboardPanelManager />
       </div>

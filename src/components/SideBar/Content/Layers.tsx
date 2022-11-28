@@ -111,7 +111,7 @@ export const Layers: FC<LayersProps> = ({ layers }) => {
       if (TEMPORAL_LAYER_TYPES.includes(layerConfig.type)) {
         setTemporalLayerConfigs((currVal) => {
           return currVal.filter((value) => {
-            return id !== value.id;
+            return layerConfig.id !== value.id;
           });
         });
       } else {

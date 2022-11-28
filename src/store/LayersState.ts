@@ -12,3 +12,8 @@ export const TemporalLayerConfigState = atom<LayerConfig[]>({
   dangerouslyAllowMutability: true,
   default: [],
 });
+
+export const TemporalLayerState = atom<any>({
+  key: 'temporalLayer',
+  default: [],
+});
