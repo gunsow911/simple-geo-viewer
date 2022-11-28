@@ -95,7 +95,7 @@ export const Content: React.FC<LayerListProps> = ({ title, layers }) => {
     <div 
       className="pb-px"
       onMouseOver={(event) =>
-        setMouseTooltipData(() => ({
+        (() => ({
           text: title,
           top: (window.innerHeight - event.clientY + 10) * -1,
           left: 20,

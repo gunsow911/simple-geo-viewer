@@ -1,12 +1,16 @@
 type TemporalLayerType =
   | 'bus_trip'
   | 'temporal_polygon'
+  | 'temporal_polygon_shape'
+  | 'temporal_polygon_area'
   | 'temporal_line'
   | 'trips_json'
   | 'trips_drm';
 export const TEMPORAL_LAYER_TYPES: Array<TemporalLayerType | string> = [
   'bus_trip',
   'temporal_polygon',
+  'temporal_polygon_shape',
+  'temporal_polygon_area',
   'temporal_line',
   'trips_json',
   'trips_drm',
@@ -38,6 +42,16 @@ export function makeTemporalLayers(
     checkedLayerTitleList,
     menu
   );
+  const temporalPolygonShapeCreator = new TemporalPolygonShapeLayerCreator(
+    layerConfig,
+    checkedLayerTitleList,
+    menu
+  );
+  const temporalPolygonAreaCreator = new TemporalPolygonAreaLayerCreator(
+    layerConfig,
+    checkedLayerTitleList,
+    menu
+  );
   const temporalLineCreator = new TemporalLineLayerCreator(
     layerConfig,
     checkedLayerTitleList,
@@ -48,6 +62,8 @@ export function makeTemporalLayers(
   const layers = [
     ...bustripCreator.makeDeckGlLayers(init, timestamp),
     ...temporalPolygonCreator.makeDeckGlLayers(init, timestamp),
+    ...temporalPolygonShapeCreator.makeDeckGlLayers(init, timestamp),
+    ...temporalPolygonAreaCreator.makeDeckGlLayers(init, timestamp),
     ...temporalLineCreator.makeDeckGlLayers(init, timestamp),
     ...tripsJsonCreator.makeDeckGlLayers(init, timestamp),
     ...tripsDRMLayerCreator.makeDeckGlLayers(init, timestamp),
@@ -159,6 +175,72 @@ class BusTripLayerCreator extends TemporalLayerCreator {
       });
       result.push(TrackingL);
     }
+    return result;
+  }
+}
+
+class TemporalPolygonShapeLayerCreator extends TemporalLayerCreator {
+  layerType: TemporalLayerType = 'temporal_polygon_shape';
+
+  makeDeckGlLayers(init, timestamp: number) {
+    const targetLayerConfigs = this.extractTargetConfig();
+    const result: GeoJsonLayer<any>[] = targetLayerConfigs.map((layerConfig) => {
+
+      const gLayer = new GeoJsonLayer({
+        id: layerConfig.id,
+        data: layerConfig.source,
+        visible: init && this.isChecked(layerConfig),
+        extruded: true,
+        getLineColor: () => [255, 0, 0, 0],
+        getFillColor: (d: any) => {
+          const timeVal = d.properties.hour * 60;
+          if ((timeVal > timestamp) || (timeVal == 0)) {
+            return [255, 0, 0, 0]
+          } else {
+            return [255, 0, 0, 192]
+          }
+        },
+        getElevation: () => 0,
+        updateTriggers: {
+          getFillColor: [timestamp],
+        },
+      });
+      return gLayer;
+    });
+
+    return result;
+  }
+}
+
+class TemporalPolygonAreaLayerCreator extends TemporalLayerCreator {
+  layerType: TemporalLayerType = 'temporal_polygon_area';
+
+  makeDeckGlLayers(init, timestamp: number) {
+    const targetLayerConfigs = this.extractTargetConfig();
+    const result: GeoJsonLayer<any>[] = targetLayerConfigs.map((layerConfig) => {
+
+      const gLayer = new GeoJsonLayer({
+        id: layerConfig.id,
+        data: layerConfig.source,
+        visible: init && this.isChecked(layerConfig),
+        extruded: true,
+        getLineColor: () => [255, 0, 0, 0],
+        getFillColor: (d: any) => {
+          const timeVal = d.properties.time_viz * 60;
+          if (timeVal > timestamp) {
+            return [255, 0, 0, 0]
+          } else {
+            return [255, 128, 0, 128]
+          }
+        },
+        getElevation: () => 0,
+        updateTriggers: {
+          getFillColor: [timestamp],
+        },
+      });
+      return gLayer;
+    });
+
     return result;
   }
 }
