@@ -18,6 +18,7 @@ import { useRecoilValue } from 'recoil';
 import { LayersState, TemporalLayerConfigState, TemporalLayerState } from '@/store/LayersState';
 import { TooltipDataState } from '@/store/TooltipState';
 import { getPropertiesObj } from '@/components/Tooltip/util';
+import { useDashboardContext } from '@/components/Dashboard/useDashboardContext';
 
 const getViewStateFromMaplibre = (map) => {
   const { lng, lat } = map.getCenter();
@@ -165,7 +166,7 @@ const MapComponent: React.VFC = () => {
   const maplibreContainer = useRef<HTMLDivElement | null>(null);
   const deckglContainer = useRef<HTMLCanvasElement | null>(null);
   const { preferences } = useContext(context);
-  //const { layers: dashboardLayers } = useDashboardContext();
+  const { layers: dashboardLayers } = useDashboardContext();
   const temporalLayerConfigs = useRecoilValue(TemporalLayerConfigState);
   //map・deckインスタンスを初期化
   const { deckGLRef, mapRef, currentZoomLevel } = useInitializeMap(
@@ -179,7 +180,7 @@ const MapComponent: React.VFC = () => {
 
   // ダッシュボードのレイヤーと統合
   if (deckGLRef.current) {
-    deckGLRef.current.setProps({ layers: [...deckglLayers] });
+    deckGLRef.current.setProps({ layers: [...deckglLayers, ...dashboardLayers] });
   }
 
   useShowTooltip(mapRef.current);
