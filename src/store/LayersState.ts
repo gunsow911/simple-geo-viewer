@@ -9,11 +9,17 @@ export const LayersState = atom<any>({
 
 export const TemporalLayerConfigState = atom<LayerConfig[]>({
   key: 'temporalLayerConfigs',
-  dangerouslyAllowMutability: true,
   default: [],
 });
 
 export const TemporalLayerState = atom<any>({
   key: 'temporalLayer',
+  dangerouslyAllowMutability: true,
+  default: [],
+});
+
+export const DashboardLayerState = atom<any>({
+  key: 'dashboardLayers',
+  dangerouslyAllowMutability: true,
   default: [],
 });
