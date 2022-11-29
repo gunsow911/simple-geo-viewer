@@ -87,28 +87,6 @@ const App: NextPage = () => {
             <div className="h-12">
               <Header />
             </div>
-            <div id="MapArea" className="relative w-4/5 m-2 pb-5 h-full">
-              <Map setTooltipData={setTooltipData} setsetTooltipPosition={setsetTooltipPosition} />
-              {tooltipData.tooltip ? (
-                <Draggable bounds="parent" handle="#handle">
-                  <div
-                    className="w-1/4 border-2 border-black z-50"
-                    style={{ ...setTooltipPosition, ...toolChipBaseStyle }}
-                  >
-                    {tooltipData.tooltip ? <Tooltip {...tooltipData.tooltip} /> : undefined}
-                    <div className="text-right absolute top-0 right-2">
-                      <button
-                        className="text-2xl"
-                        onClick={() => removeExistingTooltip(setTooltipData)}
-                        style={{ backgroundColor: toolChipBaseStyle.backgroundColor }}
-                      >
-                        {closeIcon()}
-                      </button>
-                    </div>
-                  </div>
-                </Draggable>
-              ) : undefined}
-            </div>
             <div className="flex content" style={{ overflow: 'hidden' }}>
               <div className="w-1/5 flex flex-col h-full ml-4 mr-2 mt-4 pb-10">
                 <div id="sideBar" className="overflow-auto relative flex-1">
@@ -126,21 +104,23 @@ const App: NextPage = () => {
                   setsetTooltipPosition={setsetTooltipPosition}
                 />
                 {tooltipData.tooltip ? (
-                  <div
-                    className="w-1/4 border-2 border-black z-50"
-                    style={{ ...setTooltipPosition, ...toolChipBaseStyle }}
-                  >
-                    {tooltipData.tooltip ? <Tooltip {...tooltipData.tooltip} /> : undefined}
-                    <div className="text-right absolute top-0 right-2">
-                      <button
-                        className="text-2xl"
-                        onClick={() => removeExistingTooltip(setTooltipData)}
-                        style={{ backgroundColor: toolChipBaseStyle.backgroundColor }}
-                      >
-                        {closeIcon()}
-                      </button>
+                  <Draggable bounds="parent" handle="#handle">
+                    <div
+                      className="w-1/4 border-2 border-black z-50"
+                      style={{ ...setTooltipPosition, ...toolChipBaseStyle }}
+                    >
+                      {tooltipData.tooltip ? <Tooltip {...tooltipData.tooltip} /> : undefined}
+                      <div className="text-right absolute top-0 right-2">
+                        <button
+                          className="text-2xl"
+                          onClick={() => removeExistingTooltip(setTooltipData)}
+                          style={{ backgroundColor: toolChipBaseStyle.backgroundColor }}
+                        >
+                          {closeIcon()}
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  </Draggable>
                 ) : undefined}
               </div>
             </div>
