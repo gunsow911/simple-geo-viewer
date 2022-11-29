@@ -10,6 +10,8 @@ import MouseTooltip, { MouseTooltipData } from '@/components/MouseTooltip';
 import { usePreferences, Preferences } from '@/components/LayerFilter/loader';
 import Head from 'next/head';
 import { closeIcon } from '@/components/SideBar/Icon';
+import { Backgrounds } from '../components/LayerFilter/loader';
+import Draggable from 'react-draggable';
 import { DashboardProvider } from '@/components/Dashboard/useDashboardContext';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { TooltipDataState, TooltipPositionState } from '@/store/TooltipState';
@@ -97,21 +99,23 @@ const App: NextPage = () => {
               <div id="MapArea" className="relative w-4/5 m-2 pb-5 h-full">
                 <Map />
                 {tooltipData && tooltipPosition && tooltipData.data ? (
-                  <div
-                    className="w-1/4 border-2 border-black z-50"
-                    style={{ ...tooltipPosition, ...toolChipBaseStyle }}
-                  >
-                    <Tooltip />
-                    <div className="text-right absolute top-0 right-2">
-                      <button
-                        className="text-2xl"
-                        onClick={() => setTooltipData(null)}
-                        style={{ backgroundColor: toolChipBaseStyle.backgroundColor }}
-                      >
-                        {closeIcon()}
-                      </button>
+                  <Draggable bounds="parent" handle="#handle">
+                    <div
+                      className="w-1/4 border-2 border-black z-50"
+                      style={{ ...tooltipPosition, ...toolChipBaseStyle }}
+                    >
+                      <Tooltip />
+                      <div className="text-right absolute top-0 right-2">
+                        <button
+                          className="text-2xl"
+                          onClick={() => setTooltipData(null)}
+                          style={{ backgroundColor: toolChipBaseStyle.backgroundColor }}
+                        >
+                          {closeIcon()}
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  </Draggable>
                 ) : undefined}
               </div>
             </div>
