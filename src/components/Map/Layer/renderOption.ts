@@ -79,7 +79,7 @@ const susonoBuilding = (layer: any) => {
           if (x === 1) {
             return [150, 150, 220, 180];
           } else if (x === 2) {
-            return [150, 220, 150, 180];
+            return [0, 150, 220, 180];
           } else {
             return [220, 150, 150, 180];
           }

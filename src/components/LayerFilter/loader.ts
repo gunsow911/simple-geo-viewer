@@ -12,6 +12,7 @@ export type Settings = {
   title: string;
   background_color: string;
   tooltip_background_color: string;
+  dashboard_enable?: boolean;
 };
 /**
  * backgrounds.json
