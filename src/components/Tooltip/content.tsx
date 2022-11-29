@@ -12,12 +12,13 @@ const tdStyle = {
 
 const BaseTooltip: VFC<BaseTooltipProps> = ({ children }) => {
   const { preferences } = useContext(context);
-  const setTooltipPosition = {
+  const toolchipContentStyle = {
     backgroundColor: preferences.settings.tooltip_background_color,
   };
   return (
     <div className="visible h-full">
-      <div id="tooltip_content" className="bg-white h-full" style={setTooltipPosition}>
+      <div id="handle" className="h-7 w-full bg-gray-400 cursor-move"></div>
+      <div id="tooltip_content" className="bg-white h-full" style={toolchipContentStyle}>
         {children}
       </div>
     </div>

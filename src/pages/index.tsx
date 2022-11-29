@@ -11,6 +11,8 @@ import MouseTooltip, { MouseTooltipData } from '@/components/MouseTooltip';
 import { usePreferences, Preferences } from '@/components/LayerFilter/loader';
 import Head from 'next/head';
 import { closeIcon } from '@/components/SideBar/Icon';
+import { Backgrounds } from '../components/LayerFilter/loader';
+import Draggable from 'react-draggable';
 import { DashboardProvider } from '@/components/Dashboard/useDashboardContext';
 
 type TContext = {
@@ -58,7 +60,6 @@ const App: NextPage = () => {
   });
 
   const [setTooltipPosition, setsetTooltipPosition] = useState<any>({});
-
   const contextValues = useContextValues();
   const { preferences } = usePreferences();
   if (preferences === null) {
@@ -103,21 +104,23 @@ const App: NextPage = () => {
                   setsetTooltipPosition={setsetTooltipPosition}
                 />
                 {tooltipData.tooltip ? (
-                  <div
-                    className="w-1/4 border-2 border-black z-50"
-                    style={{ ...setTooltipPosition, ...toolChipBaseStyle }}
-                  >
-                    {tooltipData.tooltip ? <Tooltip {...tooltipData.tooltip} /> : undefined}
-                    <div className="text-right absolute top-0 right-2">
-                      <button
-                        className="text-2xl"
-                        onClick={() => removeExistingTooltip(setTooltipData)}
-                        style={{ backgroundColor: toolChipBaseStyle.backgroundColor }}
-                      >
-                        {closeIcon()}
-                      </button>
+                  <Draggable bounds="parent" handle="#handle">
+                    <div
+                      className="w-1/4 border-2 border-black z-50"
+                      style={{ ...setTooltipPosition, ...toolChipBaseStyle }}
+                    >
+                      {tooltipData.tooltip ? <Tooltip {...tooltipData.tooltip} /> : undefined}
+                      <div className="text-right absolute top-0 right-2">
+                        <button
+                          className="text-2xl"
+                          onClick={() => removeExistingTooltip(setTooltipData)}
+                          style={{ backgroundColor: toolChipBaseStyle.backgroundColor }}
+                        >
+                          {closeIcon()}
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  </Draggable>
                 ) : undefined}
               </div>
             </div>

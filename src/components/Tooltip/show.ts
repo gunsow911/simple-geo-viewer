@@ -34,7 +34,7 @@ export const show = (
   setTooltipData((prevState) => {
     return {
       ...prevState,
-      tooltip: getPropertiesObj(object, !tooltipType ? "default" : tooltipType, id),
+      tooltip: getPropertiesObj(object, !tooltipType ? 'default' : tooltipType, id),
     };
   });
 };
