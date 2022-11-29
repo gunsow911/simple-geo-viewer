@@ -1,7 +1,7 @@
 import { ScenegraphLayer } from '@deck.gl/mesh-layers';
 import { GLTFLoader } from '@loaders.gl/gltf';
 import { fetchFile, parse } from '@loaders.gl/core';
-import { show } from '@/components/Tooltip/show';
+import { show, showToolTip } from '@/components/Tooltip/show';
 
 /**
  * GLTF Layerの作成
@@ -80,34 +80,6 @@ class gltfLayerCreator {
   }
 
   showToolTip = (info) => {
-    const { coordinate, object } = info;
-    if (!coordinate) return;
-    if (!object) return;
-    // @ts-ignore
-    const { layer: { props:{ tooltipType } } } = info;
-    const { layer: { id } } = info;
-    
-    const parent = document.getElementById("MapArea");
-    const body = document.getElementsByTagName("body")[0];
-    const tooltipWidth = body.clientWidth * 0.25;
-    const tooltipHeight = body.clientHeight * 0.25;
-    const parentWidth = parent !== null ? (parent.clientWidth) : 10 ;
-    const parentHeight = parent !== null ? (parent.clientHeight) : 10 ;
-
-    let x = info.x;
-    let y = info.y;
-
-    if (x + tooltipWidth +40 > parentWidth) {
-      x = parentWidth -tooltipWidth -40;
-    }
-
-    if (y + tooltipHeight +300 > parentHeight) {
-      y = parentHeight - tooltipHeight -300;
-    }
-    this.setsetTooltipPosition({
-      top: `${String(y)}px`,
-      left: `${String(x)}px`
-    });
-    show(object, coordinate[0], coordinate[1], this.map, this.setTooltipData, tooltipType, id);
+    showToolTip(info, this.map, this.setTooltipData, this.setsetTooltipPosition);
   };
 }
