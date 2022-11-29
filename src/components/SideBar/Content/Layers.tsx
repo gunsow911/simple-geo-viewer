@@ -82,14 +82,6 @@ export const Layers = (props: LayersProps) => {
             className="transition-hover duration-500 ease bg-white hover:bg-gray-200 p-2 flex"
             style={resourceStyle}
             key={index}
-            onMouseOver={(event) =>
-              setMouseTooltipData(() => ({
-                text: resource.title,
-                top: (window.innerHeight - event.clientY + 10) * -1,
-                left: 20,
-              }))
-            }
-            onMouseOut={() => setMouseTooltipData(() => null)}
           >
             <div className="w-11/12 pr-3 flex items-center">
               <input
@@ -101,7 +93,19 @@ export const Layers = (props: LayersProps) => {
                 }}
               />
               {getResourceIcon(resource, preferences.config)}
-              <p style={textStyle}>{resource.title}</p>
+              <p
+                onMouseOver={(event) =>
+                  setMouseTooltipData(() => ({
+                    text: resource.title,
+                    top: (window.innerHeight - event.clientY + 10) * -1,
+                    left: 20,
+                  }))
+                }
+                onMouseOut={() => setMouseTooltipData(() => null)}
+                style={textStyle}
+              >
+                {resource.title}
+              </p>
             </div>
             <div className="w-1/12">
               {resource.download_url === undefined
