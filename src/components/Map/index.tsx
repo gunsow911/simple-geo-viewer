@@ -186,10 +186,10 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData, setsetTooltipPosition 
         preferences.config
       );
 
-      let querySelecteLayerId = router.query.querySelecteLayerId as string | undefined;
-      querySelecteLayerId = querySelecteLayerId === undefined ? '' : querySelecteLayerId;
-      if (querySelecteLayerId !== '') {
-        const targetResource = getDataById(preferences.menu, [querySelecteLayerId]);
+      let querySelectLayerId = router.query.querySelectLayerId as string | undefined;
+      querySelectLayerId = querySelectLayerId === undefined ? '' : querySelectLayerId;
+      if (querySelectLayerId !== '') {
+        const targetResource = getDataById(preferences.menu, [querySelectLayerId]);
 
         const viewState = {
           longitude: targetResource.lng,
