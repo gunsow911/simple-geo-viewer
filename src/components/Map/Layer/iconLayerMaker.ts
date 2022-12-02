@@ -1,8 +1,7 @@
-import { Map } from 'maplibre-gl';
 import { PickInfo } from 'deck.gl';
 import { IconLayer } from '@deck.gl/layers';
-import { show, showToolTip } from '@/components/Tooltip/show';
-import { Dispatch, SetStateAction } from 'react';
+import { SetterOrUpdater } from 'recoil';
+import { showToolTip } from '@/components/Tooltip/show';
 
 type iconLayerConfig = {
   id: string;
@@ -13,58 +12,47 @@ type iconLayerConfig = {
 
 /**
  * IconLayerの作成
- * @param map mapインスタンス
  * @param layerConfig 作成したいlayerのコンフィグ
- * @param init 初期表示レイヤー生成かどうか
  * @param setTooltipData Click時に表示するsetTooltipData関数
- * @param setsetTooltipPosition ポップアップのスタイルをセットする関数
+ * @param setTooltipPosition ポップアップのスタイルをセットする関数
  */
-export function makeIconLayers(
-  map: Map,
-  layerConfig,
-  init: boolean,
-  setTooltipData,
-  setsetTooltipPosition
-) {
-  const iconLayerCreator = new IconLayerCreator(
-    layerConfig,
-    map,
-    setTooltipData,
-    setsetTooltipPosition
-  );
-  return iconLayerCreator.makeDeckGlLayers(init);
+export function makeIconLayer(layerConfig, setTooltipData, setTooltipPosition) {
+  const iconLayerCreator = new IconLayerCreator(layerConfig, setTooltipData, setTooltipPosition);
+  return iconLayerCreator.makeDeckGlLayer();
 }
 
 class IconLayerCreator {
-  private readonly map: Map;
-  private readonly layerConfig: any[];
-  private readonly layersType: string = 'icon';
-  private readonly setTooltipData: Dispatch<SetStateAction<any>>;
-  private readonly setsetTooltipPosition: Dispatch<SetStateAction<any>>;
+  private readonly layerConfig: any;
+  private readonly layerType: string = 'icon';
+  private readonly setTooltipData: SetterOrUpdater<{
+    lng: number;
+    lat: number;
+    tooltipType: 'default' | 'thumbnail' | 'table';
+    id: string;
+    data: any;
+  } | null>;
+  private readonly setTooltipPosition: SetterOrUpdater<{ top: string; left: string } | null>;
 
-  constructor(layerConfig: any[], map: Map, setTooltipData, setsetTooltipPosition) {
+  constructor(layerConfig: any, setTooltipData, setTooltipPosition) {
     this.layerConfig = layerConfig;
-    this.map = map;
     this.setTooltipData = setTooltipData;
-    this.setsetTooltipPosition = setsetTooltipPosition;
+    this.setTooltipPosition = setTooltipPosition;
   }
 
   /**
-   * makeDeckGlLayers
+   * makeDeckGlLayer
    * DeckGLのレイヤー作成
    * 初期表示レイヤーの場合visibilityをtrueの状態で返す
-   * @param init 初期表示レイヤーの生成であるか
    */
-  makeDeckGlLayers(init) {
-    const targetLayerConfigs = this.extractTargetConfig();
-
-    const result: IconLayer<any>[] = targetLayerConfigs.map((layerConfig) => {
+  makeDeckGlLayer() {
+    const { layerConfig } = this;
+    if (this.isTargetConfig(layerConfig)) {
       const config = this.extractLayerConfig(layerConfig);
 
       return new IconLayer({
         id: layerConfig.id,
         data: [layerConfig],
-        visible: init,
+        visible: true,
         pickable: true,
         getIcon: (_) => ({
           url: layerConfig.source,
@@ -78,27 +66,21 @@ class IconLayerCreator {
         onClick: this.showToolTip,
         ...config,
       });
-    });
+    }
 
-    return result;
+    return null;
   }
 
   private extractLayerConfig = (layerConfig) => {
-    const { type, source, ...otherConfig } = layerConfig;
+    const { type, source, visible, ...otherConfig } = layerConfig;
     return otherConfig;
   };
 
-  /**
-   * layersTypeに適合するレイヤーコンフィグを取り出し
-   * @private
-   */
-  private extractTargetConfig() {
-    return this.layerConfig.filter((layer: iconLayerConfig) => {
-      return layer.type === this.layersType;
-    });
+  private isTargetConfig(layerConfig: any): layerConfig is iconLayerConfig {
+    return layerConfig.type === this.layerType;
   }
 
   private showToolTip = (info: PickInfo<any>) => {
-    showToolTip(info, this.map, this.setTooltipData, this.setsetTooltipPosition);
+    showToolTip(info, this.setTooltipData, this.setTooltipPosition);
   };
 }

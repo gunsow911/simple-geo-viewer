@@ -1,8 +1,7 @@
-import { Map } from 'maplibre-gl';
 import { PickInfo } from 'deck.gl';
 import { Tile3DLayer } from '@deck.gl/geo-layers';
-import { show, showToolTip } from '@/components/Tooltip/show';
-import { Dispatch, SetStateAction } from 'react';
+import { SetterOrUpdater } from 'recoil';
+import { showToolTip } from '@/components/Tooltip/show';
 
 type tile3DLayerConfig = {
   id: string;
@@ -13,53 +12,41 @@ type tile3DLayerConfig = {
 
 /**
  * Tile3DLayerの作成
- * @param map mapインスタンス
  * @param layerConfig 作成したいlayerのコンフィグ
- * @param init 初期表示レイヤー生成かどうか
  * @param setTooltipData Click時に表示するsetTooltipData関数
- * @param setsetTooltipPosition ポップアップのスタイルをセットする関数
+ * @param setTooltipPosition ポップアップのスタイルをセットする関数
  */
-export function makeTile3DLayers(
-  map: Map,
-  layerConfig,
-  init: boolean,
-  setTooltipData,
-  setsetTooltipPosition
-) {
-  const tile3DCreator = new Tile3DLayerCreator(
-    layerConfig,
-    map,
-    setTooltipData,
-    setsetTooltipPosition
-  );
-  return tile3DCreator.makeDeckGlLayers(init);
+export function makeTile3DLayer(layerConfig, setTooltipData, setTooltipPosition) {
+  const tile3DCreator = new Tile3DLayerCreator(layerConfig, setTooltipData, setTooltipPosition);
+  return tile3DCreator.makeDeckGlLayer();
 }
 
 class Tile3DLayerCreator {
-  private readonly map: Map;
-  private readonly layerConfig: any[];
-  private readonly layersType: string = '3dtiles';
-  private readonly setTooltipData: Dispatch<SetStateAction<any>>;
-  private readonly setsetTooltipPosition: Dispatch<SetStateAction<any>>;
+  private readonly layerConfig: any;
+  private readonly layerType: string = '3dtiles';
+  private readonly setTooltipData: SetterOrUpdater<{
+    lng: number;
+    lat: number;
+    tooltipType: 'default' | 'thumbnail' | 'table';
+    id: string;
+    data: any;
+  } | null>;
+  private readonly setTooltipPosition: SetterOrUpdater<{ top: string; left: string } | null>;
 
-  constructor(layerConfig: any[], map: Map, setTooltipData, setsetTooltipPosition) {
+  constructor(layerConfig: any, setTooltipData, setTooltipPosition) {
     this.layerConfig = layerConfig;
-    this.map = map;
     this.setTooltipData = setTooltipData;
-    this.setsetTooltipPosition = setsetTooltipPosition;
+    this.setTooltipPosition = setTooltipPosition;
   }
 
-  makeDeckGlLayers(init) {
-    const targetLayerConfigs = this.extractTargetConfig();
-
-    const result: Tile3DLayer<any>[] = targetLayerConfigs.map((layerConfig) => {
+  makeDeckGlLayer() {
+    const { layerConfig } = this;
+    if (this.isTargetConfig(layerConfig)) {
       const config = this.extractLayerConfig(layerConfig);
-
-      console.log(layerConfig.source);
 
       return new Tile3DLayer({
         data: layerConfig.source,
-        visible: init,
+        visible: true,
         pickable: true,
         autoHighlight: true,
         onClick: this.showToolTip,
@@ -68,23 +55,20 @@ class Tile3DLayerCreator {
         },
         ...config,
       });
-    });
-
-    return result;
+    }
+    return null;
   }
 
   private extractLayerConfig = (layerConfig) => {
-    const { type, source, ...otherConfig } = layerConfig;
+    const { type, source, visible, ...otherConfig } = layerConfig;
     return otherConfig;
   };
 
-  private extractTargetConfig() {
-    return this.layerConfig.filter((layer: tile3DLayerConfig) => {
-      return layer.type === this.layersType;
-    });
+  private isTargetConfig(layerConfig: any): layerConfig is tile3DLayerConfig {
+    return layerConfig.type === this.layerType;
   }
 
   private showToolTip = (info: PickInfo<any>) => {
-    showToolTip(info, this.map, this.setTooltipData, this.setsetTooltipPosition);
+    showToolTip(info, this.setTooltipData, this.setTooltipPosition);
   };
 }

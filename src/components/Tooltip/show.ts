@@ -1,50 +1,17 @@
-import { Map, Marker } from 'maplibre-gl';
-import { Dispatch, SetStateAction } from 'react';
 import { getPropertiesObj } from '@/components/Tooltip/util';
-import { Tooltip } from './content';
+import { SetterOrUpdater } from 'recoil';
 import { PickInfo } from 'deck.gl';
-
-let pointMarker: Marker | null = null;
-
-export const removeExistingTooltip = (setTooltip) => {
-  if (pointMarker) pointMarker.remove();
-  setTooltip({
-    tooltip: null,
-  });
-};
-
-const makeMarker = (lng: number, lat: number, map: Map) => {
-  //marker追加
-  pointMarker = new Marker().setLngLat([lng, lat]).addTo(map);
-};
-
-export const show = (
-  object: any,
-  lng: number,
-  lat: number,
-  map: any,
-  setTooltipData: Dispatch<SetStateAction<any>>,
-  tooltipType: string,
-  id: string
-) => {
-  //すでに表示されているマーカーとポップアップを削除
-  removeExistingTooltip(setTooltipData);
-  //データが渡されていなければ何もしない
-  if (!object) return;
-  makeMarker(lng, lat, map);
-  setTooltipData((prevState) => {
-    return {
-      ...prevState,
-      tooltip: getPropertiesObj(object, !tooltipType ? 'default' : tooltipType, id),
-    };
-  });
-};
 
 export const showToolTip = (
   info: PickInfo<any>,
-  map: Map,
-  setTooltipData: Dispatch<SetStateAction<any>>,
-  setsetTooltipPosition: Dispatch<SetStateAction<any>>
+  setTooltipData: SetterOrUpdater<{
+    lng: number;
+    lat: number;
+    tooltipType: 'default' | 'thumbnail' | 'table';
+    id: string;
+    data: any;
+  } | null>,
+  setTooltipPosition: SetterOrUpdater<{ top: string; left: string } | null>
 ) => {
   // @ts-ignore
   const { coordinate, object } = info;
@@ -77,9 +44,16 @@ export const showToolTip = (
   if (y + tooltipHeight + 300 > parentHeight) {
     y = parentHeight - tooltipHeight - 300;
   }
-  setsetTooltipPosition({
+  setTooltipPosition({
     top: `${String(y)}px`,
     left: `${String(x)}px`,
   });
-  show(object, coordinate[0], coordinate[1], map, setTooltipData, tooltipType, id);
+  const data = getPropertiesObj(object, tooltipType, id);
+  setTooltipData({
+    lng: coordinate[0],
+    lat: coordinate[1],
+    tooltipType,
+    id,
+    data,
+  });
 };

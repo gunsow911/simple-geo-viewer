@@ -19,12 +19,6 @@ jest.mock('@/components/Tooltip/content', () => {
   };
 });
 
-jest.mock('@/components/Tooltip/show', () => {
-  return function removeExistingTooltip(arg) {
-    return;
-  };
-});
-
 describe('Rendering', () => {
   const _context: any = {};
   const mockSettings = {

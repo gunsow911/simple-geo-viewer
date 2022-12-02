@@ -1,8 +1,7 @@
-import { Map } from 'maplibre-gl';
 import { PickInfo } from 'deck.gl';
 import { MVTLayer } from '@deck.gl/geo-layers';
-import { show, showToolTip } from '@/components/Tooltip/show';
-import { Dispatch, SetStateAction } from 'react';
+import { SetterOrUpdater } from 'recoil';
+import { showToolTip } from '@/components/Tooltip/show';
 
 type mvtLayerConfig = {
   id: string;
@@ -18,76 +17,60 @@ type mvtLayerConfig = {
 
 /**
  * mvtLayerの作成
- * @param map mapインスタンス
  * @param layerConfig 作成したいlayerのコンフィグ
- * @param init 初期表示レイヤー生成かどうか
  * @param setTooltipData Click時に表示するsetTooltipData関数
- * @param setsetTooltipPosition ポップアップのスタイルをセットする関数
+ * @param setTooltipPosition ポップアップのスタイルをセットする関数
  */
-export function makeMvtLayers(
-  map: Map,
-  layerConfig,
-  init: boolean,
-  setTooltipData,
-  setsetTooltipPosition
-) {
-  const mvtCreator = new MvtLayerCreator(layerConfig, map, setTooltipData, setsetTooltipPosition);
-  return mvtCreator.makeDeckGlLayers(init);
+export function makeMvtLayer(layerConfig, setTooltipData, setTooltipPosition) {
+  const mvtCreator = new MvtLayerCreator(layerConfig, setTooltipData, setTooltipPosition);
+  return mvtCreator.makeDeckGlLayer();
 }
 
 class MvtLayerCreator {
-  private readonly map: Map;
-  private readonly layerConfig: any[];
-  private readonly layersType: string = 'mvt';
-  private readonly setTooltipData: Dispatch<SetStateAction<any>>;
-  private readonly setsetTooltipPosition: Dispatch<SetStateAction<any>>;
+  private readonly layerConfig: any;
+  private readonly layerType: string = 'mvt';
+  private readonly setTooltipData: SetterOrUpdater<{
+    lng: number;
+    lat: number;
+    tooltipType: 'default' | 'thumbnail' | 'table';
+    id: string;
+    data: any;
+  } | null>;
+  private readonly setTooltipPosition: SetterOrUpdater<{ top: string; left: string } | null>;
 
-  constructor(layerConfig: any[], map: Map, setTooltipData, setsetTooltipPosition) {
+  constructor(layerConfig: any, setTooltipData, setTooltipPosition) {
     this.layerConfig = layerConfig;
-    this.map = map;
     this.setTooltipData = setTooltipData;
-    this.setsetTooltipPosition = setsetTooltipPosition;
+    this.setTooltipPosition = setTooltipPosition;
   }
 
-  makeDeckGlLayers(init) {
-    const targetLayerConfigs = this.extractTargetConfig();
-
-    const result: MVTLayer<any>[] = [];
-
-    for (const layerConfig of targetLayerConfigs) {
+  makeDeckGlLayer() {
+    const { layerConfig } = this;
+    if (this.isTargetConfig(layerConfig)) {
       const config = this.extractLayerConfig(layerConfig);
-
-      result.push(
-        new MVTLayer({
-          data: layerConfig.source,
-          visible: init,
-          pickable: true,
-          autoHighlight: true,
-          onClick: this.showToolTip,
-          ...config,
-        })
-      );
+      return new MVTLayer({
+        data: layerConfig.source,
+        visible: true,
+        pickable: true,
+        autoHighlight: true,
+        onClick: this.showToolTip,
+        ...config,
+      });
     }
 
-    return result;
+    return null;
   }
 
   private extractLayerConfig = (layerConfig) => {
-    const { type, source, ...otherConfig } = layerConfig;
+    const { type, source, visible, ...otherConfig } = layerConfig;
     return otherConfig;
   };
 
-  /**
-   * layersTypeに適合するレイヤーコンフィグを取り出し
-   * @private
-   */
-  private extractTargetConfig() {
-    return this.layerConfig.filter((layer: mvtLayerConfig) => {
-      return layer.type === this.layersType;
-    });
+  private isTargetConfig(layerConfig: any): layerConfig is mvtLayerConfig {
+    return layerConfig.type === this.layerType;
   }
 
   private showToolTip = (info: PickInfo<any>) => {
-    showToolTip(info, this.map, this.setTooltipData, this.setsetTooltipPosition);
+    showToolTip(info, this.setTooltipData, this.setTooltipPosition);
   };
 }

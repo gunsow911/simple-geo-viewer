@@ -1,130 +1,118 @@
-import type { Map } from 'maplibre-gl';
 import { PickInfo } from 'deck.gl';
 import { GeoJsonLayer } from '@deck.gl/layers';
-
-import { show, showToolTip } from '@/components/Tooltip/show';
-import { Dispatch, SetStateAction } from 'react';
 
 import {
   GeojsonIconLayerConfig,
   GeojsonLayerConfig,
   LayerConfig,
 } from '@/components/LayerFilter/config';
+import { SetterOrUpdater } from 'recoil';
+import { showToolTip } from '@/components/Tooltip/show';
 
 /**
  * GeoJsonLayerの作成
- * @param map mapインスタンス
  * @param layerConfig 作成したいlayerのコンフィグ
- * @param init 初期表示レイヤー生成かどうか
  * @param setTooltipData Click時に表示するsetTooltipData関数
- * @param setsetTooltipPosition ポップアップのスタイルをセットする関数
+ * @param setTooltipPosition ポップアップのスタイルをセットする関数
  */
-export function makeGeoJsonLayers(
-  map: Map,
-  layerConfig: LayerConfig[],
-  init: boolean,
-  setTooltipData,
-  setsetTooltipPosition
-) {
+export function makeGeoJsonLayer(layerConfig: LayerConfig, setTooltipData, setTooltipPosition) {
   const geoJsonLinePolygonCreator = new GeoJsonLinePolygonCreator(
     layerConfig,
-    map,
     setTooltipData,
-    setsetTooltipPosition
+    setTooltipPosition
   );
   const geoJsonIconCreator = new GeoJsonIconLayerCreator(
     layerConfig,
-    map,
     setTooltipData,
-    setsetTooltipPosition
+    setTooltipPosition
   );
-  const geoJsoneatureCollectionIconCreator = new GeoJsonFeatureCollectionIconLayerCreator(
+  const geoJsonFeatureCollectionIconCreator = new GeoJsonFeatureCollectionIconLayerCreator(
     layerConfig,
-    map,
     setTooltipData,
-    setsetTooltipPosition
+    setTooltipPosition
   );
-  const layers = [
-    ...geoJsonLinePolygonCreator.makeDeckGlLayers(init),
-    ...geoJsonIconCreator.makeDeckGlLayers(init),
-    ...geoJsoneatureCollectionIconCreator.makeDeckGlLayers(init),
-  ];
-  return layers;
+  const geoJsonLinePolygonLayer = geoJsonLinePolygonCreator.makeDeckGlLayer();
+  const geoJsonIconLayer = geoJsonIconCreator.makeDeckGlLayer();
+  const geoJsonFeatureCollectionIconLayer = geoJsonFeatureCollectionIconCreator.makeDeckGlLayer();
+  return geoJsonLinePolygonLayer ?? geoJsonIconLayer ?? geoJsonFeatureCollectionIconLayer;
 }
 
 class GeoJsonLinePolygonCreator {
-  layersType: string = 'geojson';
-  private readonly layerConfig: LayerConfig[];
-  private readonly map: Map;
-  private readonly setTooltipData: Dispatch<SetStateAction<any>>;
-  private readonly setsetTooltipPosition: Dispatch<SetStateAction<any>>;
+  layerType: string = 'geojson';
+  private readonly layerConfig: LayerConfig;
+  private readonly setTooltipData: SetterOrUpdater<{
+    lng: number;
+    lat: number;
+    tooltipType: 'default' | 'thumbnail' | 'table';
+    id: string;
+    data: any;
+  } | null>;
+  private readonly setTooltipPosition: SetterOrUpdater<{ top: string; left: string } | null>;
 
-  constructor(layerConfig: LayerConfig[], map: Map, setTooltipData, setsetTooltipPosition) {
+  constructor(layerConfig: LayerConfig, setTooltipData, setTooltipPosition) {
     this.layerConfig = layerConfig;
-    this.map = map;
     this.setTooltipData = setTooltipData;
-    this.setsetTooltipPosition = setsetTooltipPosition;
+    this.setTooltipPosition = setTooltipPosition;
   }
 
-  makeDeckGlLayers(init) {
-    const targetLayerConfigs = this.extractTargetConfig();
-
-    const result: GeoJsonLayer<any>[] = targetLayerConfigs.map((layerConfig) => {
+  makeDeckGlLayer() {
+    const { layerConfig } = this;
+    if (this.isTargetConfig(layerConfig)) {
       const config = this.extractLayerConfig(layerConfig);
 
       return new GeoJsonLayer({
         data: layerConfig.source,
-        visible: init,
+        visible: true,
         pickable: true,
         autoHighlight: true,
         onClick: this.showToolTip,
         getFillColor: (d: any) => d.properties?.fillColor || [0, 0, 0, 255],
         ...config,
       });
-    });
-
-    return result;
+    }
+    return null;
   }
 
-  extractLayerConfig = (layerConfig: GeojsonLayerConfig) => {
-    const { type, source, ...otherConfig } = layerConfig;
+  private extractLayerConfig = (layerConfig: GeojsonLayerConfig) => {
+    const { type, source, visible, ...otherConfig } = layerConfig;
     return otherConfig;
   };
 
-  extractTargetConfig() {
-    return this.layerConfig.filter((layerConfig: LayerConfig) => {
-      return layerConfig.type === this.layersType;
-    }) as GeojsonLayerConfig[];
+  private isTargetConfig(layerConfig: LayerConfig): layerConfig is GeojsonLayerConfig {
+    return layerConfig.type === this.layerType;
   }
 
   showToolTip = (info: PickInfo<any>) => {
-    showToolTip(info, this.map, this.setTooltipData, this.setsetTooltipPosition);
+    showToolTip(info, this.setTooltipData, this.setTooltipPosition);
   };
 }
 
 class GeoJsonIconLayerCreator {
-  layersType: string = 'geojsonicon';
-  private readonly layerConfig: LayerConfig[];
-  private readonly map: Map;
-  private readonly setTooltipData: Dispatch<SetStateAction<any>>;
-  private readonly setsetTooltipPosition: Dispatch<SetStateAction<any>>;
+  layerType: string = 'geojsonicon';
+  private readonly layerConfig: LayerConfig;
+  private readonly setTooltipData: SetterOrUpdater<{
+    lng: number;
+    lat: number;
+    tooltipType: 'default' | 'thumbnail' | 'table';
+    id: string;
+    data: any;
+  } | null>;
+  private readonly setTooltipPosition: SetterOrUpdater<{ top: string; left: string } | null>;
 
-  constructor(layerConfig: LayerConfig[], map: Map, setTooltipData, setsetTooltipPosition) {
+  constructor(layerConfig: LayerConfig, setTooltipData, setTooltipPosition) {
     this.layerConfig = layerConfig;
-    this.map = map;
     this.setTooltipData = setTooltipData;
-    this.setsetTooltipPosition = setsetTooltipPosition;
+    this.setTooltipPosition = setTooltipPosition;
   }
 
-  makeDeckGlLayers(init) {
-    const targetLayerConfigs = this.extractTargetConfig();
-
-    const result: GeoJsonLayer<any>[] = targetLayerConfigs.map((layerConfig) => {
+  makeDeckGlLayer() {
+    const { layerConfig } = this;
+    if (this.isTargetConfig(layerConfig)) {
       const config = this.extractLayerConfig(layerConfig);
 
       return new GeoJsonLayer({
         data: layerConfig.source,
-        visible: init,
+        visible: true,
         pickable: true,
         autoHighlight: true,
         onClick: this.showToolTip,
@@ -141,24 +129,22 @@ class GeoJsonIconLayerCreator {
         },
         ...config,
       });
-    });
+    }
 
-    return result;
+    return null;
   }
 
   extractLayerConfig = (layerConfig: GeojsonIconLayerConfig) => {
-    const { type, source, ...otherConfig } = layerConfig;
+    const { type, source, visible, ...otherConfig } = layerConfig;
     return otherConfig;
   };
 
-  extractTargetConfig() {
-    return this.layerConfig.filter((layerConfig: LayerConfig) => {
-      return layerConfig.type === this.layersType;
-    }) as GeojsonIconLayerConfig[];
+  isTargetConfig(layerConfig: LayerConfig): layerConfig is GeojsonIconLayerConfig {
+    return layerConfig.type === this.layerType;
   }
 
   showToolTip = (info: PickInfo<any>) => {
-    showToolTip(info, this.map, this.setTooltipData, this.setsetTooltipPosition);
+    showToolTip(info, this.setTooltipData, this.setTooltipPosition);
   };
 }
 
@@ -180,23 +166,26 @@ async function getJsonFeatures(
 }
 
 class GeoJsonFeatureCollectionIconLayerCreator {
-  layersType: string = 'geojsonfcicon';
-  private readonly layerConfig: LayerConfig[];
-  private readonly map: Map;
-  private readonly setTooltipData: Dispatch<SetStateAction<any>>;
-  private readonly setsetTooltipPosition: Dispatch<SetStateAction<any>>;
+  layerType: string = 'geojsonfcicon';
+  private readonly layerConfig: LayerConfig;
+  private readonly setTooltipData: SetterOrUpdater<{
+    lng: number;
+    lat: number;
+    tooltipType: 'default' | 'thumbnail' | 'table';
+    id: string;
+    data: any;
+  } | null>;
+  private readonly setTooltipPosition: SetterOrUpdater<{ top: string; left: string } | null>;
 
-  constructor(layerConfig: LayerConfig[], map: Map, setTooltipData, setsetTooltipPosition) {
+  constructor(layerConfig: LayerConfig, setTooltipData, setTooltipPosition) {
     this.layerConfig = layerConfig;
-    this.map = map;
     this.setTooltipData = setTooltipData;
-    this.setsetTooltipPosition = setsetTooltipPosition;
+    this.setTooltipPosition = setTooltipPosition;
   }
 
-  makeDeckGlLayers(init) {
-    const targetLayerConfigs = this.extractTargetConfig();
-
-    const result: GeoJsonLayer<any>[] = targetLayerConfigs.map((layerConfig) => {
+  makeDeckGlLayer() {
+    const { layerConfig } = this;
+    if (this.isTargetConfig(layerConfig)) {
       const config = this.extractLayerConfig(layerConfig);
       let features: any;
       // aedレイヤーは要素名が日本語や座標の値が特殊なため修正する関数を定義
@@ -218,7 +207,7 @@ class GeoJsonFeatureCollectionIconLayerCreator {
 
       return new GeoJsonLayer({
         data: features,
-        visible: init,
+        visible: true,
         pickable: true,
         autoHighlight: true,
         onClick: this.showToolTip,
@@ -232,23 +221,20 @@ class GeoJsonFeatureCollectionIconLayerCreator {
         }),
         ...config,
       });
-    });
-
-    return result;
+    }
+    return null;
   }
 
   extractLayerConfig = (layerConfig: GeojsonIconLayerConfig) => {
-    const { type, source, ...otherConfig } = layerConfig;
+    const { type, source, visible, ...otherConfig } = layerConfig;
     return otherConfig;
   };
 
-  extractTargetConfig() {
-    return this.layerConfig.filter((layerConfig: LayerConfig) => {
-      return layerConfig.type === this.layersType;
-    }) as GeojsonIconLayerConfig[];
+  isTargetConfig(layerConfig: LayerConfig): layerConfig is GeojsonIconLayerConfig {
+    return layerConfig.type === this.layerType;
   }
 
   showToolTip = (info: PickInfo<any>) => {
-    showToolTip(info, this.map, this.setTooltipData, this.setsetTooltipPosition);
+    showToolTip(info, this.setTooltipData, this.setTooltipPosition);
   };
 }

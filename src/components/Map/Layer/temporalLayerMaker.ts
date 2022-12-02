@@ -15,7 +15,7 @@ export const TEMPORAL_LAYER_TYPES: Array<TemporalLayerType | string> = [
 import { IconLayer, GeoJsonLayer } from '@deck.gl/layers';
 import { RGBAColor, TripsLayer } from 'deck.gl';
 import { MVTLayer } from '@deck.gl/geo-layers';
-import { getDataList, Menu } from '@/components/LayerFilter/menu';
+import { Menu } from '@/components/LayerFilter/menu';
 
 /**
  * 時系列アニメーションDeckGLレイヤーを作成する
@@ -25,9 +25,8 @@ import { getDataList, Menu } from '@/components/LayerFilter/menu';
  * @param checkedLayerTitleList
  * @returns
  */
-export function makeTemporalLayers(
+export function makeTemporalLayer(
   layerConfig,
-  init: boolean,
   timestamp: number,
   checkedLayerTitleList: string[] = [],
   menu: Menu
@@ -45,41 +44,28 @@ export function makeTemporalLayers(
   );
   const tripsJsonCreator = new TripsJsonLayerCreator(layerConfig, checkedLayerTitleList, menu);
   const tripsDRMLayerCreator = new TripsDRMLayerCreator(layerConfig, checkedLayerTitleList, menu);
-  const layers = [
-    ...bustripCreator.makeDeckGlLayers(init, timestamp),
-    ...temporalPolygonCreator.makeDeckGlLayers(init, timestamp),
-    ...temporalLineCreator.makeDeckGlLayers(init, timestamp),
-    ...tripsJsonCreator.makeDeckGlLayers(init, timestamp),
-    ...tripsDRMLayerCreator.makeDeckGlLayers(init, timestamp),
-  ];
-  return layers;
+  const bustripLayer = bustripCreator.makeDeckGlLayer(timestamp);
+  const temporalPolygonLayer = temporalPolygonCreator.makeDeckGlLayer(timestamp);
+  const temporalLineLayer = temporalLineCreator.makeDeckGlLayer(timestamp);
+  const tripsJsonLayer = tripsJsonCreator.makeDeckGlLayer(timestamp);
+  const tripsDRMLayer = tripsDRMLayerCreator.makeDeckGlLayer(timestamp);
+  return (
+    bustripLayer ?? temporalPolygonLayer ?? temporalLineLayer ?? tripsJsonLayer ?? tripsDRMLayer
+  );
 }
 
 abstract class TemporalLayerCreator {
   layerType: TemporalLayerType = 'bus_trip';
-  layerConfig: any[];
+  layerConfig: any;
   checkedLayerTitleList: string[];
   private _menu: Menu;
 
-  constructor(layerConfig: any[], checkedLayerTitleList: string[] = [], menu: Menu) {
+  constructor(layerConfig: any, checkedLayerTitleList: string[] = [], menu: Menu) {
     this.layerConfig = layerConfig;
     this.checkedLayerTitleList = checkedLayerTitleList;
     this._menu = menu;
   }
-  abstract makeDeckGlLayers(init, timestamp): any[];
-
-  isChecked(layerConfig) {
-    // レイヤーがチェックされているか判定
-    const dataList = getDataList(this._menu);
-    let flag = false;
-    for (const data of dataList) {
-      if (data.id.includes(layerConfig.id)) {
-        if (this.checkedLayerTitleList.includes(data.title)) flag = true;
-      }
-    }
-    return flag;
-  }
-
+  abstract makeDeckGlLayer(timestamp): any;
   /**
    * layersTypeに適合するレイヤーコンフィグを取り出し
    */
@@ -110,21 +96,23 @@ abstract class TemporalLayerCreator {
       a1 * (1 - value) + a2 * value,
     ];
   }
+
+  isTargetConfig(layerConfig: any): boolean {
+    return layerConfig.type === this.layerType;
+  }
 }
 
 class BusTripLayerCreator extends TemporalLayerCreator {
   layerType: TemporalLayerType = 'bus_trip';
 
-  makeDeckGlLayers(init, timestamp) {
-    const targetLayerConfigs = this.extractTargetConfig();
-    const result: IconLayer<any>[] = [];
-
-    for (const layerConfig of targetLayerConfigs) {
+  makeDeckGlLayer(timestamp) {
+    const { layerConfig } = this;
+    if (this.isTargetConfig(layerConfig)) {
       const iconUrl = layerConfig.iconUrl ? layerConfig.iconUrl : 'images/bus_yellow.png';
       const TrackingL = new IconLayer({
         id: layerConfig.id,
         data: layerConfig.source,
-        visible: init && this.isChecked(layerConfig),
+        visible: true,
         lastPositions: {},
         getIcon: () => {
           return {
@@ -157,22 +145,22 @@ class BusTripLayerCreator extends TemporalLayerCreator {
           getPosition: [timestamp],
         },
       });
-      result.push(TrackingL);
+      return TrackingL;
     }
-    return result;
+    return null;
   }
 }
 
 class TemporalPolygonLayerCreator extends TemporalLayerCreator {
   layerType: TemporalLayerType = 'temporal_polygon';
 
-  makeDeckGlLayers(init, timestamp: number) {
-    const targetLayerConfigs = this.extractTargetConfig();
-    const result: GeoJsonLayer<any>[] = targetLayerConfigs.map((layerConfig) => {
-      const gLayer = new GeoJsonLayer({
+  makeDeckGlLayer(timestamp: number) {
+    const { layerConfig } = this;
+    if (this.isTargetConfig(layerConfig)) {
+      return new GeoJsonLayer({
         id: layerConfig.id,
         data: layerConfig.source,
-        visible: init && this.isChecked(layerConfig),
+        visible: true,
         extruded: true,
         getLineColor: () => [0, 0, 0, 0],
         getFillColor: (d: any) => {
@@ -204,23 +192,21 @@ class TemporalPolygonLayerCreator extends TemporalLayerCreator {
           getElevation: [timestamp],
         },
       });
-      return gLayer;
-    });
-
-    return result;
+    }
+    return null;
   }
 }
 
 class TemporalLineLayerCreator extends TemporalLayerCreator {
   layerType: TemporalLayerType = 'temporal_line';
 
-  makeDeckGlLayers(init, timestamp: number) {
-    const targetLayerConfigs = this.extractTargetConfig();
-    const result: GeoJsonLayer<any>[] = targetLayerConfigs.map((layerConfig) => {
-      const gLayer = new GeoJsonLayer({
+  makeDeckGlLayer(timestamp: number) {
+    const { layerConfig } = this;
+    if (this.isTargetConfig(layerConfig)) {
+      return new GeoJsonLayer({
         id: layerConfig.id,
         data: layerConfig.source,
-        visible: init && this.isChecked(layerConfig),
+        visible: true,
         extruded: true,
         getLineColor: (d: any) => {
           const normalizedTimestamp = timestamp - (timestamp % d.properties.step);
@@ -245,23 +231,21 @@ class TemporalLineLayerCreator extends TemporalLayerCreator {
           getElevation: [timestamp],
         },
       });
-      return gLayer;
-    });
-
-    return result;
+    }
+    return null;
   }
 }
 
 class TripsJsonLayerCreator extends TemporalLayerCreator {
   layerType: TemporalLayerType = 'trips_json';
 
-  makeDeckGlLayers(init, timestamp: number) {
-    const targetLayerConfigs = this.extractTargetConfig();
-    const result: TripsLayer<any>[] = targetLayerConfigs.map((layerConfig) => {
-      const gLayer = new TripsLayer({
+  makeDeckGlLayer(timestamp: number) {
+    const { layerConfig } = this;
+    if (this.isTargetConfig(layerConfig)) {
+      return new TripsLayer({
         id: layerConfig.id,
         data: layerConfig.source,
-        visible: init && this.isChecked(layerConfig),
+        visible: true,
         getTimestamps: (d) => d.timestamps,
         getColor: layerConfig.color || [255, 0, 0],
         currentTime: timestamp,
@@ -271,25 +255,26 @@ class TripsJsonLayerCreator extends TemporalLayerCreator {
           currentTime: [timestamp],
         },
       });
-      return gLayer;
-    });
-    return result;
+    }
+    return null;
   }
 }
 class TripsDRMLayerCreator extends TemporalLayerCreator {
   // レイヤータイプは'trips_drm'
   layerType: TemporalLayerType = 'trips_drm';
 
-  makeDeckGlLayers(init, timestamp: number) {
-    const targetLayerConfigs = this.extractTargetConfig();
-    const result: MVTLayer<any>[] = targetLayerConfigs.map((layerConfig) => {
-      const mLayer = new MVTLayer({
+  makeDeckGlLayer(timestamp: number) {
+    const { layerConfig } = this;
+    if (this.isTargetConfig(layerConfig)) {
+      return new MVTLayer({
         id: layerConfig.id,
         data: layerConfig.source,
         // @ts-ignore
         getLineColor: (d: any) => {
           const dataIndex: number = Math.trunc(timestamp / layerConfig.step);
-          const temporalValue: number = JSON.parse('[' + d.properties.traffic_volume + ']')[dataIndex];
+          const temporalValue: number = JSON.parse('[' + d.properties.traffic_volume + ']')[
+            dataIndex
+          ];
           // 0〜1の範囲にノーマライズの計算
           const normalizedValue = this.generateNormalizedValue(temporalValue, layerConfig);
           return this.generateColor(normalizedValue, layerConfig);
@@ -297,7 +282,9 @@ class TripsDRMLayerCreator extends TemporalLayerCreator {
         // 線幅の表示
         getLineWidth: (d: any) => {
           const dataIndex: number = Math.trunc(timestamp / layerConfig.step);
-          const temporalValue: number = JSON.parse('[' + d.properties.traffic_volume + ']')[dataIndex];
+          const temporalValue: number = JSON.parse('[' + d.properties.traffic_volume + ']')[
+            dataIndex
+          ];
           const normalizedValue = this.generateNormalizedValue(temporalValue, layerConfig);
           const widths = layerConfig.widths || [5, 5];
           const width = widths[0] * (1 - normalizedValue) + widths[1] * normalizedValue;
@@ -305,7 +292,7 @@ class TripsDRMLayerCreator extends TemporalLayerCreator {
         },
         // 最低5Pixcl幅で表示
         lineWidthMinPixels: 5,
-        visible: init && this.isChecked(layerConfig),
+        visible: true,
         stroked: false,
         filled: true,
         updateTriggers: {
@@ -313,8 +300,7 @@ class TripsDRMLayerCreator extends TemporalLayerCreator {
           getLineWidth: [timestamp],
         },
       });
-      return mLayer;
-    });
-    return result;
+    }
+    return null;
   }
 }

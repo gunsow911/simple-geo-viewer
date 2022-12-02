@@ -3,6 +3,7 @@ import '../styles/styles.css';
 import 'tailwindcss/tailwind.css';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import { RecoilRoot } from 'recoil';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -10,7 +11,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>&#65279;</title>
       </Head>
-      <Component {...pageProps} />
+      <RecoilRoot>
+        <Component {...pageProps} />
+      </RecoilRoot>
     </>
   );
 }

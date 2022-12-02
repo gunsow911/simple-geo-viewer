@@ -1,28 +1,25 @@
 import { ScenegraphLayer } from '@deck.gl/mesh-layers';
 import { GLTFLoader } from '@loaders.gl/gltf';
 import { fetchFile, parse } from '@loaders.gl/core';
-import { show, showToolTip } from '@/components/Tooltip/show';
+import { showToolTip } from '../../Tooltip/show';
 
 /**
  * GLTF Layerの作成
- * @param map {maplibregl.Map}
  * @param layerConfig {any}
- * @param init {boolean}
  * @param setTooltipData {Dispatch<SetStateAction<any>>}
- * @param setsetTooltipPosition ポップアップのスタイルをセットする関数
- * @returns {ScenegraphLayer[]}
+ * @param setTooltipPosition ポップアップのスタイルをセットする関数
+ * @returns {ScenegraphLayer}
  */
-export function makeGltfLayers(map, layerConfig, init, setTooltipData, setsetTooltipPosition) {
-  const gltfCreator = new gltfLayerCreator(layerConfig, map, setTooltipData, setsetTooltipPosition);
-  return gltfCreator.makeDeckGlLayers(init);
+export function makeGltfLayer(layerConfig, setTooltipData, setTooltipPosition) {
+  const gltfCreator = new gltfLayerCreator(layerConfig, setTooltipData, setTooltipPosition);
+  return gltfCreator.makeDeckGlLayer();
 }
 
 class gltfLayerCreator {
-  map;
   layerConfig;
-  layersType = 'gltf';
+  layerType = 'gltf';
   setTooltipData;
-  setsetTooltipPosition;
+  setTooltipPosition;
 
   /**
    *
@@ -30,21 +27,19 @@ class gltfLayerCreator {
    * @param map {maplibregl.Map}
    * @param setTooltipData {Dispatch<SetStateAction<any>>}
    */
-  constructor(layerConfig, map, setTooltipData, setsetTooltipPosition) {
+  constructor(layerConfig, setTooltipData, setTooltipPosition) {
     this.layerConfig = layerConfig;
-    this.map = map;
     this.setTooltipData = setTooltipData;
-    this.setsetTooltipPosition = setsetTooltipPosition;
+    this.setTooltipPosition = setTooltipPosition;
   }
 
   /**
    * DeckGLLayerの作成
-   * @param init {boolean} 初期表示レイヤーかどうか
-   * @returns {ScenegraphLayer[]}
+   * @returns {ScenegraphLayer}
    */
-  makeDeckGlLayers(init) {
-    const targetLayerConfigs = this.extractTargetConfig();
-    return targetLayerConfigs.map((layerConfig) => {
+  makeDeckGlLayer() {
+    const { layerConfig } = this;
+    if (this.isTargetConfig(layerConfig)) {
       const config = this.extractLayerConfig(layerConfig);
 
       const content = fetchFile(layerConfig.source);
@@ -53,7 +48,7 @@ class gltfLayerCreator {
 
       return new ScenegraphLayer({
         data: layerConfig.source,
-        visible: init,
+        visible: true,
         pickable: true,
         scenegraph: scenegraph,
         _lighting: 'flat',
@@ -61,25 +56,20 @@ class gltfLayerCreator {
         onClick: this.showToolTip,
         ...config,
       });
-    });
+    }
+    return null;
   }
 
   extractLayerConfig = (layerConfig) => {
-    const { type, source, ...otherConfig } = layerConfig;
+    const { type, source, visible, ...otherConfig } = layerConfig;
     return otherConfig;
   };
 
-  /**
-   * layersTypeに適合するレイヤーコンフィグを取り出し
-   * @private
-   */
-  extractTargetConfig() {
-    return this.layerConfig.filter((layer) => {
-      return layer.type === this.layersType;
-    });
+  isTargetConfig(layer) {
+    return layer.type === this.layerType;
   }
 
   showToolTip = (info) => {
-    showToolTip(info, this.map, this.setTooltipData, this.setsetTooltipPosition);
+    showToolTip(info, this.setTooltipData, this.setTooltipPosition);
   };
 }

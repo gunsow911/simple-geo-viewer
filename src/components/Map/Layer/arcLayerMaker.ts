@@ -1,9 +1,8 @@
-import { Map } from 'maplibre-gl';
 import { PickInfo, RGBAColor } from 'deck.gl';
 import { ArcLayer } from '@deck.gl/layers';
 
-import { show, showToolTip } from '@/components/Tooltip/show';
-import { Dispatch, SetStateAction } from 'react';
+import { SetterOrUpdater } from 'recoil';
+import { showToolTip } from '@/components/Tooltip/show';
 
 type ArcLayerConfig = {
   id: string;
@@ -17,46 +16,40 @@ type ArcLayerConfig = {
 
 /**
  * makeArcLayersの作成
- * @param map mapインスタンス
  * @param layerConfig 作成したいlayerのコンフィグ
- * @param init 初期表示レイヤー生成かどうか
  * @param setTooltipData Click時に表示するsetTooltipData関数
- * @param setsetTooltipPosition ポップアップのスタイルをセットする関数
+ * @param setTooltipPosition ポップアップのスタイルをセットする関数
  */
-export function makeArcLayers(
-  map: Map,
-  layerConfig,
-  init: boolean,
-  setTooltipData,
-  setsetTooltipPosition
-) {
-  const ArcCreator = new ArcLayerCreator(layerConfig, map, setTooltipData, setsetTooltipPosition);
-  return ArcCreator.makeDeckGlLayers(init);
+export function makeArcLayer(layerConfig, setTooltipData, setTooltipPosition) {
+  const ArcCreator = new ArcLayerCreator(layerConfig, setTooltipData, setTooltipPosition);
+  return ArcCreator.makeDeckGlLayer();
 }
 
 class ArcLayerCreator {
-  private layersType: string = 'Arc';
-  private readonly layerConfig: any[];
-  private readonly map: Map;
-  private readonly setTooltipData: Dispatch<SetStateAction<any>>;
-  private readonly setsetTooltipPosition: Dispatch<SetStateAction<any>>;
+  private layerType: string = 'Arc';
+  private readonly layerConfig: any;
+  setTooltipData: SetterOrUpdater<{
+    lng: number;
+    lat: number;
+    tooltipType: 'default' | 'thumbnail' | 'table';
+    id: string;
+    data: any;
+  } | null>;
+  setTooltipPosition: SetterOrUpdater<{ top: string; left: string } | null>;
 
-  constructor(layerConfig: any[], map: Map, setTooltipData, setsetTooltipPosition) {
+  constructor(layerConfig: any, setTooltipData, setTooltipPosition) {
     this.layerConfig = layerConfig;
-    this.map = map;
     this.setTooltipData = setTooltipData;
-    this.setsetTooltipPosition = setsetTooltipPosition;
+    this.setTooltipPosition = setTooltipPosition;
   }
 
-  makeDeckGlLayers(init) {
-    const targetLayerConfigs = this.extractTargetConfig();
-
-    const result: ArcLayer<any>[] = targetLayerConfigs.map((layerConfig) => {
+  makeDeckGlLayer() {
+    const { layerConfig } = this;
+    if (this.isTargetConfig(layerConfig)) {
       const config = this.extractLayerConfig(layerConfig);
-
       return new ArcLayer({
         id: layerConfig.id,
-        visible: init,
+        visible: true,
         pickable: true,
         data: layerConfig.source,
         getWidth: layerConfig.width,
@@ -66,23 +59,21 @@ class ArcLayerCreator {
         getTargetColor: layerConfig.targetColor,
         ...config,
       });
-    });
+    }
 
-    return result;
+    return null;
   }
 
   private extractLayerConfig = (layerConfig) => {
-    const { type, source, ...otherConfig } = layerConfig;
+    const { type, source, visible, ...otherConfig } = layerConfig;
     return otherConfig;
   };
 
-  private extractTargetConfig() {
-    return this.layerConfig.filter((layer: ArcLayerConfig) => {
-      return layer.type === this.layersType;
-    });
+  private isTargetConfig(layerConfig: any): boolean {
+    return layerConfig.type === this.layerType;
   }
 
   private showToolTip = (info: PickInfo<any>) => {
-    showToolTip(info, this.map, this.setTooltipData, this.setsetTooltipPosition);
+    showToolTip(info, this.setTooltipData, this.setTooltipPosition);
   };
 }
