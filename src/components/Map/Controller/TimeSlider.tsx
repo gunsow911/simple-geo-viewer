@@ -1,30 +1,14 @@
-import {
-  Dispatch,
-  memo,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useContext,
-  VFC,
-} from 'react';
+import { memo, useCallback, useEffect, useRef, useState, useContext, VFC } from 'react';
 import { context } from '@/pages';
 import Slider from 'react-rangeslider';
-import { Deck } from 'deck.gl';
-import { getFilteredLayerConfig } from '@/components/LayerFilter/config';
-import { getDataList } from '@/components/LayerFilter/menu';
 import { addRenderOption } from '@/components/Map/Layer/renderOption';
-import { makeTemporalLayers, TEMPORAL_LAYER_TYPES } from '../Layer/temporalLayerMaker';
-import { Map } from 'maplibre-gl';
+import { makeTemporalLayer } from '../Layer/temporalLayerMaker';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { TemporalLayerConfigState, TemporalLayerState } from '@/store/LayersState';
 
-type Props = {
-  map: Map;
-  deck: Deck;
-  setTooltipData: Dispatch<SetStateAction<any>>;
-};
-
-export const TimeSlider: VFC<Props> = memo(function TimeSlider({ map, deck, setTooltipData }) {
+export const TimeSlider: VFC = memo(function TimeSlider() {
+  const temporalLayerConfigs = useRecoilValue(TemporalLayerConfigState);
+  const [temporalLayers, setTemporalLayers] = useRecoilState(TemporalLayerState);
   const [timestamp, setTimestamp] = useState<number>(() => {
     // 時間初期値
     const dateNow = new Date();
@@ -39,31 +23,6 @@ export const TimeSlider: VFC<Props> = memo(function TimeSlider({ map, deck, setT
 
   const { checkedLayerTitleList } = useContext(context);
   const { preferences } = useContext(context);
-
-  // Layerレンダリング用のCallback
-  const renderCallback = (layerConfig, timestamp) => {
-    addRenderOption(
-      makeTemporalLayers(layerConfig, true, timestamp, checkedLayerTitleList, preferences.menu)
-    ).forEach((layer) => {
-      deck.setProps({
-        layers: [
-          ...deck.props.layers.filter((l) => {
-            return l.id !== layer.id;
-          }),
-          layer,
-        ],
-      });
-    });
-  };
-
-  const getLayerConfig = () => {
-    const { menu, config } = preferences;
-    return getFilteredLayerConfig(menu, config).filter((layer) => {
-      return getDataList(menu).some(
-        (value) => value.id.includes(layer.id) && TEMPORAL_LAYER_TYPES.includes(layer.type)
-      );
-    });
-  };
 
   /* jsonからプロパティの取得 設定されていない場合は元々のタイムスライダーの値をセット */
   const maxVal = 1439;
@@ -82,17 +41,27 @@ export const TimeSlider: VFC<Props> = memo(function TimeSlider({ map, deck, setT
 
   // callback関数に変更があった場合のみanimateを再生成する
   const animate = useCallback(() => {
-    const layerConfig = getLayerConfig();
     setTimestamp((prevState) => {
       if (prevState >= maxVal) {
-        renderCallback(layerConfig, 0);
+        setTemporalLayers(() =>
+          temporalLayerConfigs.map((lc) =>
+            addRenderOption(makeTemporalLayer(lc, 0, checkedLayerTitleList, preferences.menu))
+          )
+        );
+
         return 0;
       }
-      renderCallback(layerConfig, prevState + (1 + speed));
+      setTemporalLayers(() => {
+        return temporalLayerConfigs.map((lc) =>
+          addRenderOption(
+            makeTemporalLayer(lc, prevState + (1 + speed), checkedLayerTitleList, preferences.menu)
+          )
+        );
+      });
       return prevState + (1 + speed);
     });
     requestRef.current = requestAnimationFrame(animate);
-  }, [getLayerConfig, maxVal, renderCallback, speed]);
+  }, [setTemporalLayers, temporalLayerConfigs, checkedLayerTitleList, preferences.menu]);
 
   // animate関数に変更があった場合は一度破棄して再度呼び出す
   useEffect(() => {
@@ -112,11 +81,21 @@ export const TimeSlider: VFC<Props> = memo(function TimeSlider({ map, deck, setT
   };
 
   useEffect(() => {
-    if (deck !== undefined) {
-      // 初回レンダリング
-      renderCallback(getLayerConfig(), timestamp);
-    }
-  }, [deck]);
+    setTemporalLayers(() => {
+      return temporalLayerConfigs.map((lc) =>
+        addRenderOption(makeTemporalLayer(lc, timestamp, checkedLayerTitleList, preferences.menu))
+      );
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setTemporalLayers, temporalLayerConfigs]);
+
+  // unmount時に正常に処理が行われるように
+  useEffect(() => {
+    return () => {
+      setTemporalLayers([]);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className={'mx-4 my-4'}>
@@ -127,8 +106,13 @@ export const TimeSlider: VFC<Props> = memo(function TimeSlider({ map, deck, setT
             return getDisplayTime(value);
           }}
           onChange={(value) => {
-            const layerConfig = getLayerConfig();
-            renderCallback(layerConfig, value);
+            setTemporalLayers(() =>
+              temporalLayerConfigs.map((lc) =>
+                addRenderOption(
+                  makeTemporalLayer(lc, value, checkedLayerTitleList, preferences.menu)
+                )
+              )
+            );
             setTimestamp(value);
           }}
           orientation="horizontal"

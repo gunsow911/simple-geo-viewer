@@ -3,6 +3,9 @@ import { context } from '@/pages';
 import Collapsible from 'react-collapsible';
 import { getDataById, getCategoryByTitle, getDataTitleById } from '@/components/LayerFilter/menu';
 import { largeDownloadIcon, shareIcon, linkIcon } from '@/components/SideBar/Icon';
+import { useRecoilValue } from 'recoil';
+import { TooltipDataState } from '@/store/TooltipState';
+import { getPropertiesObj } from '@/components/Tooltip/util';
 
 type BaseTooltipProps = { children: ReactNode };
 
@@ -12,23 +15,17 @@ const tdStyle = {
 
 const BaseTooltip: VFC<BaseTooltipProps> = ({ children }) => {
   const { preferences } = useContext(context);
-  const setTooltipPosition = {
+  const toolchipContentStyle = {
     backgroundColor: preferences.settings.tooltip_background_color,
   };
   return (
     <div className="visible h-full">
-      <div id="tooltip_content" className="bg-white h-full" style={setTooltipPosition}>
+      <div id="handle" className="h-7 w-full bg-gray-400 cursor-move"></div>
+      <div id="tooltip_content" className="bg-white h-full" style={toolchipContentStyle}>
         {children}
       </div>
     </div>
   );
-};
-
-type TooltipProps = {
-  properties: any;
-  labels: string[];
-  tooltipType: string;
-  id: string;
 };
 
 type TooltipBodyProps = {
@@ -48,7 +45,17 @@ type TooltipTableBodyProps = {
   id: string;
 };
 
-export const Tooltip: VFC<TooltipProps> = ({ properties, labels, tooltipType, id }) => {
+export const Tooltip: VFC = () => {
+  const tooltipData = useRecoilValue(TooltipDataState);
+  if (!tooltipData) {
+    return null;
+  }
+  const {
+    data: { properties, labels },
+    tooltipType,
+    id,
+  } = tooltipData;
+
   return (
     <div className={'relative overflow-auto h-full '}>
       <BaseTooltip>

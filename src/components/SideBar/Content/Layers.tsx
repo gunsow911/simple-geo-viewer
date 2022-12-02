@@ -1,37 +1,34 @@
-import React, { Dispatch, SetStateAction, useContext, useEffect } from 'react';
+import React, { Dispatch, FC, SetStateAction, useCallback, useContext, useEffect } from 'react';
 import { context } from '@/pages';
 import { Data, Menu } from '@/components/LayerFilter/menu';
 import { getResourceIcon } from '@/components/SideBar/Icon';
-import { getDataById } from '@/components/LayerFilter/menu';
 import { filterCheckedData } from '@/components/LayerFilter/sideBar';
 import { DownloadIcon } from '@/components/SideBar/Icon';
+import { useRecoilState } from 'recoil';
+import { LayersState, TemporalLayerConfigState } from '@/store/LayersState';
+import { makeDeckGLLayer } from '@/components/Map/Layer/deckGlLayerFactory';
+import { TEMPORAL_LAYER_TYPES } from '@/components/Map/Layer/temporalLayerMaker';
+import { getLayerConfigById, LayerConfig } from '@/components/LayerFilter/config';
+import { TooltipDataState, TooltipPositionState } from '@/store/TooltipState';
 
 const isSelected = (resourceName: string, selectedResourceNameList: string[]): boolean => {
   return selectedResourceNameList.includes(resourceName);
 };
 
-const setResourceViewState = (resourceId: string[], setClickedLayerViewState: any, menu: Menu) => {
-  const targetResource = getDataById(menu, resourceId);
-
+const setResourceViewState = (resource: Data, setClickedLayerViewState: any) => {
   setClickedLayerViewState({
-    longitude: targetResource.lng,
-    latitude: targetResource.lat,
-    zoom: targetResource.zoom,
-    id: targetResource.id[0],
+    longitude: resource.lng,
+    latitude: resource.lat,
+    zoom: resource.zoom,
+    id: resource.id[0],
   });
-};
-
-const getDefaultVisiblyLayerTitles = (menu: Menu) => {
-  return filterCheckedData(menu).map((layer) => layer.title);
 };
 
 type LayersProps = {
   layers: Data[];
 };
 
-export const Layers = (props: LayersProps) => {
-  const { layers } = props;
-
+export const Layers: FC<LayersProps> = ({ layers }) => {
   const {
     checkedLayerTitleList,
     setCheckedLayerTitleList,
@@ -40,23 +37,90 @@ export const Layers = (props: LayersProps) => {
     preferences,
   } = useContext(context);
 
+  const [deckGLLayers, setDeckGLLayers] = useRecoilState(LayersState);
+  const [temporalLayerConfigs, setTemporalLayerConfigs] = useRecoilState(TemporalLayerConfigState);
+  const [tooltipData, setTooltipData] = useRecoilState(TooltipDataState);
+  const [tooltipPosition, setTooltipPosition] = useRecoilState(TooltipPositionState);
+
+  const layerCreateById = useCallback(
+    (ids: string[]) => {
+      return ids.forEach((id) => {
+        const layerConfig = getLayerConfigById(id, preferences.config);
+        if (!layerConfig) {
+          return;
+        }
+        if (TEMPORAL_LAYER_TYPES.includes(layerConfig.type)) {
+          setTemporalLayerConfigs((currVal) => {
+            return [...currVal, layerConfig];
+          });
+        } else {
+          const deckGLlayer = makeDeckGLLayer(layerConfig, setTooltipData, setTooltipPosition);
+          if (deckGLlayer) {
+            setDeckGLLayers((currVal) => {
+              return [...currVal, deckGLlayer];
+            });
+          }
+        }
+      });
+    },
+    [
+      preferences.config,
+      setTemporalLayerConfigs,
+      setTooltipData,
+      setTooltipPosition,
+      setDeckGLLayers,
+    ]
+  );
   //最初の一度だけ、menuのcheckedを確認し、trueならcheckedLayerTitleListにset
   useEffect(() => {
-    setCheckedLayerTitleList(getDefaultVisiblyLayerTitles(preferences.menu));
+    layers
+      .filter((value) => value.checked)
+      .forEach((value) => {
+        layerCreateById(value.id);
+      });
+    setCheckedLayerTitleList(
+      layers
+        .filter((value) => value.checked)
+        .map((value) => {
+          return value.title;
+        })
+    );
   }, []);
 
-  const toggleSelectedResourceList = (resourceName: string, resourceId: string[]) => {
+  const toggleSelectedResourceList = (resource: Data) => {
     // 既存のリストに対象リソースが入っていなければ格納
-    if (!isSelected(resourceName, checkedLayerTitleList)) {
-      setCheckedLayerTitleList((prevList) => [...prevList, resourceName]);
+    if (!isSelected(resource.title, checkedLayerTitleList)) {
+      setCheckedLayerTitleList((prevList) => [...prevList, resource.title]);
       // クリックされたリソースの位置情報を保存する
-      setResourceViewState(resourceId, setClickedLayerViewState, preferences.menu);
+      setResourceViewState(resource, setClickedLayerViewState);
+
+      layerCreateById(resource.id);
+
       return;
     }
 
     //リストから削除
     const newList = checkedLayerTitleList.filter((item) => {
-      return item !== resourceName;
+      return item !== resource.title;
+    });
+    resource.id.forEach((id) => {
+      const layerConfig = getLayerConfigById(id, preferences.config);
+      if (!layerConfig) {
+        return;
+      }
+      if (TEMPORAL_LAYER_TYPES.includes(layerConfig.type)) {
+        setTemporalLayerConfigs((currVal) => {
+          return currVal.filter((value) => {
+            return layerConfig.id !== value.id;
+          });
+        });
+      } else {
+        setDeckGLLayers((currVal) => {
+          return currVal.filter((value) => {
+            return id !== value.id;
+          });
+        });
+      }
     });
     setCheckedLayerTitleList([...newList]);
     //チェックが外れた時はnullをセットしてflyToしない
@@ -73,7 +137,6 @@ export const Layers = (props: LayersProps) => {
     'white-space': 'nowrap',
     'min-width': 0,
   };
-
   return (
     <>
       {layers.map((resource, index) => (
@@ -82,14 +145,6 @@ export const Layers = (props: LayersProps) => {
             className="transition-hover duration-500 ease bg-white hover:bg-gray-200 p-2 flex"
             style={resourceStyle}
             key={index}
-            onMouseOver={(event) =>
-              setMouseTooltipData(() => ({
-                text: resource.title,
-                top: (window.innerHeight - event.clientY + 10) * -1,
-                left: 20,
-              }))
-            }
-            onMouseOut={() => setMouseTooltipData(() => null)}
           >
             <div className="w-11/12 pr-3 flex items-center">
               <input
@@ -97,11 +152,23 @@ export const Layers = (props: LayersProps) => {
                 className="rounded-full mx-1 text-cyan-600 focus:outline-none min-w-16 min-h-16 max-w-16 max-h-16"
                 checked={isSelected(resource.title, checkedLayerTitleList)}
                 onChange={() => {
-                  toggleSelectedResourceList(resource.title, resource.id);
+                  toggleSelectedResourceList(resource);
                 }}
               />
               {getResourceIcon(resource, preferences.config)}
-              <p style={textStyle}>{resource.title}</p>
+              <p
+                onMouseOver={(event) =>
+                  setMouseTooltipData(() => ({
+                    text: resource.title,
+                    top: (window.innerHeight - event.clientY + 10) * -1,
+                    left: 20,
+                  }))
+                }
+                onMouseOut={() => setMouseTooltipData(() => null)}
+                style={textStyle}
+              >
+                {resource.title}
+              </p>
             </div>
             <div className="w-1/12">
               {resource.download_url === undefined

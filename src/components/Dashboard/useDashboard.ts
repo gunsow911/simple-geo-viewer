@@ -6,6 +6,8 @@ import useLinkVolume from './Menu/LinkVolume/useLinkVolume';
 import useTuMeshVolume from './Menu/TuMeshVolume/useTuMeshVolume';
 import useSbMeshVolume from './Menu/SbMeshVolume/useSbMeshVolume';
 import { useRouter } from 'next/router';
+import { useRecoilState } from 'recoil';
+import { DashboardLayerState } from '@/store/LayersState';
 
 // ダッシュボード専用レイヤープロパティ
 export type DashboardLayerProps = {
@@ -29,10 +31,6 @@ export type UseDashboardReturn = {
    */
   selectedMenuId?: string;
   /**
-   * ダッシュボードが所持しているレイヤーリスト
-   */
-  layers: Layer[];
-  /**
    * メニューのダッシュボードを表示させる
    * @param menuId メニューID
    */
@@ -49,7 +47,7 @@ export type UseDashboardReturn = {
  */
 const useDashboard = (): UseDashboardReturn => {
   const [selectedMenuId, setSelectedMenuId] = useState<string>();
-  const [layers, setLayers] = useState<Layer<DashboardLayerProps>[]>([]);
+  const [layers, setLayers] = useRecoilState(DashboardLayerState);
   const [menuInfo, setMenuInfo] = useState<any | undefined>(undefined);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const router = useRouter();
@@ -118,7 +116,6 @@ const useDashboard = (): UseDashboardReturn => {
     menuItems,
     selectedMenuId,
     menuInfo,
-    layers,
     show,
     hide,
   };

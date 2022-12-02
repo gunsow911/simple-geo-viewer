@@ -1,34 +1,28 @@
-import React, { Dispatch, SetStateAction, useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
-import { Map, Style, NavigationControl } from 'maplibre-gl';
+import { Map, Marker, NavigationControl, Style } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 import { Deck, FlyToInterpolator } from '@deck.gl/core/typed';
 
 import { context } from '@/pages';
-import { useFlyTo, easeOutQuart } from '@/components/Map/Animation/flyTo';
-import { makeDeckGlLayers } from '@/components/Map/Layer/deckGlLayerFactory';
-import { toggleVisibly, zoomVisibly, visiblyLayers } from '@/components/Map/Layer/visibly';
+import { useFlyTo } from '@/components/Map/Animation/flyTo';
 import Legend, { useGetClickedLayerId } from '@/components/Map/Legend';
 
 import BackgroundSelector from './Controller/BackgroundSelector';
 import { TimeSlider } from '@/components/Map/Controller/TimeSlider';
-import {
-  getFilteredLayerConfig,
-  getLayerConfigById,
-  Config,
-} from '@/components/LayerFilter/config';
-import { Menu, getDataById } from '@/components/LayerFilter/menu';
-import { TEMPORAL_LAYER_TYPES } from '@/components/Map/Layer/temporalLayerMaker';
-import { Preferences, Backgrounds } from '@/components/LayerFilter/loader';
-import { resolveUrl } from '@loaders.gl/gltf/src/lib/gltf-utils/resolve-url';
-import { useDashboardContext } from '../Dashboard/useDashboardContext';
+import { getLayerConfigById } from '@/components/LayerFilter/config';
+import { Backgrounds, Preferences } from '@/components/LayerFilter/loader';
 import DashboardPanelManager from '../Dashboard/DashboardPanelManager';
-import { useRouter } from 'next/router';
-
-let map: Map;
-let deck: Deck;
-let visLayers: visiblyLayers;
+import { useRecoilValue } from 'recoil';
+import {
+  DashboardLayerState,
+  LayersState,
+  TemporalLayerConfigState,
+  TemporalLayerState,
+} from '@/store/LayersState';
+import { TooltipDataState } from '@/store/TooltipState';
+import { getPropertiesObj } from '@/components/Tooltip/util';
 
 const getViewStateFromMaplibre = (map) => {
   const { lng, lat } = map.getCenter();
@@ -65,22 +59,19 @@ const getInitialStyle = (backgrounds: Backgrounds): Style => {
   return style;
 };
 
-const checkZoomVisible = () => {
-  const deckGlLayers = deck.props.layers;
-  const zommVisibleLayers = zoomVisibly(deckGlLayers, visLayers);
-  deck.setProps({ layers: zommVisibleLayers });
-};
-
 const useInitializeMap = (
   maplibreContainer: React.MutableRefObject<HTMLDivElement | null>,
   deckglContainer: React.MutableRefObject<HTMLCanvasElement | null>,
   preferences: Preferences
 ) => {
   const { backgrounds, initialView, menu } = preferences;
+  const [currentZoomLevel, setCurrentZoomLevel] = useState(0);
+  const deckGLRef = useRef<any>();
+  const mapRef = useRef<any>();
   useEffect(() => {
-    if (!map) {
+    if (!mapRef.current) {
       if (!maplibreContainer.current) return;
-      map = new Map({
+      mapRef.current = new Map({
         container: maplibreContainer.current,
         style: getInitialStyle(backgrounds),
         center: initialView.map.center,
@@ -92,10 +83,9 @@ const useInitializeMap = (
       });
     }
 
-    visLayers = new visiblyLayers(menu, initialView.map.zoom);
     // @ts-ignore
-    const gl = map.painter.context.gl;
-    deck = new Deck({
+    const gl = mapRef.current.painter.context.gl;
+    deckGLRef.current = new Deck({
       initialViewState: {
         latitude: initialView.map.center[1],
         longitude: initialView.map.center[0],
@@ -106,36 +96,63 @@ const useInitializeMap = (
       canvas: deckglContainer.current!,
       controller: true,
       onViewStateChange: ({ viewState }) => {
-        map.jumpTo({
+        mapRef.current.jumpTo({
           center: [viewState.longitude, viewState.latitude],
           zoom: viewState.zoom,
           bearing: viewState.bearing,
           pitch: viewState.pitch,
         });
-        visLayers.setzoomLevel(viewState.zoom);
-      },
-      onBeforeRender: () => {
-        checkZoomVisible();
+        setCurrentZoomLevel(viewState.zoom);
       },
       layers: [],
     });
 
-    map.addControl(new NavigationControl());
+    mapRef.current.addControl(new NavigationControl());
 
-    map.on('moveend', (_e) => {
-      deck.setProps({ initialViewState: getViewStateFromMaplibre(map) });
+    mapRef.current.on('moveend', (_e) => {
+      deckGLRef.current.setProps({ initialViewState: getViewStateFromMaplibre(mapRef.current) });
     });
   }, []);
+  return {
+    deckGLRef,
+    mapRef,
+    currentZoomLevel,
+  };
 };
 
-const useToggleVisibly = (menu: Menu, config: Config) => {
-  const { checkedLayerTitleList } = useContext(context);
+const useShowTooltip = (map: any) => {
+  const pointMarkerRef = useRef<any>();
 
-  if (!deck) return;
-  const deckGlLayers = deck.props.layers;
-  const toggleVisibleLayers = toggleVisibly(deckGlLayers, checkedLayerTitleList, menu);
-  const zoomVisibleLayers = zoomVisibly(toggleVisibleLayers, visLayers);
-  const priorityViewLayer = zoomVisibleLayers
+  const tooltipData = useRecoilValue(TooltipDataState);
+  useEffect(() => {
+    if (!tooltipData || !tooltipData.data) {
+      if (pointMarkerRef.current) {
+        pointMarkerRef.current.remove();
+      }
+    } else {
+      const { data, tooltipType, id, lat, lng } = tooltipData;
+      getPropertiesObj(data, !tooltipType ? 'default' : tooltipType, id);
+      if (map) {
+        pointMarkerRef.current = new Marker().setLngLat([lng, lat]).addTo(map);
+      }
+    }
+  }, [map, tooltipData]);
+};
+
+const useDeckGLLayer = (currentZoomLevel: number, config) => {
+  const deckglLayers = useRecoilValue(LayersState);
+  const temporalLayers = useRecoilValue(TemporalLayerState);
+  const dL = deckglLayers.map((layer) => {
+    return layer.clone({
+      visible: !layer.props || !layer.props.minzoom || layer.props.minzoom <= currentZoomLevel,
+    });
+  });
+  const tdL = temporalLayers.map((layer) => {
+    return layer.clone({
+      visible: !layer.props || !layer.props.minzoom || layer.props.minzoom <= currentZoomLevel,
+    });
+  });
+  return [...dL, ...tdL]
     .map((layer) => {
       if (getLayerConfigById(layer.id, config)?.type === 'geojsonicon') {
         return { index: 1, layer: layer };
@@ -147,76 +164,30 @@ const useToggleVisibly = (menu: Menu, config: Config) => {
     .map((obj) => {
       return obj.layer;
     });
-  deck.setProps({ layers: priorityViewLayer });
-  visLayers.setlayerList(checkedLayerTitleList);
-  return priorityViewLayer;
 };
 
-type Props = {
-  setTooltipData: Dispatch<SetStateAction<any>>;
-  setsetTooltipPosition: Dispatch<SetStateAction<any>>;
-};
-
-const MapComponent: React.VFC<Props> = ({ setTooltipData, setsetTooltipPosition }) => {
+const MapComponent: React.VFC = () => {
   const maplibreContainer = useRef<HTMLDivElement | null>(null);
   const deckglContainer = useRef<HTMLCanvasElement | null>(null);
   const { preferences } = useContext(context);
-  const { layers: dashboardLayers } = useDashboardContext();
-
-  const visibleLayerTypes = getFilteredLayerConfig(preferences.menu, preferences.config).map(
-    (item) => {
-      return item.type;
-    }
-  );
-  const hasTimeSeries = !!visibleLayerTypes.find((item) => TEMPORAL_LAYER_TYPES.includes(item));
-
+  const temporalLayerConfigs = useRecoilValue(TemporalLayerConfigState);
+  const dashboardLayers = useRecoilValue(DashboardLayerState);
   //map・deckインスタンスを初期化
-  useInitializeMap(maplibreContainer, deckglContainer, preferences);
-  const router = useRouter();
-
-  //対象のレイヤを全て作成してdeckに登録
-  useEffect(() => {
-    map.on('load', () => {
-      makeDeckGlLayers(
-        map,
-        deck,
-        setTooltipData,
-        setsetTooltipPosition,
-        preferences.menu,
-        preferences.config
-      );
-
-      let querySelectLayerId = router.query.querySelectLayerId as string | undefined;
-      querySelectLayerId = querySelectLayerId === undefined ? '' : querySelectLayerId;
-      if (querySelectLayerId !== '') {
-        const targetResource = getDataById(preferences.menu, [querySelectLayerId]);
-
-        const viewState = {
-          longitude: targetResource.lng,
-          latitude: targetResource.lat,
-          zoom: targetResource.zoom,
-          id: targetResource.id[0],
-          pitch: preferences.initialView.map.pitch,
-          transitionDuration: 2000,
-          transitionEasing: easeOutQuart,
-          transitionInterpolator: new FlyToInterpolator(),
-        };
-        deck.setProps({ initialViewState: viewState });
-      }
-      checkZoomVisible();
-    });
-  }, []);
-
-  //layerの可視状態を変更
-  const visibleLayers = useToggleVisibly(preferences.menu, preferences.config);
-
+  const { deckGLRef, mapRef, currentZoomLevel } = useInitializeMap(
+    maplibreContainer,
+    deckglContainer,
+    preferences
+  );
+  const deckglLayers = useDeckGLLayer(currentZoomLevel, preferences.config);
   //クリックされたレイヤに画面移動
-  useFlyTo(deck);
+  useFlyTo(deckGLRef.current);
 
   // ダッシュボードのレイヤーと統合
-  if (deck) {
-    deck.setProps({ layers: [...(visibleLayers ?? []), ...dashboardLayers] });
+  if (deckGLRef.current) {
+    deckGLRef.current.setProps({ layers: [...deckglLayers, ...dashboardLayers] });
   }
+
+  useShowTooltip(mapRef.current);
 
   return (
     <>
@@ -227,12 +198,10 @@ const MapComponent: React.VFC<Props> = ({ setTooltipData, setsetTooltipPosition 
         </div>
         <div className="z-10 absolute top-2 right-12 bg-white p-1">
           <div className="text-center font-bold">背景</div>
-          <BackgroundSelector map={map} />
+          <BackgroundSelector map={mapRef.current} />
         </div>
         <div className="z-10 absolute bottom-0 left-0 w-2/5 bg-white">
-          {hasTimeSeries ? (
-            <TimeSlider deck={deck} map={map} setTooltipData={setTooltipData} />
-          ) : null}
+          {temporalLayerConfigs.length ? <TimeSlider /> : null}
         </div>
         <DashboardPanelManager />
       </div>

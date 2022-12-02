@@ -1,5 +1,5 @@
 import { context } from '@/pages';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, Dispatch, SetStateAction } from 'react';
 import { getVisiblyContent } from '@/components/LayerFilter/sideBar';
 import { Content } from '@/components/SideBar/Content';
 import { Layers } from '@/components/SideBar/Content/Layers';

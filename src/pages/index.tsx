@@ -6,12 +6,15 @@ import Map from '@/components/Map';
 import { clickedLayerViewState } from '@/components/Map/types';
 import { defaultLegendId } from '@/components/Map/Legend/layerIds';
 import { Tooltip } from '@/components/Tooltip/content';
-import { removeExistingTooltip } from '@/components/Tooltip/show';
 import MouseTooltip, { MouseTooltipData } from '@/components/MouseTooltip';
 import { usePreferences, Preferences } from '@/components/LayerFilter/loader';
 import Head from 'next/head';
 import { closeIcon } from '@/components/SideBar/Icon';
+import { Backgrounds } from '../components/LayerFilter/loader';
+import Draggable from 'react-draggable';
 import { DashboardProvider } from '@/components/Dashboard/useDashboardContext';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { TooltipDataState, TooltipPositionState } from '@/store/TooltipState';
 
 type TContext = {
   checkedLayerTitleList: string[];
@@ -53,12 +56,8 @@ const useContextValues = (): Omit<TContext, 'preferences'> => {
 export const context = createContext({} as TContext);
 
 const App: NextPage = () => {
-  const [tooltipData, setTooltipData] = useState<any>({
-    tooltip: null,
-  });
-
-  const [setTooltipPosition, setsetTooltipPosition] = useState<any>({});
-
+  const tooltipPosition = useRecoilValue(TooltipPositionState);
+  const [tooltipData, setTooltipData] = useRecoilState(TooltipDataState);
   const contextValues = useContextValues();
   const { preferences } = usePreferences();
   if (preferences === null) {
@@ -98,26 +97,25 @@ const App: NextPage = () => {
                 ) : undefined}
               </div>
               <div id="MapArea" className="relative w-4/5 m-2 pb-5 h-full">
-                <Map
-                  setTooltipData={setTooltipData}
-                  setsetTooltipPosition={setsetTooltipPosition}
-                />
-                {tooltipData.tooltip ? (
-                  <div
-                    className="w-1/4 border-2 border-black z-50"
-                    style={{ ...setTooltipPosition, ...toolChipBaseStyle }}
-                  >
-                    {tooltipData.tooltip ? <Tooltip {...tooltipData.tooltip} /> : undefined}
-                    <div className="text-right absolute top-0 right-2">
-                      <button
-                        className="text-2xl"
-                        onClick={() => removeExistingTooltip(setTooltipData)}
-                        style={{ backgroundColor: toolChipBaseStyle.backgroundColor }}
-                      >
-                        {closeIcon()}
-                      </button>
+                <Map />
+                {tooltipData && tooltipPosition && tooltipData.data ? (
+                  <Draggable bounds="parent" handle="#handle">
+                    <div
+                      className="w-1/4 border-2 border-black z-50"
+                      style={{ ...tooltipPosition, ...toolChipBaseStyle }}
+                    >
+                      <Tooltip />
+                      <div className="text-right absolute top-0 right-2">
+                        <button
+                          className="text-2xl"
+                          onClick={() => setTooltipData(null)}
+                          style={{ backgroundColor: toolChipBaseStyle.backgroundColor }}
+                        >
+                          {closeIcon()}
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  </Draggable>
                 ) : undefined}
               </div>
             </div>
