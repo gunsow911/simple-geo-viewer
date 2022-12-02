@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Map, Marker, NavigationControl, Style } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-import { Deck } from '@deck.gl/core/typed';
+import { Deck, FlyToInterpolator } from '@deck.gl/core/typed';
 
 import { context } from '@/pages';
 import { useFlyTo } from '@/components/Map/Animation/flyTo';
