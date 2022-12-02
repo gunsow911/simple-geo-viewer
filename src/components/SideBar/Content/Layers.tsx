@@ -2,7 +2,10 @@ import React, { Dispatch, FC, SetStateAction, useCallback, useContext, useEffect
 import { context } from '@/pages';
 import { Data, Menu } from '@/components/LayerFilter/menu';
 import { getResourceIcon } from '@/components/SideBar/Icon';
-import { filterCheckedData } from '@/components/LayerFilter/sideBar';
+import {
+  filterCheckedData,
+  getCheckedLayerIdByDataTitleList,
+} from '@/components/LayerFilter/sideBar';
 import { DownloadIcon } from '@/components/SideBar/Icon';
 import { useRecoilState } from 'recoil';
 import { LayersState, TemporalLayerConfigState } from '@/store/LayersState';
@@ -71,6 +74,7 @@ export const Layers: FC<LayersProps> = ({ layers }) => {
       setDeckGLLayers,
     ]
   );
+
   //最初の一度だけ、menuのcheckedを確認し、trueならcheckedLayerTitleListにset
   useEffect(() => {
     layers
@@ -78,13 +82,6 @@ export const Layers: FC<LayersProps> = ({ layers }) => {
       .forEach((value) => {
         layerCreateById(value.id);
       });
-    setCheckedLayerTitleList(
-      layers
-        .filter((value) => value.checked)
-        .map((value) => {
-          return value.title;
-        })
-    );
   }, []);
 
   const toggleSelectedResourceList = (resource: Data) => {
