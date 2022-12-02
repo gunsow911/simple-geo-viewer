@@ -53,7 +53,7 @@ const useSbMeshVolume = (props: Props): UseMenuReturn => {
     const start = dayjs(date).startOf('day');
     const end = dayjs(date).endOf('day');
     const volumes =
-      data[code].filter((v) => {
+      data[code]?.filter((v) => {
         const d = dayjs(v.d);
         return start <= d && end >= d;
       }) ?? [];
