@@ -16,7 +16,7 @@ import { Backgrounds, Preferences } from '@/components/LayerFilter/loader';
 import DashboardPanelManager from '../Dashboard/DashboardPanelManager';
 import { useRecoilValue } from 'recoil';
 import {
-  DashboardLayerState,
+  DashboardLayersState,
   LayersState,
   TemporalLayerConfigState,
   TemporalLayerState,
@@ -171,7 +171,7 @@ const MapComponent: React.VFC = () => {
   const deckglContainer = useRef<HTMLCanvasElement | null>(null);
   const { preferences } = useContext(context);
   const temporalLayerConfigs = useRecoilValue(TemporalLayerConfigState);
-  const dashboardLayers = useRecoilValue(DashboardLayerState);
+  const dashboardLayers = useRecoilValue(DashboardLayersState);
   //map・deckインスタンスを初期化
   const { deckGLRef, mapRef, currentZoomLevel } = useInitializeMap(
     maplibreContainer,

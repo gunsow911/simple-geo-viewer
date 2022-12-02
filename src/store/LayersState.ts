@@ -1,5 +1,6 @@
 import { atom } from 'recoil';
 import { LayerConfig } from '@/components/LayerFilter/config';
+import { Layer } from '@deck.gl/core/typed';
 
 export const LayersState = atom<any>({
   key: 'layers',
@@ -18,7 +19,7 @@ export const TemporalLayerState = atom<any>({
   default: [],
 });
 
-export const DashboardLayerState = atom<any>({
+export const DashboardLayersState = atom<Layer[]>({
   key: 'dashboardLayers',
   dangerouslyAllowMutability: true,
   default: [],
