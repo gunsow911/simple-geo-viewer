@@ -75,7 +75,7 @@ export const Layers: FC<LayersProps> = ({ layers }) => {
     ]
   );
 
-  //最初の一度だけ、menuのcheckedを確認し、trueならcheckedLayerTitleListにset
+  //最初の一度だけ、menuのcheckedを確認し、trueならレイヤーを作成する
   useEffect(() => {
     layers
       .filter((value) => value.checked)
