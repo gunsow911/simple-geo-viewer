@@ -12,14 +12,13 @@ const Sidebar: React.FC = () => {
   const filteredMenu = getFilteredMenu(preferences.menu, InputFilterKeyword);
   const visiblyContentList = getVisiblyContent(filteredMenu);
 
-  const layers = visiblyContentList.flatMap((content) => {
-    return content.layers;
-  });
-
   // 初回レンダリング時にチェック済のレイヤータイトルを設定しておく
   useEffect(() => {
     setCheckedLayerTitleList(
-      layers
+      visiblyContentList
+        .flatMap((content) => {
+          return content.layers;
+        })
         .filter((value) => value.checked)
         .map((value) => {
           return value.title;
