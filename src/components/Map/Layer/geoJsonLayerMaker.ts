@@ -1,6 +1,5 @@
 import type { Map } from 'maplibre-gl';
-import { PickInfo } from 'deck.gl';
-import { CompositeLayer } from '@deck.gl/core';
+import { CompositeLayer, PickInfo } from 'deck.gl';
 import { GeoJsonLayer, IconLayer, TextLayer } from '@deck.gl/layers';
 
 import { show } from '@/components/Tooltip/show';
@@ -11,6 +10,8 @@ import {
   GeojsonLayerConfig,
   LayerConfig,
 } from '@/components/LayerFilter/config';
+import { BooleanFlag } from 'aws-sdk/clients/directconnect';
+import { Config } from 'aws-sdk';
 
 /**
  * GeoJsonLayerの作成
@@ -363,16 +364,14 @@ class GeoJsonFeatureCollectionIconLayerCreator {
   };
 }
 
-export class GeoJsonArrowLayer extends CompositeLayer {
-  private readonly data;
-  private readonly init;
-  private readonly config;
-  constructor(props: any) {
-    super(props);
-    this.data = props.data;
-    this.init = props.init;
-    this.config = props;
-  }
+interface GeoJsonArrowLayerProps{
+  url: string;
+}
+
+export default class GeoJsonArrowLayer extends CompositeLayer<GeoJsonArrowLayerProps> {
+  // constructor(props: any) {
+  //   super(props);
+  // }
 
   // initializeState() {
   //   const { init }  = this.props;
@@ -392,11 +391,13 @@ export class GeoJsonArrowLayer extends CompositeLayer {
   }
 
   renderLayers() {
+    console.log("render")
+    const { id, visible, url } = this.props
     return [
       new GeoJsonLayer({
-        data: this.data,
-        id: this.config.id + 'point',
-        visible: this.init,
+        data: url,
+        id: id + 'point',
+        visible: visible,
         pickable: true,
         autoHighlight: true,
         sizeScale: 8,
@@ -413,12 +414,11 @@ export class GeoJsonArrowLayer extends CompositeLayer {
         parameters: {
           depthTest: false,
         },
-        ...this.config,
       }),
       new GeoJsonLayer({
-        data: this.data,
-        id: this.config.id + 'arrow',
-        visible: this.init,
+        data: url,
+        id: id + 'arrow',
+        visible: visible,
         pickable: true,
         autoHighlight: true,
         sizeScale: 8,
@@ -432,8 +432,8 @@ export class GeoJsonArrowLayer extends CompositeLayer {
           console.log("icon:"+_.properties["タイトル"]+":"+angle);
           return ({
           url: 'images/arrow.png',
-          width: this.props.icon.width,
-          height: this.props.icon.height,
+          width: this.props.icon.width * angle,
+          height: this.props.icon.height * angle,
           anchorX: anchor.x,
           anchorY: anchor.y,
           mask: false,
@@ -450,8 +450,7 @@ export class GeoJsonArrowLayer extends CompositeLayer {
         },
         updateTriggers: {
           getIcon: this.props.updateTriggers.getIcon,
-        },
-        ...this.config,
+        }
       }),
     ];
   }
@@ -474,10 +473,10 @@ class GeoJsonArrowLayerCreator {
   makeDeckGlLayers(init) {
     const targetLayerConfigs = this.extractTargetConfig();
 
-    const result: GeoJsonLayer<any>[] = targetLayerConfigs.map((layerConfig) => {
+    const result: GeoJsonArrowLayer[] = targetLayerConfigs.map((layerConfig) => {
       const config = this.extractLayerConfig(layerConfig);
       return new GeoJsonArrowLayer({
-        data: layerConfig.source,
+        url: layerConfig.source,
         visible: init,
         pickable: true,
         autoHighlight: true,
