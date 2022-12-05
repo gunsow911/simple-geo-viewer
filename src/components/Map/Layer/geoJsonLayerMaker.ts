@@ -1,6 +1,7 @@
 import type { Map } from 'maplibre-gl';
-import { CompositeLayer, PickInfo } from 'deck.gl';
+import { PickInfo } from 'deck.gl';
 import { GeoJsonLayer, IconLayer, TextLayer } from '@deck.gl/layers';
+import { CompositeLayer,CompositeLayerProps } from "@deck.gl/core/typed";
 
 import { show } from '@/components/Tooltip/show';
 import { Dispatch, SetStateAction } from 'react';
@@ -364,11 +365,21 @@ class GeoJsonFeatureCollectionIconLayerCreator {
   };
 }
 
-interface GeoJsonArrowLayerProps{
-  url: string;
+// interface GeoJsonArrowLayerData{
+//   url: string;
+// }
+
+interface ExtendedLayerProps<D> extends CompositeLayerProps<D> {
+  "@@type"?: string;
+  name: string;
 }
 
-export default class GeoJsonArrowLayer extends CompositeLayer<GeoJsonArrowLayerProps> {
+interface GeoJsonArrowLayerData<D> extends ExtendedLayerProps<D>{
+  url?: string;
+  mesh: string;
+}
+
+export default class GeoJsonArrowLayer extends CompositeLayer<GeoJsonArrowLayerData<unknown>> {
   // constructor(props: any) {
   //   super(props);
   // }
@@ -390,9 +401,9 @@ export default class GeoJsonArrowLayer extends CompositeLayer<GeoJsonArrowLayerP
     return {...anchor};
   }
 
-  renderLayers() {
+  renderLayers(){
     console.log("render")
-    const { id, visible, url } = this.props
+    const { id, visible, url } = this.props;
     return [
       new GeoJsonLayer({
         data: url,
@@ -425,20 +436,20 @@ export default class GeoJsonArrowLayer extends CompositeLayer<GeoJsonArrowLayerP
         // @ts-ignore
         iconSizeScale: 60,
         pointType: 'icon',
-        getIcon: (_) => {
-          const angle: number = ("方向" in _.properties ? (_.properties.方向 === null ? 0 : _.properties.方向) : 0);
+        getIcon: (d) => {
+          const angle: number = ("方向" in d.properties ? (d.properties.方向 === null ? 0 : d.properties.方向) : 0);
           const anchor: any = this.degreesToAnchorPer(angle,64,64); 
     
-          console.log("icon:"+_.properties["タイトル"]+":"+angle);
+          console.log("icon:"+d.properties["タイトル"]+":"+angle);
           return ({
           url: 'images/arrow.png',
-          width: this.props.icon.width * angle,
-          height: this.props.icon.height * angle,
+          width: this.props.icon.width,
+          height: this.props.icon.height,
           anchorX: anchor.x,
           anchorY: anchor.y,
           mask: false,
           })
-      },
+        },
         parameters: {
           depthTest: false,
         },
@@ -451,7 +462,7 @@ export default class GeoJsonArrowLayer extends CompositeLayer<GeoJsonArrowLayerP
         updateTriggers: {
           getIcon: this.props.updateTriggers.getIcon,
         }
-      }),
+      })
     ];
   }
 }
