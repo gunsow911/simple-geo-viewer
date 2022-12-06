@@ -32,7 +32,7 @@ const DashboardMenu = () => {
 
   const generateMenu = (item: MenuItem) => {
     return item.subList ? (
-      <>
+      <React.Fragment key={item.id}>
         <div className="flex-col">
           <button
             className={`peer mr-1 py-1 px-3 menuitem ${selectedChildrenClass(item.subList)}`}
@@ -57,7 +57,7 @@ const DashboardMenu = () => {
             })}
           </div>
         </div>
-      </>
+      </React.Fragment>
     ) : (
       <li
         key={item.id}
