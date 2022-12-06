@@ -20,6 +20,7 @@ import {
   LayersState,
   TemporalLayerConfigState,
   TemporalLayerState,
+  WeatherMapLayerState,
 } from '@/store/LayersState';
 import { TooltipDataState } from '@/store/TooltipState';
 import { getPropertiesObj } from '@/components/Tooltip/util';
@@ -172,6 +173,8 @@ const MapComponent: React.VFC = () => {
   const { preferences } = useContext(context);
   const temporalLayerConfigs = useRecoilValue(TemporalLayerConfigState);
   const dashboardLayers = useRecoilValue(DashboardLayersState);
+  const weatherMapLayer = useRecoilValue(WeatherMapLayerState);
+
   //map・deckインスタンスを初期化
   const { deckGLRef, mapRef, currentZoomLevel } = useInitializeMap(
     maplibreContainer,
@@ -182,9 +185,9 @@ const MapComponent: React.VFC = () => {
   //クリックされたレイヤに画面移動
   useFlyTo(deckGLRef.current);
 
-  // ダッシュボードのレイヤーと統合
+  // 各種レイヤーの統合
   if (deckGLRef.current) {
-    deckGLRef.current.setProps({ layers: [...deckglLayers, ...dashboardLayers] });
+    deckGLRef.current.setProps({ layers: [...deckglLayers, ...dashboardLayers, weatherMapLayer] });
   }
 
   useShowTooltip(mapRef.current);

@@ -24,3 +24,9 @@ export const DashboardLayersState = atom<Layer[]>({
   dangerouslyAllowMutability: true,
   default: [],
 });
+
+export const WeatherMapLayerState = atom<Layer>({
+  key: 'weatherMapLayer',
+  dangerouslyAllowMutability: true,
+  default: undefined,
+});
