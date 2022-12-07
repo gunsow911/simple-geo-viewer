@@ -437,11 +437,12 @@ export default class GeoJsonArrowLayer extends CompositeLayer<GeoJsonArrowLayerD
         pointType: 'icon',
         getIcon: (d) => {
           const angle: number = ("方向" in d.properties ? (d.properties.方向 === null ? 0 : d.properties.方向) : 0);
-          // const angle = 288
-          const anchor: any = this.degreesToAnchorPer(angle,1,1); 
+          // const angle = 90
+          const anchor: any = this.degreesToAnchorPer(angle,64,64); 
     
           console.log("icon:"+d.properties["タイトル"]+":"+angle);
           return ({
+          id: String(angle),
           url: 'images/arrow.png',
           width: this.props.icon.width,
           height: this.props.icon.height,
@@ -456,7 +457,7 @@ export default class GeoJsonArrowLayer extends CompositeLayer<GeoJsonArrowLayerD
         getIconAngle: (d) => {
           const angle = "方向" in d.properties ? (d.properties.方向 === null ? 0 : d.properties.方向) : 0;
           // const angle = 345.57;
-          // const angle = 288;
+          // const angle = 90;
           console.log("arr:"+d.properties["タイトル"]+":"+angle);
           return angle
         },
