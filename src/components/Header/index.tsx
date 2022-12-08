@@ -8,14 +8,14 @@ import { Preferences } from '@/components/LayerFilter/loader';
 
 type Props = {
   disasters: Disasters;
+  isDisaster: boolean;
   setPreferrence: Dispatch<SetStateAction<Preferences | null>>
 };
 
-const Header: React.FC<Props> = ({ disasters, setPreferrence }) => {
+const Header: React.FC<Props> = ({ disasters, isDisaster ,setPreferrence }) => {
   const { preferences } = useContext(context);
   const router = useRouter();
   if (preferences === null) return null;
-  const isDisaster  = router.query.isDisaster as boolean | undefined;
   const headerStyle = {
     backgroundColor: preferences.settings.background_color,
   };
