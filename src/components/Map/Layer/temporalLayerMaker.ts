@@ -67,7 +67,13 @@ export function makeTemporalLayer(
   const temporalPolygonShape = temporalPolygonShapeCreator.makeDeckGlLayer(timestamp);
   const temporalPolygonArea = temporalPolygonAreaCreator.makeDeckGlLayer(timestamp);
   return (
-    bustripLayer ?? temporalPolygonLayer ?? temporalLineLayer ?? tripsJsonLayer ?? tripsDRMLayer ?? temporalPolygonShape ?? temporalPolygonArea
+    bustripLayer ??
+    temporalPolygonLayer ??
+    temporalLineLayer ??
+    tripsJsonLayer ??
+    tripsDRMLayer ??
+    temporalPolygonShape ??
+    temporalPolygonArea
   );
 }
 
@@ -172,10 +178,9 @@ class TemporalPolygonShapeLayerCreator extends TemporalLayerCreator {
   layerType: TemporalLayerType = 'temporal_polygon_shape';
 
   makeDeckGlLayer(timestamp: number) {
-    const targetLayerConfigs = this.extractTargetConfig();
-    const result: GeoJsonLayer<any>[] = targetLayerConfigs.map((layerConfig) => {
-
-      const gLayer = new GeoJsonLayer({
+    const { layerConfig } = this;
+    if (this.isTargetConfig(layerConfig)) {
+      return new GeoJsonLayer({
         id: layerConfig.id,
         data: layerConfig.source,
         visible: true,
@@ -183,10 +188,10 @@ class TemporalPolygonShapeLayerCreator extends TemporalLayerCreator {
         getLineColor: () => [255, 0, 0, 0],
         getFillColor: (d: any) => {
           const timeVal = d.properties.hour * 60;
-          if ((timeVal > timestamp) || (timeVal == 0)) {
-            return [255, 0, 0, 0]
+          if (timeVal > timestamp || timeVal == 0) {
+            return [255, 0, 0, 0];
           } else {
-            return [255, 0, 0, 192]
+            return [255, 0, 0, 192];
           }
         },
         getElevation: () => 0,
@@ -194,21 +199,17 @@ class TemporalPolygonShapeLayerCreator extends TemporalLayerCreator {
           getFillColor: [timestamp],
         },
       });
-      return gLayer;
-    });
-
-    return result;
+    }
+    return null;
   }
 }
 
 class TemporalPolygonAreaLayerCreator extends TemporalLayerCreator {
   layerType: TemporalLayerType = 'temporal_polygon_area';
-
   makeDeckGlLayer(timestamp: number) {
-    const targetLayerConfigs = this.extractTargetConfig();
-    const result: GeoJsonLayer<any>[] = targetLayerConfigs.map((layerConfig) => {
-
-      const gLayer = new GeoJsonLayer({
+    const { layerConfig } = this;
+    if (this.isTargetConfig(layerConfig)) {
+      return new GeoJsonLayer({
         id: layerConfig.id,
         data: layerConfig.source,
         visible: true,
@@ -217,9 +218,9 @@ class TemporalPolygonAreaLayerCreator extends TemporalLayerCreator {
         getFillColor: (d: any) => {
           const timeVal = d.properties.time_viz * 60;
           if (timeVal > timestamp) {
-            return [255, 0, 0, 0]
+            return [255, 0, 0, 0];
           } else {
-            return [255, 128, 0, 128]
+            return [255, 128, 0, 128];
           }
         },
         getElevation: () => 0,
@@ -227,10 +228,8 @@ class TemporalPolygonAreaLayerCreator extends TemporalLayerCreator {
           getFillColor: [timestamp],
         },
       });
-      return gLayer;
-    });
-
-    return result;
+    }
+    return null;
   }
 }
 
