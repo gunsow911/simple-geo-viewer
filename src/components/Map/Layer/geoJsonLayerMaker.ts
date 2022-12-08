@@ -365,12 +365,7 @@ class GeoJsonFeatureCollectionIconLayerCreator {
   };
 }
 
-interface ExtendedLayerProps<D> extends CompositeLayerProps<D> {
-  "@@type"?: string;
-  name: string;
-}
-
-interface GeoJsonArrowLayerData<D> extends ExtendedLayerProps<D>{
+interface GeoJsonArrowLayerData<D> extends CompositeLayerProps{
   url?: string;
   mesh: string;
   icon: any;
