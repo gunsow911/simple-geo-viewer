@@ -25,7 +25,7 @@ export const DashboardLayersState = atom<Layer[]>({
   default: [],
 });
 
-export const WeatherMapLayerState = atom<Layer>({
+export const WeatherMapLayerState = atom<Layer<{ minzoom: number; show: boolean }>>({
   key: 'weatherMapLayer',
   dangerouslyAllowMutability: true,
   default: undefined,

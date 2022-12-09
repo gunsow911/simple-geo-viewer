@@ -14,7 +14,7 @@ import { TimeSlider } from '@/components/Map/Controller/TimeSlider';
 import { getLayerConfigById } from '@/components/LayerFilter/config';
 import { Backgrounds, Preferences } from '@/components/LayerFilter/loader';
 import DashboardPanelManager from '../Dashboard/DashboardPanelManager';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   DashboardLayersState,
   LayersState,
@@ -24,6 +24,7 @@ import {
 } from '@/store/LayersState';
 import { TooltipDataState } from '@/store/TooltipState';
 import { getPropertiesObj } from '@/components/Tooltip/util';
+import { ViewState } from '@/store/ViewState';
 
 const getViewStateFromMaplibre = (map) => {
   const { lng, lat } = map.getCenter();
@@ -67,6 +68,7 @@ const useInitializeMap = (
 ) => {
   const { backgrounds, initialView, menu } = preferences;
   const [currentZoomLevel, setCurrentZoomLevel] = useState(0);
+  const setRecoilViewState = useSetRecoilState(ViewState);
   const deckGLRef = useRef<any>();
   const mapRef = useRef<any>();
   useEffect(() => {
@@ -104,6 +106,7 @@ const useInitializeMap = (
           pitch: viewState.pitch,
         });
         setCurrentZoomLevel(viewState.zoom);
+        setRecoilViewState(viewState);
       },
       layers: [],
     });
