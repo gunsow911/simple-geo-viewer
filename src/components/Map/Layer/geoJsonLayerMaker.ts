@@ -365,30 +365,13 @@ class GeoJsonFeatureCollectionIconLayerCreator {
   };
 }
 
-// interface GeoJsonArrowLayerData{
-//   url: string;
-// }
-
-interface ExtendedLayerProps<D> extends CompositeLayerProps<D> {
-  "@@type"?: string;
-  name: string;
-}
-
-interface GeoJsonArrowLayerData<D> extends ExtendedLayerProps<D>{
+interface GeoJsonArrowLayerData<D> extends CompositeLayerProps{
   url?: string;
   mesh: string;
+  icon: any;
 }
 
 export default class GeoJsonArrowLayer extends CompositeLayer<GeoJsonArrowLayerData<unknown>> {
-  // constructor(props: any) {
-  //   super(props);
-  // }
-
-  // initializeState() {
-  //   const { init }  = this.props;
-  //   const data = this.props.layerConfig.source;
-  //   this.setState({data: data, init: init})
-  // }
 
   degreesToAnchorPer(degrees,x,y) {
     const pi: number = Math.PI;
@@ -494,6 +477,7 @@ class GeoJsonArrowLayerCreator {
         pickable: true,
         autoHighlight: true,
         onClick: this.showToolTip,
+        // @ts-ignore
         sizeScale: 8,
         // @ts-ignore
         iconSizeScale: 60,
