@@ -88,6 +88,7 @@ const useInitializeMap = (
         //deck.gl側にマップの操作を任せるためにfalseに設定
         interactive: false,
       });
+      map.addControl(new NavigationControl());
     }
 
     // @ts-ignore
@@ -116,14 +117,12 @@ const useInitializeMap = (
         checkZoomVisible();
       },
       layers: [],
-    });
-
-    map.addControl(new NavigationControl());
+    },);
 
     map.on('moveend', (_e) => {
       deck.setProps({ initialViewState: getViewStateFromMaplibre(map) });
     });
-  }, []);
+  }, [preferences]);
 };
 
 const useToggleVisibly = (preferences: Preferences | null) => {
