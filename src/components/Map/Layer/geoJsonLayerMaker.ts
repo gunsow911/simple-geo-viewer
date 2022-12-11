@@ -415,7 +415,7 @@ export default class GeoJsonArrowLayer extends CompositeLayer<GeoJsonArrowLayerD
         iconSizeScale: 60,
         pointType: 'icon',
         getIcon: (_) => ({
-          url: 'images/icon.png',
+          url: `images/icon_${this.props.icon.color}.png`,
           width: this.props.icon.width,
           height: this.props.icon.height,
           anchorY: this.props.icon.anchorY,
