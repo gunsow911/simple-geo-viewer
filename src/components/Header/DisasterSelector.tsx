@@ -27,11 +27,21 @@ const DisasterSelector: React.FC<Props> = ({ disasters, setPreferrences}) => {
     <select onChange={(e) => updateCurrentDisaster(e)}>
       {
         entries !== undefined ? (
-          entries.map((disaster) => (
-            <option key={disaster.value} value={disaster.value}>
-              {disaster.text}
-            </option>
-          ))
+          entries.map((disaster) => {
+            if(disaster['value'] === router.query.disaster) {
+              return (
+                <option key={disaster.value} value={disaster.value} selected>
+                  {disaster.text}
+                </option>
+              )
+            }else{
+              return (
+                <option key={disaster.value} value={disaster.value}>
+                  {disaster.text}
+                </option>
+              )
+            }
+        })
         ) : null
       }
     </select>

@@ -102,6 +102,7 @@ const App: NextPage = () => {
       };
       let loadedPreferences: Preferences;
       const isdisaster = router.query.isDisaster as boolean | undefined;
+      const disasterPreference = router.query.disaster as string | undefined;
       
       
       if (isdisaster) {
@@ -114,10 +115,14 @@ const App: NextPage = () => {
         setDisasters(() => disastersData);
         const disastersPath = disastersData.data[disastersData.default].value as string;
         preferencesPath = `${preferencesPath}/${disastersPath}`;
+        if (typeof disasterPreference !== undefined) {
+          preferencesPath = `${router.basePath}/disaster/${disasterPreference}`;
+        }
         if (typeof currentDisaster !== 'undefined' && typeof setCurrentDisaster !== 'undefined' && currentDisaster !== '') {
-          preferencesPath = preferencesPath.replace(`/${disastersPath}`,'');
-          preferencesPath = `${preferencesPath}/${currentDisaster}`;
+            preferencesPath = preferencesPath.replace(`/${disastersPath}`,'');
+            preferencesPath = `${preferencesPath}/${currentDisaster}`;
         };
+        
         
         loadedPreferences = await fetchJsons(preferencesPath);
         setCurrentDisaster(() => disastersPath);
