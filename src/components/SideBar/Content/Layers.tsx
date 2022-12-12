@@ -6,7 +6,7 @@ import {
   filterCheckedData,
   getCheckedLayerIdByDataTitleList,
 } from '@/components/LayerFilter/sideBar';
-import { DownloadIcon } from '@/components/SideBar/Icon';
+import { DownloadIcon, smallShareIcon } from '@/components/SideBar/Icon';
 import { useRecoilState } from 'recoil';
 import { LayersState, TemporalLayerConfigState } from '@/store/LayersState';
 import { makeDeckGLLayer } from '@/components/Map/Layer/deckGlLayerFactory';
@@ -171,6 +171,11 @@ export const Layers: FC<LayersProps> = ({ layers }) => {
               {resource.download_url === undefined
                 ? undefined
                 : DownloadIcon(resource.download_url)}
+            </div>
+            <div className="w-1/12">
+              {resource.download_url === undefined
+                ? undefined
+                : smallShareIcon(resource.download_url)}
             </div>
           </div>
         </label>
