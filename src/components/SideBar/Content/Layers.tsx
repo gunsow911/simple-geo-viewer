@@ -45,7 +45,7 @@ export const Layers = (props: LayersProps) => {
     if (preferences === null) return;
     setCheckedLayerTitleList(getDefaultVisiblyLayerTitles(preferences.menu));
     
-  }, []);
+  }, [preferences]);
   if (preferences === null) return null;
   const toggleSelectedResourceList = (resourceName: string, resourceId: string[]) => {
     // 既存のリストに対象リソースが入っていなければ格納

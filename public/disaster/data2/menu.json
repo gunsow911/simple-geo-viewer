@@ -1,33 +1,33 @@
 [
   {
-    "category": "アジア航測株式会社aaaaaaa",
+    "category": "朝日航洋株式会社",
     "data": [
       {
-        "title": "令和4年8月3日からの大雨【アジア航測】aaaaa",
+        "title": "令和4年7月15日大雨被害　斜め写真　【朝日航洋】",
         "type": "icon",
-        "lng": 139.734491,
-        "lat": 38.0621,
+        "lng": 141.082069,
+        "lat": 38.569465,
         "zoom": 12,
         "id": [
-          "ia78d289f-60ed-4f25-abef-ead1ad42e404_dataset"
+          "i4a3fddd0-f8b8-4a86-9647-ad291d308e8b_dataset"
         ],
         "checked": true,
         "icon": "images/arrow_blue.png",
-        "download_url": "https://www.geospatial.jp/ckan/dataset/aas-disaster-20220803"
+        "download_url": "https://www.geospatial.jp/ckan/dataset/aigid-2022-0715-aac"
       }
     ]
   },
   {
-    "category": "朝日航洋株式会社",
+    "category": "アジア航測株式会社",
     "data": [
       {
-        "title": "令和4年8月3日からの大雨　斜め写真　【朝日航洋】",
+        "title": "令和4年7月15日大雨被害　斜め写真　【アジア航測】",
         "type": "icon",
-        "lng": 139.698243,
-        "lat": 38.039837,
+        "lng": 141.07372,
+        "lat": 38.578888,
         "zoom": 12,
         "id": [
-          "icf2273b2-ed68-41a5-9161-d78c7865b526_dataset"
+          "i87c90daf-6a5f-4dd2-ba88-d404ec945618_dataset"
         ],
         "checked": true,
         "icon": "images/arrow_red.png",
@@ -36,16 +36,16 @@
     ]
   },
   {
-    "category": "国際航業株式会社",
+    "category": "株式会社パスコ",
     "data": [
       {
-        "title": "令和4年8月3日からの大雨　斜め写真　【国際航業株式会社】",
+        "title": "令和4年7月15日大雨被害　斜め写真　【株式会社パスコ】",
         "type": "icon",
-        "lng": 139.639598,
-        "lat": 38.022254,
+        "lng": 140.972787,
+        "lat": 38.5227,
         "zoom": 12,
         "id": [
-          "id2074bcc-f930-4aff-b87c-1dbe12da3673_dataset"
+          "ibb5f7f33-4a64-4d3e-993d-28e3e85aa5cd_dataset"
         ],
         "checked": true,
         "icon": "images/arrow_red.png",
@@ -54,16 +54,16 @@
     ]
   },
   {
-    "category": "株式会社パスコ",
+    "category": "国際航業株式会社",
     "data": [
       {
-        "title": "令和4年8月3日からの大雨　斜め写真　【株式会社パスコ】",
+        "title": "令和4年7月15日大雨被害　斜め写真　【国際航業株式会社】",
         "type": "icon",
-        "lng": 140.01109,
-        "lat": 38.097076,
+        "lng": 141.233102,
+        "lat": 38.585986,
         "zoom": 12,
         "id": [
-          "ifbf83845-b15b-4ec9-a93c-0fa766853df2_dataset"
+          "if6889f2c-8a6b-42fe-bc00-7e10eb35d1c4_dataset"
         ],
         "checked": true,
         "icon": "images/arrow_yellow.png",
