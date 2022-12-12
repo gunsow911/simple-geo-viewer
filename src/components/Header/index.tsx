@@ -10,9 +10,10 @@ type Props = {
   disasters: Disasters;
   isDisaster: boolean;
   setPreferrence: Dispatch<SetStateAction<Preferences | null>>
+  isDisaster: boolean;
 };
 
-const Header: React.FC<Props> = ({ disasters, isDisaster ,setPreferrence }) => {
+const Header: React.FC<Props> = ({ disasters, setPreferrence, isDisaster }) => {
   const { preferences } = useContext(context);
   const router = useRouter();
   if (preferences === null) return null;
