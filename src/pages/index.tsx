@@ -164,7 +164,7 @@ const App: NextPage = () => {
       <div className="h-screen">
         <context.Provider value={{ ...contextValues, preferences }}>
           <div className="h-12">
-            <Header disasters={disasters} setPreferrence={setPreferences}/>
+            <Header disasters={disasters} setPreferrence={setPreferences} isDisaster={isDisaster}/>
           </div>
           <div className="flex content" style={{ overflow: 'hidden' }}>
             <div className="w-1/5 flex flex-col h-full ml-4 mr-2 mt-4 pb-10">
