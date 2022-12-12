@@ -8,6 +8,7 @@ import {
 } from '@/components/LayerFilter/config';
 import { SetterOrUpdater } from 'recoil';
 import { showToolTip } from '@/components/Tooltip/show';
+import chroma from 'chroma-js';
 
 /**
  * GeoJsonLayerの作成
@@ -31,10 +32,21 @@ export function makeGeoJsonLayer(layerConfig: LayerConfig, setTooltipData, setTo
     setTooltipData,
     setTooltipPosition
   );
+  const geoJsonCO2PolygonCreator = new GeoJsonCO2PolygonCreator(
+    layerConfig,
+    setTooltipData,
+    setTooltipPosition
+  );
   const geoJsonLinePolygonLayer = geoJsonLinePolygonCreator.makeDeckGlLayer();
   const geoJsonIconLayer = geoJsonIconCreator.makeDeckGlLayer();
   const geoJsonFeatureCollectionIconLayer = geoJsonFeatureCollectionIconCreator.makeDeckGlLayer();
-  return geoJsonLinePolygonLayer ?? geoJsonIconLayer ?? geoJsonFeatureCollectionIconLayer;
+  const geoJsonCO2PolygonLayer = geoJsonCO2PolygonCreator.makeDeckGlLayer();
+  return (
+    geoJsonLinePolygonLayer ??
+    geoJsonIconLayer ??
+    geoJsonFeatureCollectionIconLayer ??
+    geoJsonCO2PolygonLayer
+  );
 }
 
 class GeoJsonLinePolygonCreator {
@@ -67,6 +79,84 @@ class GeoJsonLinePolygonCreator {
         autoHighlight: true,
         onClick: this.showToolTip,
         getFillColor: (d: any) => d.properties?.fillColor || [0, 0, 0, 255],
+        ...config,
+      });
+    }
+    return null;
+  }
+
+  private extractLayerConfig = (layerConfig: GeojsonLayerConfig) => {
+    const { type, source, visible, ...otherConfig } = layerConfig;
+    return otherConfig;
+  };
+
+  private isTargetConfig(layerConfig: LayerConfig): layerConfig is GeojsonLayerConfig {
+    return layerConfig.type === this.layerType;
+  }
+
+  showToolTip = (info: PickInfo<any>) => {
+    showToolTip(info, this.setTooltipData, this.setTooltipPosition);
+  };
+}
+
+class GeoJsonCO2PolygonCreator {
+  layerType: string = 'geojsonco2';
+  private readonly layerConfig: LayerConfig;
+  private readonly setTooltipData: SetterOrUpdater<{
+    lng: number;
+    lat: number;
+    tooltipType: 'default' | 'thumbnail' | 'table';
+    id: string;
+    data: any;
+  } | null>;
+  private readonly setTooltipPosition: SetterOrUpdater<{ top: string; left: string } | null>;
+
+  constructor(layerConfig: LayerConfig, setTooltipData, setTooltipPosition) {
+    this.layerConfig = layerConfig;
+    this.setTooltipData = setTooltipData;
+    this.setTooltipPosition = setTooltipPosition;
+  }
+
+  makeDeckGlLayer() {
+    const { layerConfig } = this;
+    //const colorScale = chroma.scale(['white', 'red']).domain([0,140000]);
+    if (this.isTargetConfig(layerConfig)) {
+      const config = this.extractLayerConfig(layerConfig);
+
+      return new GeoJsonLayer({
+        data: layerConfig.source,
+        visible: true,
+        pickable: true,
+        autoHighlight: true,
+        onClick: this.showToolTip,
+        getFillColor: (d: any) => {
+          let col = [255, 255, 255, 0];
+          if (d.properties['CO2排出量(家庭部門, 2019年)']) {
+            if (d.properties['CO2排出量(家庭部門, 2019年)'] !== null) {
+              return chroma
+                .scale(['white', 'red'])
+                .domain([0, 8000])(d.properties['CO2排出量(家庭部門, 2019年)'])
+                .rgb();
+            }
+          }
+          if (d.properties['CO2排出量(特定事業所, 2019年)']) {
+            if (d.properties['CO2排出量(特定事業所, 2019年)'] !== null) {
+              return chroma
+                .scale(['white', 'red'])
+                .domain([0, 140000])(d.properties['CO2排出量(特定事業所, 2019年)'])
+                .rgb();
+            }
+          }
+          if (d.properties['CO2排出量(家庭部門+特定事業所, 2019年)']) {
+            if (d.properties['CO2排出量(家庭部門+特定事業所, 2019年)'] !== null) {
+              return chroma
+                .scale(['white', 'red'])
+                .domain([0, 140000])(d.properties['CO2排出量(家庭部門+特定事業所, 2019年)'])
+                .rgb();
+            }
+          }
+          return col;
+        },
         ...config,
       });
     }

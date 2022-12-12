@@ -2,6 +2,7 @@ import { getColorParamList } from '@/components/Map/Legend/colorParamList';
 
 const getColorParam = (id: string, param: number | string) => {
   const colorParamList = getColorParamList(id, param);
+  // @ts-ignore
   const colorParam = colorParamList.find((colorParam) => colorParam.param);
   return colorParam?.color;
 };

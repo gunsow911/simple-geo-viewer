@@ -1,5 +1,11 @@
 // 表示させたい判例が存在しない場合は空にするのではなく、空文字を配列に格納する
-export const havingLegendIdList = ['gyosei-tokyo','shizuoka-building'];
+export const havingLegendIdList = [
+  'gyosei-tokyo',
+  'shizuoka-building',
+  'cn_household_susono',
+  'cn_business_susono',
+  'cn_business_household_susono',
+];
 
 // 表示させたい判例が存在しない場合は空にするのではなく、空文字を登録する
 export const defaultLegendId = 'shizuoka-building';
