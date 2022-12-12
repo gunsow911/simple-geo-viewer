@@ -8,6 +8,7 @@ import { Preferences } from '@/components/LayerFilter/loader';
 
 type Props = {
   disasters: Disasters;
+  isDisaster: boolean;
   setPreferrence: Dispatch<SetStateAction<Preferences | null>>
   isDisaster: boolean;
 };
