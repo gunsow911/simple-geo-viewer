@@ -134,6 +134,7 @@ export const Layers: FC<LayersProps> = ({ layers }) => {
     'white-space': 'nowrap',
     'min-width': 0,
   };
+
   return (
     <>
       {layers.map((resource, index) => (
@@ -172,10 +173,20 @@ export const Layers: FC<LayersProps> = ({ layers }) => {
                 ? undefined
                 : DownloadIcon(resource.download_url)}
             </div>
-            <div className="w-1/12">
-              {resource.download_url === undefined
-                ? undefined
-                : smallShareIcon(resource.download_url)}
+            <div
+              className="w-1/12"
+              onMouseOver={(event) =>
+                setMouseTooltipData(() => ({
+                  text: 'リンクをコピー',
+                  top: (window.innerHeight - event.clientY) * -1,
+                  left: event.clientX,
+                }))
+              }
+              onMouseOut={() => setMouseTooltipData(() => null)}
+            >
+              {smallShareIcon(
+                `${location.href.replace(location.search, '')}?querySelectLayerId=${resource.id[0]}`
+              )}
             </div>
           </div>
         </label>
