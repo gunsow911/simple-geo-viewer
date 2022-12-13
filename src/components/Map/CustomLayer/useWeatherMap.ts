@@ -2,10 +2,10 @@ import { useEffect } from 'react';
 import { GeoJsonLayer } from '@deck.gl/layers/typed';
 import { useRouter } from 'next/router';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { WeatherMapState } from '@/store/LayersState';
+import { WeatherMapState, CustomLayerProperty, BaseInformationProperty } from '@/store/LayersState';
 import { Feature, Point } from 'geojson';
 import { usePreferences } from '@/components/LayerFilter/loader';
-import { Layer } from '@deck.gl/core/typed';
+import { Layer, PickingInfo } from '@deck.gl/core/typed';
 import { ViewState } from '@/store/ViewState';
 
 /**
@@ -53,7 +53,10 @@ const useWeatherMap = (weatherMapLayerId: string) => {
   useEffect(() => {
     if (weatherMap.layer === undefined) return;
     const newLayer = getVisibleLayer(weatherMap.layer, weatherMap.layer.props.show);
-    setWeatherMap({ ...weatherMap, layer: newLayer });
+    setWeatherMap((curr) => ({
+      ...curr,
+      layer: newLayer,
+    }));
   }, [viewState]);
 
   const onChangeSelect = (layerId: string, selected: boolean) => {
@@ -63,19 +66,20 @@ const useWeatherMap = (weatherMapLayerId: string) => {
     selected ? show() : hide();
   };
 
-  const onIconClick = () => {
-    console.log(weatherMap);
-    if (!weatherMap.layer) return;
-    weatherMap.showPanel ? hidePanel() : showPanel();
-    console.log('weather_map_marker_clicked.');
+  const onIconClick = (pickingInfo: PickingInfo) => {
+    if (!weatherMap.showPanel)
+      showPanel(pickingInfo.object as Feature<Point, BaseInformationProperty>);
   };
 
   const show = () => {
     if (weatherMap.layer) {
       const newLayer = getVisibleLayer(weatherMap.layer, true);
-      setWeatherMap({ ...weatherMap, layer: newLayer });
+      setWeatherMap((curr) => ({
+        ...curr,
+        layer: newLayer,
+      }));
     } else {
-      const newLayer = new GeoJsonLayer<Feature<Point>, { minzoom: number; show: boolean }>({
+      const newLayer = new GeoJsonLayer<Feature<Point>, CustomLayerProperty>({
         id: weatherMapLayerId,
         pointType: 'icon',
         stroked: true,
@@ -84,8 +88,8 @@ const useWeatherMap = (weatherMapLayerId: string) => {
         visible: true,
         pickable: true,
         onClick: onIconClick,
-        getIcon: (_) => ({
-          url: `${subDirectoryPath}/images/airport_blue.png`,
+        getIcon: () => ({
+          url: `${subDirectoryPath}/images/marker-green.png`,
           width: 64,
           height: 64,
           anchorY: 64,
@@ -96,7 +100,10 @@ const useWeatherMap = (weatherMapLayerId: string) => {
         minzoom: 12,
         show: true,
       });
-      setWeatherMap({ ...weatherMap, layer: newLayer });
+      setWeatherMap((curr) => ({
+        ...curr,
+        layer: newLayer,
+      }));
 
       // データをロード
       fetch(`${subDirectoryPath}/data/weather_mapping.jsonl`)
@@ -108,10 +115,11 @@ const useWeatherMap = (weatherMapLayerId: string) => {
             .map((json) => {
               return JSON.parse(json) as WeatherMapRow;
             });
-          setWeatherMap({
-            ...weatherMap,
+
+          setWeatherMap((curr) => ({
+            ...curr,
             data: result,
-          });
+          }));
         });
     }
   };
@@ -119,31 +127,25 @@ const useWeatherMap = (weatherMapLayerId: string) => {
   const hide = () => {
     if (weatherMap.layer) {
       const newLayer = getVisibleLayer(weatherMap.layer, false);
-      setWeatherMap({ ...weatherMap, layer: newLayer });
+      setWeatherMap((curr) => ({
+        ...curr,
+        layer: newLayer,
+      }));
     }
   };
 
-  const getVisibleLayer = (layer: Layer<{ minzoom: number; show: boolean }>, show: boolean) => {
+  const getVisibleLayer = (layer: Layer<CustomLayerProperty>, show: boolean) => {
     if (!show) return layer.clone({ visible: false, show });
     const visible = layer.props.minzoom <= viewState.zoom;
     return layer.clone({ visible, show });
   };
 
-  const showPanel = () => {
-    console.log('showPanel');
-    console.log(weatherMap.layer);
-    setWeatherMap({
-      ...weatherMap,
+  const showPanel = (feature: Feature<Point, BaseInformationProperty>) => {
+    setWeatherMap((curr) => ({
+      ...curr,
       showPanel: true,
-    });
-  };
-
-  const hidePanel = () => {
-    console.log('hidePanel');
-    setWeatherMap({
-      ...weatherMap,
-      showPanel: false,
-    });
+      feature,
+    }));
   };
 
   return { onChangeSelect };

@@ -2,6 +2,7 @@ import { atom } from 'recoil';
 import { LayerConfig } from '@/components/LayerFilter/config';
 import { Layer } from '@deck.gl/core/typed';
 import { WeatherMapRow } from '@/components/Map/CustomLayer/useWeatherMap';
+import { Feature, Point } from 'geojson';
 
 export const LayersState = atom<any>({
   key: 'layers',
@@ -26,9 +27,21 @@ export const DashboardLayersState = atom<Layer[]>({
   default: [],
 });
 
+export type BaseInformationProperty = {
+  locationName: string;
+  startDate: string;
+  endDate: string;
+  altitude: number;
+};
+export type CustomLayerProperty = {
+  minzoom: number;
+  show: boolean;
+} & BaseInformationProperty;
+
 type WeatherMapStateAtom = {
-  layer?: Layer<{ minzoom: number; show: boolean }>;
+  layer?: Layer<CustomLayerProperty>;
   showPanel: boolean;
+  feature?: Feature<Point, BaseInformationProperty>;
   data?: WeatherMapRow[];
 };
 export const WeatherMapState = atom<WeatherMapStateAtom>({
@@ -37,6 +50,7 @@ export const WeatherMapState = atom<WeatherMapStateAtom>({
   default: {
     layer: undefined,
     showPanel: false,
+    feature: undefined,
     data: undefined,
   },
 });

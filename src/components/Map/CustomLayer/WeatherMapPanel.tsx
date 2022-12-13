@@ -60,9 +60,16 @@ const WeatherMapPanel = () => {
   }, []);
 
   const hide = () => {
-    setWeatherMap({
-      ...weatherMap,
+    setWeatherMap((curr) => ({
+      ...curr,
       showPanel: false,
+      baseInfo: undefined,
+    }));
+    setVolumeData([]);
+    setGraphType(undefined);
+    setBetweenDate({
+      start: '2022-09-01',
+      end: '2022-09-01',
     });
   };
 
@@ -175,16 +182,41 @@ const WeatherMapPanel = () => {
 
   return (
     <>
-      {true && (
+      {weatherMap.showPanel && (
         <Draggable cancel=".body">
           <div className="z-10 absolute top-2 left-2">
-            <div className={`title p-1 ${selectedBgColor} cursor-pointer`}>
+            <div className={`title p-1 ${selectedBgColor} cursor-move`}>
               <div className="absolute top-1 right-1">
                 <CloseButton onClick={hide} darkmode />
               </div>
-              <div className={`${selectedTextColor}`}>ピンポイント気象データ</div>
+              <div className={`${selectedTextColor} ml-1`}>ピンポイント気象データ</div>
             </div>
-            <div className="body p-1 bg-white opacity-90">
+            <div className="body p-2 bg-white opacity-90">
+              <div className="py-1">
+                <div>
+                  <span className="mr-2">地点</span>
+                  <span>{weatherMap.feature?.properties.locationName}</span>
+                </div>
+                <div>
+                  <span className="mr-2">期間</span>
+                  <span>
+                    {dayjs(weatherMap.feature?.properties.startDate).format('YYYY/MM/DD')}〜
+                    {dayjs(weatherMap.feature?.properties.endDate).format('YYYY/MM/DD')}
+                  </span>
+                </div>
+                <div>
+                  <span className="mr-2">標高</span>
+                  <span>{weatherMap.feature?.properties.altitude}m</span>
+                </div>
+                <div>
+                  <span className="mr-2">緯度</span>
+                  <span>{weatherMap.feature?.geometry.coordinates[1]}</span>
+                </div>
+                <div>
+                  <span className="mr-2">経度</span>
+                  <span>{weatherMap.feature?.geometry.coordinates[0]}</span>
+                </div>
+              </div>
               <div className="py-1 flex">
                 <button
                   className={`border px-2 mx-1 ${
