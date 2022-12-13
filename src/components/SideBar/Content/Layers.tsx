@@ -185,7 +185,10 @@ export const Layers: FC<LayersProps> = ({ layers }) => {
               onMouseOut={() => setMouseTooltipData(() => null)}
             >
               {smallShareIcon(
-                `${location.href.replace(location.search, '')}?querySelectLayerId=${resource.id[0]}`
+                location.href.replace(
+                  /querySelectLayerId=[^&]*/,
+                  `querySelectLayerId=${resource.id[0]}`
+                )
               )}
             </div>
           </div>

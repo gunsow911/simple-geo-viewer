@@ -24,7 +24,7 @@ import {
 import { TooltipDataState } from '@/store/TooltipState';
 import { getPropertiesObj } from '@/components/Tooltip/util';
 import { useRouter } from 'next/router';
-import { Menu, getDataById } from '@/components/LayerFilter/menu';
+import { getDataById } from '@/components/LayerFilter/menu';
 
 const getViewStateFromMaplibre = (map) => {
   const { lng, lat } = map.getCenter();
