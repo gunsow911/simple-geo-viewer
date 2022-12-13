@@ -1,6 +1,7 @@
 import { atom } from 'recoil';
 import { LayerConfig } from '@/components/LayerFilter/config';
 import { Layer } from '@deck.gl/core/typed';
+import { WeatherMapRow } from '@/components/Map/CustomLayer/useWeatherMap';
 
 export const LayersState = atom<any>({
   key: 'layers',
@@ -28,6 +29,7 @@ export const DashboardLayersState = atom<Layer[]>({
 type WeatherMapStateAtom = {
   layer?: Layer<{ minzoom: number; show: boolean }>;
   showPanel: boolean;
+  data?: WeatherMapRow[];
 };
 export const WeatherMapState = atom<WeatherMapStateAtom>({
   key: 'weatherMap',
@@ -35,5 +37,6 @@ export const WeatherMapState = atom<WeatherMapStateAtom>({
   default: {
     layer: undefined,
     showPanel: false,
+    data: undefined,
   },
 });

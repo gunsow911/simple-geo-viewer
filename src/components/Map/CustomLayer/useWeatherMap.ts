@@ -9,6 +9,20 @@ import { Layer } from '@deck.gl/core/typed';
 import { ViewState } from '@/store/ViewState';
 
 /**
+ * 気象データマッピングの列データ
+ */
+export type WeatherMapRow = {
+  date: string;
+  temperature: number;
+  relativeHumidity: number;
+  luminosity: number;
+  rainfall: number;
+  windVelocity: number;
+  windDiraction: string;
+  atmosphericPressure: number;
+};
+
+/**
  * 気象データマッピングフック
  */
 const useWeatherMap = (weatherMapLayerId: string) => {
@@ -18,6 +32,7 @@ const useWeatherMap = (weatherMapLayerId: string) => {
   const viewState = useRecoilValue(ViewState);
   const [weatherMap, setWeatherMap] = useRecoilState(WeatherMapState);
 
+  // レイヤー初期表示設定
   useEffect(() => {
     if (!preferences) return;
     const initVisible =
@@ -82,6 +97,22 @@ const useWeatherMap = (weatherMapLayerId: string) => {
         show: true,
       });
       setWeatherMap({ ...weatherMap, layer: newLayer });
+
+      // データをロード
+      fetch(`${subDirectoryPath}/data/weather_mapping.jsonl`)
+        .then((data) => data.text())
+        .then((t) => {
+          const result = t
+            .split('\n')
+            .filter((json) => json.length > 0)
+            .map((json) => {
+              return JSON.parse(json) as WeatherMapRow;
+            });
+          setWeatherMap({
+            ...weatherMap,
+            data: result,
+          });
+        });
     }
   };
 
