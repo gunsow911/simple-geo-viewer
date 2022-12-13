@@ -178,7 +178,7 @@ const WeatherMapPanel = () => {
       {true && (
         <Draggable cancel=".body">
           <div className="z-10 absolute top-2 left-2">
-            <div className={`title p-1 ${selectedBgColor}`}>
+            <div className={`title p-1 ${selectedBgColor} cursor-pointer`}>
               <div className="absolute top-1 right-1">
                 <CloseButton onClick={hide} darkmode />
               </div>
