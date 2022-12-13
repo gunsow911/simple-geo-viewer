@@ -99,6 +99,7 @@ const useWeatherMap = (weatherMapLayerId: string) => {
         autoHighlight: true,
         minzoom: 12,
         show: true,
+        downloadUrl: `${subDirectoryPath}/data/weather_data_mapping.csv`,
       });
       setWeatherMap((curr) => ({
         ...curr,

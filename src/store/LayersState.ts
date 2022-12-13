@@ -36,7 +36,8 @@ export type BaseInformationProperty = {
 export type CustomLayerProperty = {
   minzoom: number;
   show: boolean;
-} & BaseInformationProperty;
+  downloadUrl: string;
+};
 
 type WeatherMapStateAtom = {
   layer?: Layer<CustomLayerProperty>;
