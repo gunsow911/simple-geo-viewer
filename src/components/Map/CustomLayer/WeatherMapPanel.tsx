@@ -2,8 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { WeatherMapState } from '@/store/LayersState';
 import CloseButton from '@/components/Utils/CloseButton';
+import 'react-datepicker/dist/react-datepicker.css';
 import Draggable from 'react-draggable';
-import settings from '@/assets/settings.json';
 import { Line } from 'react-chartjs-2';
 import {
   Chart,
@@ -20,6 +20,7 @@ import dayjs from 'dayjs';
 import { WeatherMapRow } from './useWeatherMap';
 Chart.register(LineElement, PointElement, LinearScale, TimeScale, Legend);
 import utc from 'dayjs/plugin/utc';
+import { DatePicker } from '@/components/Utils/DataPicker';
 dayjs.extend(utc);
 
 type GraphType =
@@ -44,11 +45,14 @@ const WeatherMapPanel = () => {
   const [weatherMap, setWeatherMap] = useRecoilState(WeatherMapState);
   const [volumeData, setVolumeData] = useState<{ x: dayjs.Dayjs; y: number }[]>([]);
   const [graphType, setGraphType] = useState<GraphType>();
-  const [betweenDate, setBetweenDate] = useState<{ start: string; end: string }>();
+  const [betweenDate, setBetweenDate] = useState<{ start: string; end: string }>({
+    start: '2022-09-01',
+    end: '2022-09-01',
+  });
   const [summary, setSummary] = useState<WeatherMapSummary>();
 
   const selectedBgColor = useMemo(() => {
-    return `bg-[${settings.background_color}]`;
+    return `bg-[#17a2b8]`;
   }, []);
 
   const selectedTextColor = useMemo(() => {
@@ -228,20 +232,47 @@ const WeatherMapPanel = () => {
                 </button>
               </div>
               <div className="py-1">
-                <button
-                  className="border px-2 mx-1"
-                  onClick={() => setBetweenDate({ start: '2022-09-01', end: '2022-09-01' })}
-                >
-                  2022年9月
-                </button>
-                <button
-                  className="border px-2 mx-1"
-                  onClick={() => setBetweenDate({ start: '2022-10-01', end: '2022-10-01' })}
-                >
-                  2022年10月
-                </button>
+                <div className="flex">
+                  <span className="pr-2">日付選択</span>
+                  <button
+                    className="px-2 mx-1 border"
+                    onClick={() => {
+                      const prev = dayjs.utc(betweenDate?.start).add(-1, 'day');
+                      setBetweenDate({
+                        start: prev.format('YYYY-MM-DD'),
+                        end: prev.format('YYYY-MM-DD'),
+                      });
+                    }}
+                  >
+                    &lt;
+                  </button>
+                  <DatePicker
+                    className="border text-center"
+                    selected={dayjs.utc(betweenDate?.start).toDate()}
+                    onChange={(date: Date) => {
+                      const dateString = dayjs.utc(date).format('YYYY-MM-DD');
+                      setBetweenDate({ start: dateString, end: dateString });
+                    }}
+                    dateFormat="yyyy年M月d日"
+                    calendarStartDay={1}
+                    minDate={dayjs.utc('2022-09-01').toDate()}
+                    maxDate={dayjs.utc('2022-10-17').toDate()}
+                  ></DatePicker>
+                  <button
+                    className="px-2 mx-1 border"
+                    onClick={() => {
+                      const next = dayjs.utc(betweenDate?.start).add(1, 'day');
+                      setBetweenDate({
+                        start: next.format('YYYY-MM-DD'),
+                        end: next.format('YYYY-MM-DD'),
+                      });
+                    }}
+                  >
+                    &gt;
+                  </button>
+                </div>
               </div>
-              {graphType && betweenDate && (
+              {graphType ? (
                 <>
                   <div className="py-1">
                     {getTitle()}
@@ -271,6 +302,8 @@ const WeatherMapPanel = () => {
                     </div>
                   </div>
                 </>
+              ) : (
+                <></>
               )}
             </div>
           </div>
