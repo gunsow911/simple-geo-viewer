@@ -2,25 +2,12 @@ import { useEffect } from 'react';
 import { GeoJsonLayer } from '@deck.gl/layers/typed';
 import { useRouter } from 'next/router';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { WeatherMapState, CustomLayerProperty, BaseInformationProperty } from '@/store/LayersState';
+import { WeatherMapLayerState, CustomLayerProperty } from '@/store/LayersState';
 import { Feature, Point } from 'geojson';
 import { usePreferences } from '@/components/LayerFilter/loader';
 import { Layer, PickingInfo } from '@deck.gl/core/typed';
 import { ViewState } from '@/store/ViewState';
-
-/**
- * 気象データマッピングの列データ
- */
-export type WeatherMapRow = {
-  date: string;
-  temperature: number;
-  relativeHumidity: number;
-  luminosity: number;
-  rainfall: number;
-  windVelocity: number;
-  windDiraction: string;
-  atmosphericPressure: number;
-};
+import { WeatherMapPanelState, BaseInformationProperty, WeatherMapRow } from '@/store/PanelState';
 
 /**
  * 気象データマッピングフック
@@ -30,7 +17,8 @@ const useWeatherMap = (weatherMapLayerId: string) => {
   const subDirectoryPath = router.basePath;
   const { preferences } = usePreferences();
   const viewState = useRecoilValue(ViewState);
-  const [weatherMap, setWeatherMap] = useRecoilState(WeatherMapState);
+  const [weatherMapLayer, setWeatherMapLayer] = useRecoilState(WeatherMapLayerState);
+  const [weatherMapPanel, setWeatherMapPanel] = useRecoilState(WeatherMapPanelState);
 
   // レイヤー初期表示設定
   useEffect(() => {
@@ -51,12 +39,9 @@ const useWeatherMap = (weatherMapLayerId: string) => {
 
   // zoomLevel変更によるレイヤーの表示変更
   useEffect(() => {
-    if (weatherMap.layer === undefined) return;
-    const newLayer = getVisibleLayer(weatherMap.layer, weatherMap.layer.props.show);
-    setWeatherMap((curr) => ({
-      ...curr,
-      layer: newLayer,
-    }));
+    if (weatherMapLayer === undefined) return;
+    const newLayer = getVisibleLayer(weatherMapLayer, weatherMapLayer.props.show);
+    setWeatherMapLayer(newLayer);
   }, [viewState]);
 
   const onChangeSelect = (layerId: string, selected: boolean) => {
@@ -67,17 +52,14 @@ const useWeatherMap = (weatherMapLayerId: string) => {
   };
 
   const onIconClick = (pickingInfo: PickingInfo) => {
-    if (!weatherMap.showPanel)
+    if (!weatherMapPanel.show)
       showPanel(pickingInfo.object as Feature<Point, BaseInformationProperty>);
   };
 
   const show = () => {
-    if (weatherMap.layer) {
-      const newLayer = getVisibleLayer(weatherMap.layer, true);
-      setWeatherMap((curr) => ({
-        ...curr,
-        layer: newLayer,
-      }));
+    if (weatherMapLayer) {
+      const newLayer = getVisibleLayer(weatherMapLayer, true);
+      setWeatherMapLayer(newLayer);
     } else {
       const newLayer = new GeoJsonLayer<Feature<Point>, CustomLayerProperty>({
         id: weatherMapLayerId,
@@ -101,10 +83,7 @@ const useWeatherMap = (weatherMapLayerId: string) => {
         show: true,
         downloadUrl: `${subDirectoryPath}/data/weather_data_mapping.csv`,
       });
-      setWeatherMap((curr) => ({
-        ...curr,
-        layer: newLayer,
-      }));
+      setWeatherMapLayer(newLayer);
 
       // データをロード
       fetch(`${subDirectoryPath}/data/weather_mapping.jsonl`)
@@ -117,7 +96,7 @@ const useWeatherMap = (weatherMapLayerId: string) => {
               return JSON.parse(json) as WeatherMapRow;
             });
 
-          setWeatherMap((curr) => ({
+          setWeatherMapPanel((curr) => ({
             ...curr,
             data: result,
           }));
@@ -126,12 +105,9 @@ const useWeatherMap = (weatherMapLayerId: string) => {
   };
 
   const hide = () => {
-    if (weatherMap.layer) {
-      const newLayer = getVisibleLayer(weatherMap.layer, false);
-      setWeatherMap((curr) => ({
-        ...curr,
-        layer: newLayer,
-      }));
+    if (weatherMapLayer) {
+      const newLayer = getVisibleLayer(weatherMapLayer, false);
+      setWeatherMapLayer(newLayer);
     }
   };
 
@@ -142,9 +118,10 @@ const useWeatherMap = (weatherMapLayerId: string) => {
   };
 
   const showPanel = (feature: Feature<Point, BaseInformationProperty>) => {
-    setWeatherMap((curr) => ({
+    setWeatherMapPanel((curr) => ({
       ...curr,
-      showPanel: true,
+      donwloadUrl: `${subDirectoryPath}/data/weather_data_mapping.csv`,
+      show: true,
       feature,
     }));
   };

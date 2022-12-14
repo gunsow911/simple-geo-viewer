@@ -10,12 +10,11 @@ import MouseTooltip, { MouseTooltipData } from '@/components/MouseTooltip';
 import { usePreferences, Preferences } from '@/components/LayerFilter/loader';
 import Head from 'next/head';
 import { closeIcon } from '@/components/SideBar/Icon';
-import { Backgrounds } from '../components/LayerFilter/loader';
 import Draggable from 'react-draggable';
 import { DashboardProvider } from '@/components/Dashboard/useDashboardContext';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { TooltipDataState, TooltipPositionState } from '@/store/TooltipState';
-import useWeatherMap from '@/components/Map/CustomLayer/useWeatherMap';
+import useWeatherMap from '@/components/Map/Custom/useWeatherMap';
 
 type TContext = {
   checkedLayerTitleList: string[];

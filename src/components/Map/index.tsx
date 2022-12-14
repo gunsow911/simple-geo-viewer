@@ -20,12 +20,12 @@ import {
   LayersState,
   TemporalLayerConfigState,
   TemporalLayerState,
-  WeatherMapState,
+  WeatherMapLayerState,
 } from '@/store/LayersState';
 import { TooltipDataState } from '@/store/TooltipState';
 import { getPropertiesObj } from '@/components/Tooltip/util';
 import { ViewState } from '@/store/ViewState';
-import WeatherMapPanel from './CustomLayer/WeatherMapPanel';
+import WeatherMapPanel from './Custom/WeatherMapPanel';
 
 const getViewStateFromMaplibre = (map) => {
   const { lng, lat } = map.getCenter();
@@ -177,7 +177,7 @@ const MapComponent: React.VFC = () => {
   const { preferences } = useContext(context);
   const temporalLayerConfigs = useRecoilValue(TemporalLayerConfigState);
   const dashboardLayers = useRecoilValue(DashboardLayersState);
-  const { layer: weatherMapLayer } = useRecoilValue(WeatherMapState);
+  const weatherMapLayer = useRecoilValue(WeatherMapLayerState);
 
   //map・deckインスタンスを初期化
   const { deckGLRef, mapRef, currentZoomLevel } = useInitializeMap(
