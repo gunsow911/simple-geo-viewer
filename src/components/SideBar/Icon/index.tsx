@@ -402,7 +402,7 @@ export const shareIcon = (url: string) => {
   );
 };
 
-export const smallShareIcon = (url: string) => {
+export const smallShareIcon = (url: string, layerID: string) => {
   return (
     <a href="#">
       <svg
@@ -412,7 +412,13 @@ export const smallShareIcon = (url: string) => {
         viewBox="0 0 24 24"
         fill="#000000"
         onClick={() => {
-          navigator.clipboard.writeText(url);
+          const query = `querySelectLayerId=${layerID}`;
+          const link = url.replace(/querySelectLayerId=[^&]*/, query);
+          if (url === link) {
+            navigator.clipboard.writeText(`${url}&${query}`);
+          } else {
+            navigator.clipboard.writeText(link);
+          }
         }}
       >
         <path d="M0 0h24v24H0V0z" fill="none" />
