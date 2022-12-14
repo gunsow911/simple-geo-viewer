@@ -417,7 +417,7 @@ export const smallShareIcon = (layerID: string) => {
           const link = url.replace(/querySelectLayerId=[^&]*/, query);
           if (url === link) {
             if (location.search === '') {
-              navigator.clipboard.writeText(`${url}?${query}`);
+              navigator.clipboard.writeText(`${url.replace(/\/$/, '/')}?${query}`);
             } else {
               navigator.clipboard.writeText(`${url}&${query}`);
             }

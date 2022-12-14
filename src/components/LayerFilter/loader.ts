@@ -63,6 +63,11 @@ export const usePreferences = () => {
     // preferencesが指定されているがqueryとして読み込みが完了していない場合はJSONの取得処理の開始を保留する
     if (router.asPath.includes('preferences=') && typeof router.query.preferences === 'undefined')
       return;
+    if (
+      router.asPath.includes('querySelectLayerId=') &&
+      typeof router.query.querySelectLayerId === 'undefined'
+    )
+      return;
 
     (async () => {
       // クエリパラメータでpreferencesが指定されていればそのURLを
@@ -114,6 +119,6 @@ export const usePreferences = () => {
 
       setPreferences(() => loadedPreferences);
     })();
-  }, [router.query.preferences]);
+  }, [router.query.preferences, router.query.querySelectLayerId]);
   return { preferences };
 };
