@@ -5,6 +5,7 @@ export const havingLegendIdList = [
   'cn_household_susono',
   'cn_business_susono',
   'cn_business_household_susono',
+  'plateau-building',
 ];
 
 // 表示させたい判例が存在しない場合は空にするのではなく、空文字を登録する

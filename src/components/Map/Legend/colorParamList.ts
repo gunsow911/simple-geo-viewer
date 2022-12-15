@@ -146,6 +146,101 @@ const co2Business = (param?: string) => {
   ];
 };
 
+export const getPlateauColorParamList = (param?: number) => {
+  return [
+    {
+      param: param == 401,
+      name: '業務施設',
+      color: [255, 155, 0, 200],
+    },
+    {
+      param: param == 402,
+      name: '商業施設',
+      color: [255, 0, 0, 200],
+    },
+    {
+      param: param == 403,
+      name: '宿泊施設',
+      color: [230, 240, 40, 200],
+    },
+    {
+      param: param == 404,
+      name: '商業系複合施設',
+      color: [255, 0, 0, 200],
+    },
+    {
+      param: param == 411,
+      name: '住宅',
+      color: [50, 200, 10, 200],
+    },
+    {
+      param: param == 412,
+      name: '共同住宅',
+      color: [140, 230, 40, 200],
+    },
+    {
+      param: param == 413,
+      name: '店舗併用住宅',
+      color: [180, 220, 230, 200],
+    },
+    {
+      param: param == 414,
+      name: '店舗等併用共同住宅',
+      color: [180, 220, 230, 200],
+    },
+    {
+      param: param == 415,
+      name: '作業所併用住宅',
+      color: [180, 220, 230, 200],
+    },
+    {
+      param: param == 421,
+      name: '官公庁施設',
+      color: [95, 150, 235, 200],
+    },
+    {
+      param: param == 422,
+      name: '文教厚生施設',
+      color: [0, 0, 255, 200],
+    },
+    {
+      param: param == 431,
+      name: '運輸倉庫施設',
+      color: [145, 95, 240, 200],
+    },
+    {
+      param: param == 441,
+      name: '工場',
+      color: [125, 200, 250, 200],
+    },
+    {
+      param: param == 451,
+      name: '農林漁業用施設',
+      color: [20, 120, 15, 200],
+    },
+    {
+      param: param == 452,
+      name: '供給処理施設',
+      color: [40, 35, 125, 200],
+    },
+    {
+      param: param == 453,
+      name: '防衛施設',
+      color: [160, 30, 10, 200],
+    },
+    {
+      param: param == 454,
+      name: 'その他',
+      color: [230, 210, 220, 200],
+    },
+    {
+      param: !param,
+      name: '不明',
+      color: [220, 220, 220, 200],
+    },
+  ];
+};
+
 export const getColorParamList = (id: string, param?: number | string) => {
   if (id === 'gyosei-tokyo' && (typeof param === 'string' || typeof param === 'undefined')) {
     return gyoseiTokyo(param);
@@ -158,6 +253,9 @@ export const getColorParamList = (id: string, param?: number | string) => {
   }
   if (id === 'cn_business_susono' && (typeof param === 'string' || typeof param === 'undefined')) {
     return co2Business(param);
+  }
+  if (id === 'plateau-building' && (typeof param === 'number' || typeof param === 'undefined')) {
+    return getPlateauColorParamList(param);
   }
   if (
     id === 'cn_business_household_susono' &&
