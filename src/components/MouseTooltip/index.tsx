@@ -12,7 +12,7 @@ const MouseTooltip: React.FC<Props> = ({ mouseTooltipData }) => {
   return (
     <div
       className={
-        'absolute text-xs whitespace-nowrap bg-black text-white rounded-md h-6 px-2 py-1 z-10'
+        'absolute text-xs whitespace-nowrap bg-black text-white rounded-md h-6 px-2 py-1 z-50'
       }
       style={{ top: `${top}px`, left: `${left}px` }}
     >
