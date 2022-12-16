@@ -28,10 +28,11 @@ const setResourceViewState = (resource: Data, setClickedLayerViewState: any) => 
 };
 
 type LayersProps = {
+  onChange?: (layerId: string, checked: boolean) => void;
   layers: Data[];
 };
 
-export const Layers: FC<LayersProps> = ({ layers }) => {
+export const Layers: FC<LayersProps> = ({ layers, onChange }) => {
   const {
     checkedLayerTitleList,
     setCheckedLayerTitleList,
@@ -149,8 +150,9 @@ export const Layers: FC<LayersProps> = ({ layers }) => {
                 type="checkbox"
                 className="rounded-full mx-1 text-cyan-600 focus:outline-none min-w-16 min-h-16 max-w-16 max-h-16"
                 checked={isSelected(resource.title, checkedLayerTitleList)}
-                onChange={() => {
+                onChange={(e) => {
                   toggleSelectedResourceList(resource);
+                  onChange && onChange(resource.id[0], e.target.checked);
                 }}
               />
               {getResourceIcon(resource, preferences.config)}
