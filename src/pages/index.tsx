@@ -10,11 +10,11 @@ import MouseTooltip, { MouseTooltipData } from '@/components/MouseTooltip';
 import { usePreferences, Preferences } from '@/components/LayerFilter/loader';
 import Head from 'next/head';
 import { closeIcon } from '@/components/SideBar/Icon';
-import { Backgrounds } from '../components/LayerFilter/loader';
 import Draggable from 'react-draggable';
 import { DashboardProvider } from '@/components/Dashboard/useDashboardContext';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { TooltipDataState, TooltipPositionState } from '@/store/TooltipState';
+import useWeatherMap from '@/components/Map/Custom/useWeatherMap';
 
 type TContext = {
   checkedLayerTitleList: string[];
@@ -60,6 +60,8 @@ const App: NextPage = () => {
   const [tooltipData, setTooltipData] = useRecoilState(TooltipDataState);
   const contextValues = useContextValues();
   const { preferences } = usePreferences();
+  const { onChangeSelect } = useWeatherMap('weather-data-mapping');
+
   if (preferences === null) {
     return <div>loading</div>;
   }
@@ -88,7 +90,7 @@ const App: NextPage = () => {
             <div className="flex content" style={{ overflow: 'hidden' }}>
               <div className="w-1/5 flex flex-col h-full ml-4 mr-2 mt-4 pb-10">
                 <div id="sideBar" className="overflow-auto relative flex-1">
-                  <Sidebar />
+                  <Sidebar onChangeSelect={onChangeSelect} />
                 </div>
                 {contextValues.mouseTooltipData !== null ? (
                   <div className="relative">

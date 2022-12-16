@@ -6,7 +6,11 @@ import { Layers } from '@/components/SideBar/Content/Layers';
 import { FilterLayerInput } from '@/components/SideBar/Content/FilterLayerInput';
 import { getFilteredMenu } from '@/components/LayerFilter/menu';
 
-const Sidebar: React.FC = () => {
+type Props = {
+  onChangeSelect?: (layerId: string, selected: boolean) => void;
+};
+
+const Sidebar = (props: Props) => {
   const { setCheckedLayerTitleList, preferences } = useContext(context);
   const [InputFilterKeyword, setInputFilterKeyword] = useState('');
   const filteredMenu = getFilteredMenu(preferences.menu, InputFilterKeyword);
@@ -32,7 +36,7 @@ const Sidebar: React.FC = () => {
       {visiblyContentList.map((content) => (
         <Content
           title={content.title}
-          layers={<Layers layers={content.layers} />}
+          layers={<Layers layers={content.layers} onChange={props.onChangeSelect} />}
           key={content.title}
         />
       ))}
