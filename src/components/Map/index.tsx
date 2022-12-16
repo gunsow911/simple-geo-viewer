@@ -15,15 +15,18 @@ import { TimeSlider } from '@/components/Map/Controller/TimeSlider';
 import { getLayerConfigById } from '@/components/LayerFilter/config';
 import { Backgrounds, Preferences } from '@/components/LayerFilter/loader';
 import DashboardPanelManager from '../Dashboard/DashboardPanelManager';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import {
-  DashboardLayerState,
+  DashboardLayersState,
   LayersState,
   TemporalLayerConfigState,
   TemporalLayerState,
+  WeatherMapLayerState,
 } from '@/store/LayersState';
 import { TooltipDataState } from '@/store/TooltipState';
 import { getPropertiesObj } from '@/components/Tooltip/util';
+import { ViewState } from '@/store/ViewState';
+import WeatherMapPanel from './Custom/WeatherMapPanel';
 import { useRouter } from 'next/router';
 import { getDataById } from '@/components/LayerFilter/menu';
 
@@ -69,6 +72,7 @@ const useInitializeMap = (
 ) => {
   const { backgrounds, initialView, menu } = preferences;
   const [currentZoomLevel, setCurrentZoomLevel] = useState(0);
+  const setRecoilViewState = useSetRecoilState(ViewState);
   const deckGLRef = useRef<any>();
   const mapRef = useRef<any>();
   useEffect(() => {
@@ -106,6 +110,7 @@ const useInitializeMap = (
           pitch: viewState.pitch,
         });
         setCurrentZoomLevel(viewState.zoom);
+        setRecoilViewState(viewState);
       },
       layers: [],
     });
@@ -174,7 +179,9 @@ const MapComponent: React.VFC = () => {
   const deckglContainer = useRef<HTMLCanvasElement | null>(null);
   const { preferences } = useContext(context);
   const temporalLayerConfigs = useRecoilValue(TemporalLayerConfigState);
-  const dashboardLayers = useRecoilValue(DashboardLayerState);
+  const dashboardLayers = useRecoilValue(DashboardLayersState);
+  const weatherMapLayer = useRecoilValue(WeatherMapLayerState);
+
   //map・deckインスタンスを初期化
   const { deckGLRef, mapRef, currentZoomLevel } = useInitializeMap(
     maplibreContainer,
@@ -185,9 +192,9 @@ const MapComponent: React.VFC = () => {
   //クリックされたレイヤに画面移動
   useFlyTo(deckGLRef.current);
 
-  // ダッシュボードのレイヤーと統合
+  // 各種レイヤーの統合
   if (deckGLRef.current) {
-    deckGLRef.current.setProps({ layers: [...deckglLayers, ...dashboardLayers] });
+    deckGLRef.current.setProps({ layers: [...deckglLayers, ...dashboardLayers, weatherMapLayer] });
   }
 
   useShowTooltip(mapRef.current);
@@ -231,6 +238,7 @@ const MapComponent: React.VFC = () => {
           {temporalLayerConfigs.length ? <TimeSlider /> : null}
         </div>
         <DashboardPanelManager />
+        <WeatherMapPanel />
       </div>
     </>
   );
