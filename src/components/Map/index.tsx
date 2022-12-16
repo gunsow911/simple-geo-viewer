@@ -6,7 +6,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import { Deck, FlyToInterpolator } from '@deck.gl/core/typed';
 
 import { context } from '@/pages';
-import { useFlyTo } from '@/components/Map/Animation/flyTo';
+import { useFlyTo, easeOutQuart } from '@/components/Map/Animation/flyTo';
 import Legend, { useGetClickedLayerId } from '@/components/Map/Legend';
 
 import BackgroundSelector from './Controller/BackgroundSelector';
@@ -26,6 +26,8 @@ import { TooltipDataState } from '@/store/TooltipState';
 import { getPropertiesObj } from '@/components/Tooltip/util';
 import { ViewState } from '@/store/ViewState';
 import WeatherMapPanel from './Custom/WeatherMapPanel';
+import { useRouter } from 'next/router';
+import { getDataById } from '@/components/LayerFilter/menu';
 
 const getViewStateFromMaplibre = (map) => {
   const { lng, lat } = map.getCenter();
@@ -195,6 +197,27 @@ const MapComponent: React.VFC = () => {
   }
 
   useShowTooltip(mapRef.current);
+  const router = useRouter();
+
+  useEffect(() => {
+    let querySelectLayerId = router.query.querySelectLayerId as string | undefined;
+    querySelectLayerId = querySelectLayerId === undefined ? '' : querySelectLayerId;
+    if (querySelectLayerId !== '') {
+      const targetResource = getDataById(preferences.menu, [querySelectLayerId]);
+
+      const viewState = {
+        longitude: targetResource.lng,
+        latitude: targetResource.lat,
+        zoom: targetResource.zoom,
+        id: targetResource.id[0],
+        pitch: preferences.initialView.map.pitch,
+        transitionDuration: 2000,
+        transitionEasing: easeOutQuart,
+        transitionInterpolator: new FlyToInterpolator(),
+      };
+      deckGLRef.current.setProps({ initialViewState: viewState });
+    }
+  }, []);
 
   return (
     <>

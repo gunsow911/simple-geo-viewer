@@ -119,7 +119,7 @@ const TooltipDefaultBody: VFC<TooltipBodyProps> = ({ properties, labels }) => {
           return (
             <tr key={key}>
               <td className="whitespace-nomal font-bold align-top w-24">{key}</td>
-              <td className="whitespace-nomal break-all" style={tdStyle}>
+              <td className="align-top" style={tdStyle}>
                 {content}
               </td>
             </tr>

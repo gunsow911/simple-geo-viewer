@@ -6,7 +6,7 @@ import {
   filterCheckedData,
   getCheckedLayerIdByDataTitleList,
 } from '@/components/LayerFilter/sideBar';
-import { DownloadIcon } from '@/components/SideBar/Icon';
+import { DownloadIcon, smallShareIcon } from '@/components/SideBar/Icon';
 import { useRecoilState } from 'recoil';
 import { LayersState, TemporalLayerConfigState } from '@/store/LayersState';
 import { makeDeckGLLayer } from '@/components/Map/Layer/deckGlLayerFactory';
@@ -135,6 +135,7 @@ export const Layers: FC<LayersProps> = ({ layers, onChange }) => {
     'white-space': 'nowrap',
     'min-width': 0,
   };
+
   return (
     <>
       {layers.map((resource, index) => (
@@ -173,6 +174,19 @@ export const Layers: FC<LayersProps> = ({ layers, onChange }) => {
               {resource.download_url === undefined
                 ? undefined
                 : DownloadIcon(resource.download_url)}
+            </div>
+            <div
+              className="w-1/12"
+              onMouseOver={(event) =>
+                setMouseTooltipData(() => ({
+                  text: 'リンクをコピー',
+                  top: (window.innerHeight - event.clientY) * -1,
+                  left: event.clientX,
+                }))
+              }
+              onMouseOut={() => setMouseTooltipData(() => null)}
+            >
+              {smallShareIcon(resource.id[0])}
             </div>
           </div>
         </label>

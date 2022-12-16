@@ -5,6 +5,8 @@ import { Config } from './config';
 import { RasterSource } from 'maplibre-gl';
 import { route } from 'next/dist/server/router';
 import { context } from '@/pages';
+import { getDataById } from '@/components/LayerFilter/menu';
+import { Element } from 'chart.js';
 
 /**
  * settings.json
@@ -61,6 +63,11 @@ export const usePreferences = () => {
     // preferencesが指定されているがqueryとして読み込みが完了していない場合はJSONの取得処理の開始を保留する
     if (router.asPath.includes('preferences=') && typeof router.query.preferences === 'undefined')
       return;
+    if (
+      router.asPath.includes('querySelectLayerId=') &&
+      typeof router.query.querySelectLayerId === 'undefined'
+    )
+      return;
 
     (async () => {
       // クエリパラメータでpreferencesが指定されていればそのURLを
@@ -90,8 +97,28 @@ export const usePreferences = () => {
         initialView: results[4] as InitialView,
       };
 
+      let querySelectLayerId = router.query.querySelectLayerId as string | undefined;
+      querySelectLayerId = querySelectLayerId === undefined ? '' : querySelectLayerId;
+      if (querySelectLayerId !== '') {
+        let targetResource = getDataById(loadedPreferences.menu, [querySelectLayerId]);
+        targetResource.checked = true;
+        for (
+          let categoryIndex = 0;
+          categoryIndex < loadedPreferences.menu.length;
+          categoryIndex++
+        ) {
+          const element = loadedPreferences.menu[categoryIndex];
+          for (let dataIndex = 0; dataIndex < element.data.length; dataIndex++) {
+            const resource = element.data[dataIndex];
+            if (resource.id[0] === targetResource.id[0]) {
+              loadedPreferences.menu[categoryIndex].data[dataIndex] = targetResource;
+            }
+          }
+        }
+      }
+
       setPreferences(() => loadedPreferences);
     })();
-  }, [router.query.preferences]);
+  }, [router.query.preferences, router.query.querySelectLayerId]);
   return { preferences };
 };
