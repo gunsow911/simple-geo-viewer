@@ -135,7 +135,7 @@ class GeoJsonCO2PolygonCreator {
             if (d.properties['CO2排出量(家庭部門, 2019年)'] !== null) {
               return chroma
                 .scale(['white', 'red'])
-                .domain([0, 8000])(d.properties['CO2排出量(家庭部門, 2019年)'])
+                .domain([0, 5000])(d.properties['CO2排出量(家庭部門, 2019年)'])
                 .rgb();
             }
           }

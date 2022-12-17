@@ -49,53 +49,38 @@ const shizuokaBuilding = (param?: string) => {
 };
 
 const co2Household = (param?: string) => {
-  const colorScale = chroma.scale(['white', 'red']).domain([0, 8000]);
+  const colorScale = chroma.scale(['white', 'red']).domain([0, 5000]);
 
   return [
     {
       param: '',
-      name: '0',
+      name: '0 〜',
       color: colorScale(0).rgb(),
     },
     {
       param: '',
-      name: '1000',
+      name: '1000 〜',
       color: colorScale(1000).rgb(),
     },
     {
       param: '',
-      name: '2000',
+      name: '2000 〜',
       color: colorScale(2000).rgb(),
     },
     {
       param: '',
-      name: '3000',
+      name: '3000 〜',
       color: colorScale(3000).rgb(),
     },
     {
       param: '',
-      name: '4000',
+      name: '4000 〜',
       color: colorScale(4000).rgb(),
     },
     {
       param: '',
-      name: '5000',
+      name: '5000 〜',
       color: colorScale(5000).rgb(),
-    },
-    {
-      param: '',
-      name: '6000',
-      color: colorScale(6000).rgb(),
-    },
-    {
-      param: '',
-      name: '7000',
-      color: colorScale(7000).rgb(),
-    },
-    {
-      param: '',
-      name: '8000',
-      color: colorScale(8000).rgb(),
     },
   ];
 };
@@ -105,42 +90,42 @@ const co2Business = (param?: string) => {
   return [
     {
       param: '',
-      name: '0',
+      name: '0 〜',
       color: colorScale(0).rgb(),
     },
     {
       param: '',
-      name: '20000',
+      name: '20000 〜',
       color: colorScale(20000).rgb(),
     },
     {
       param: '',
-      name: '40000',
+      name: '40000 〜',
       color: colorScale(40000).rgb(),
     },
     {
       param: '',
-      name: '60000',
+      name: '60000 〜',
       color: colorScale(60000).rgb(),
     },
     {
       param: '',
-      name: '80000',
+      name: '80000 〜',
       color: colorScale(80000).rgb(),
     },
     {
       param: '',
-      name: '100000',
+      name: '100000 〜',
       color: colorScale(100000).rgb(),
     },
     {
       param: '',
-      name: '120000',
+      name: '120000 〜',
       color: colorScale(120000).rgb(),
     },
     {
       param: '',
-      name: '140000',
+      name: '140000 〜',
       color: colorScale(140000).rgb(),
     },
   ];
