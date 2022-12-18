@@ -40,21 +40,13 @@ class gltfLayerCreator {
   makeDeckGlLayer() {
     const { layerConfig } = this;
     if (this.isTargetConfig(layerConfig)) {
-      const config = this.extractLayerConfig(layerConfig);
-
-      const content = fetchFile(layerConfig.source);
-
-      const scenegraph = parse(content, GLTFLoader);
-
       return new ScenegraphLayer({
-        data: layerConfig.source,
+        id: layerConfig.id,
+        data: [null],
         visible: true,
-        pickable: true,
-        scenegraph: scenegraph,
-        _lighting: 'flat',
-        autoHighlight: true,
-        onClick: this.showToolTip,
-        ...config,
+        scenegraph: layerConfig.source,
+        getPosition: () => layerConfig.coords,
+        getOrientation: () => layerConfig.orientation,
       });
     }
     return null;
