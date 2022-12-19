@@ -25,8 +25,6 @@ class Tile3DLayerCreator {
   private readonly layerConfig: any;
   private readonly layerType: string = '3dtiles';
   private readonly setTooltipData: SetterOrUpdater<{
-    lng: number;
-    lat: number;
     tooltipType: 'default' | 'thumbnail' | 'table';
     id: string;
     data: any;

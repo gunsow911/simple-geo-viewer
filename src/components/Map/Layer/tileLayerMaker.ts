@@ -26,8 +26,6 @@ class tileLayerCreator {
   private readonly layerConfig: any;
   private readonly layerType: string = 'raster';
   private readonly setTooltipData: SetterOrUpdater<{
-    lng: number;
-    lat: number;
     tooltipType: 'default' | 'thumbnail' | 'table';
     id: string;
     data: any;
