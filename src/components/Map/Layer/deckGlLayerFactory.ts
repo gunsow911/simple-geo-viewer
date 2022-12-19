@@ -16,8 +16,6 @@ import { SetterOrUpdater } from 'recoil';
 export const makeDeckGLLayer = (
   layerConfig: LayerConfig,
   setTooltipData: SetterOrUpdater<{
-    lng: number;
-    lat: number;
     tooltipType: 'default' | 'thumbnail' | 'table';
     id: string;
     data: any;

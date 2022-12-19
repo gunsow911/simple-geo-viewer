@@ -29,8 +29,6 @@ class ArcLayerCreator {
   private layerType: string = 'Arc';
   private readonly layerConfig: any;
   setTooltipData: SetterOrUpdater<{
-    lng: number;
-    lat: number;
     tooltipType: 'default' | 'thumbnail' | 'table';
     id: string;
     data: any;

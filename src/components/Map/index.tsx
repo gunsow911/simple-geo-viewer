@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
-import { Map, Marker, NavigationControl, Style } from 'maplibre-gl';
+import { Map, NavigationControl, Style } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 import { Deck, FlyToInterpolator } from '@deck.gl/core/typed';
@@ -14,7 +14,7 @@ import { TimeSlider } from '@/components/Map/Controller/TimeSlider';
 import { getLayerConfigById } from '@/components/LayerFilter/config';
 import { Backgrounds, Preferences } from '@/components/LayerFilter/loader';
 import DashboardPanelManager from '../Dashboard/DashboardPanelManager';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   DashboardLayersState,
   LayersState,
@@ -22,8 +22,6 @@ import {
   TemporalLayerState,
   WeatherMapLayerState,
 } from '@/store/LayersState';
-import { TooltipDataState } from '@/store/TooltipState';
-import { getPropertiesObj } from '@/components/Tooltip/util';
 import { ViewState } from '@/store/ViewState';
 import WeatherMapPanel from './Custom/WeatherMapPanel';
 import { useRouter } from 'next/router';
@@ -127,25 +125,6 @@ const useInitializeMap = (
   };
 };
 
-const useShowTooltip = (map: any) => {
-  const pointMarkerRef = useRef<any>();
-
-  const tooltipData = useRecoilValue(TooltipDataState);
-  useEffect(() => {
-    if (!tooltipData || !tooltipData.data) {
-      if (pointMarkerRef.current) {
-        pointMarkerRef.current.remove();
-      }
-    } else {
-      const { data, tooltipType, id, lat, lng } = tooltipData;
-      getPropertiesObj(data, !tooltipType ? 'default' : tooltipType, id);
-      if (map) {
-        pointMarkerRef.current = new Marker().setLngLat([lng, lat]).addTo(map);
-      }
-    }
-  }, [map, tooltipData]);
-};
-
 const useDeckGLLayer = (currentZoomLevel: number, config) => {
   const deckglLayers = useRecoilValue(LayersState);
   const temporalLayers = useRecoilValue(TemporalLayerState);
@@ -196,7 +175,6 @@ const MapComponent: React.VFC = () => {
     deckGLRef.current.setProps({ layers: [...deckglLayers, ...dashboardLayers, weatherMapLayer] });
   }
 
-  useShowTooltip(mapRef.current);
   const router = useRouter();
 
   useEffect(() => {

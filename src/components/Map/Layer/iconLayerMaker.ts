@@ -25,8 +25,6 @@ class IconLayerCreator {
   private readonly layerConfig: any;
   private readonly layerType: string = 'icon';
   private readonly setTooltipData: SetterOrUpdater<{
-    lng: number;
-    lat: number;
     tooltipType: 'default' | 'thumbnail' | 'table';
     id: string;
     data: any;

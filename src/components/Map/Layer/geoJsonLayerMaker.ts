@@ -41,8 +41,6 @@ class GeoJsonLinePolygonCreator {
   layerType: string = 'geojson';
   private readonly layerConfig: LayerConfig;
   private readonly setTooltipData: SetterOrUpdater<{
-    lng: number;
-    lat: number;
     tooltipType: 'default' | 'thumbnail' | 'table';
     id: string;
     data: any;
@@ -91,8 +89,6 @@ class GeoJsonIconLayerCreator {
   layerType: string = 'geojsonicon';
   private readonly layerConfig: LayerConfig;
   private readonly setTooltipData: SetterOrUpdater<{
-    lng: number;
-    lat: number;
     tooltipType: 'default' | 'thumbnail' | 'table';
     id: string;
     data: any;
@@ -169,8 +165,6 @@ class GeoJsonFeatureCollectionIconLayerCreator {
   layerType: string = 'geojsonfcicon';
   private readonly layerConfig: LayerConfig;
   private readonly setTooltipData: SetterOrUpdater<{
-    lng: number;
-    lat: number;
     tooltipType: 'default' | 'thumbnail' | 'table';
     id: string;
     data: any;

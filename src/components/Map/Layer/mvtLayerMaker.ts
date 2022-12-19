@@ -30,8 +30,6 @@ class MvtLayerCreator {
   private readonly layerConfig: any;
   private readonly layerType: string = 'mvt';
   private readonly setTooltipData: SetterOrUpdater<{
-    lng: number;
-    lat: number;
     tooltipType: 'default' | 'thumbnail' | 'table';
     id: string;
     data: any;

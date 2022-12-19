@@ -5,8 +5,6 @@ import { PickInfo } from 'deck.gl';
 export const showToolTip = (
   info: PickInfo<any>,
   setTooltipData: SetterOrUpdater<{
-    lng: number;
-    lat: number;
     tooltipType: 'default' | 'thumbnail' | 'table';
     id: string;
     data: any;
@@ -50,8 +48,6 @@ export const showToolTip = (
   });
   const data = getPropertiesObj(object, tooltipType, id);
   setTooltipData({
-    lng: coordinate[0],
-    lat: coordinate[1],
     tooltipType,
     id,
     data,
