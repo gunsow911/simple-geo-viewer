@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState, useContext } from 'react';
+import React, { createContext, useState } from 'react';
 import { NextPage } from 'next';
 import Sidebar from '@/components/SideBar';
 import Header from '@/components/Header';
@@ -6,13 +6,17 @@ import Map from '@/components/Map';
 import { clickedLayerViewState } from '@/components/Map/types';
 import { defaultLegendId } from '@/components/Map/Legend/layerIds';
 import { Tooltip } from '@/components/Tooltip/content';
-import { removeExistingTooltip } from '@/components/Tooltip/show';
 import MouseTooltip, { MouseTooltipData } from '@/components/MouseTooltip';
-import { useRouter } from 'next/router';
-import { Preferences, fetchJson, fetchJsons } from '@/components/LayerFilter/loader';
+import { usePreferences, Preferences } from '@/components/LayerFilter/loader';
 import Head from 'next/head';
 import { closeIcon } from '@/components/SideBar/Icon';
-import { Backgrounds, Disasters } from '../components/LayerFilter/loader';
+import Draggable from 'react-draggable';
+import { DashboardProvider } from '@/components/Dashboard/useDashboardContext';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { TooltipDataState, TooltipPositionState } from '@/store/TooltipState';
+import useWeatherMap from '@/components/Map/Custom/useWeatherMap';
+import { Disasters } from '@/components/LayerFilter/loader';
+
 
 type TContext = {
   checkedLayerTitleList: string[];
@@ -35,7 +39,7 @@ type TContext = {
   setDisasters: React.Dispatch<React.SetStateAction<Disasters>>;
 };
 
-const useContextValues =  (): TContext => {
+const useContextValues = (): TContext => {
   const [checkedLayerTitleList, setCheckedLayerTitleList] = useState<string[]>([]);
   const [displayedLegendLayerId, setDisplayedLegendLayerId] = useState<string>(defaultLegendId);
   const [clickedLayerViewState, setClickedLayerViewState] = useState<clickedLayerViewState | null>(
@@ -43,14 +47,13 @@ const useContextValues =  (): TContext => {
   );
   const [isDefault, setIsDefault] = useState<boolean>(true);
   const [mouseTooltipData, setMouseTooltipData] = useState<MouseTooltipData | null>(null);
+
   const [ preferences, setPreferences ] = useState<Preferences | null>(null);
-  
   const [currentDisaster, setCurrentDisaster] = useState<string>('');
   const [isDisaster, setIsDisaster] = useState<boolean>(false);
   const defaultDisasters: Disasters =  {default:0,data:[]} 
-  const [disasters, setDisasters] = useState<Disasters>(defaultDisasters);
-  
-  
+  const [disasters, setDisasters] = useState<Disasters>(defaultDisasters)
+
   return {
     checkedLayerTitleList,
     setCheckedLayerTitleList,
@@ -76,74 +79,18 @@ const useContextValues =  (): TContext => {
 export const context = createContext({} as TContext);
 
 const App: NextPage = () => {
-  const [tooltipData, setTooltipData] = useState<any>({
-    tooltip: null,
-  });
-
-  const [setTooltipPosition, setsetTooltipPosition] = useState<any>({});
+  const tooltipPosition = useRecoilValue(TooltipPositionState);
+  const [tooltipData, setTooltipData] = useRecoilState(TooltipDataState);
   const contextValues = useContextValues();
-  const router = useRouter();
-  const { preferences, setPreferences } = useContextValues();
-  const { currentDisaster, setCurrentDisaster } = useContextValues();
-  const { disasters, setDisasters } = useContextValues();
-  const { isDisaster, setIsDisaster } = useContextValues();
+  const { setPreferences } = useContextValues();
+  const { preferences } = usePreferences();
+  const { onChangeSelect } = useWeatherMap('weather-data-mapping');
+  const { disasters } = useContextValues();
+  const { isDisaster } = useContextValues();
 
-  useEffect(() => {
-    console.log(currentDisaster);
-    
-    if (router.asPath.includes('preferences=') && typeof router.query.preferences === 'undefined')
-      return;
-    (async () => {
-      // クエリパラメータでpreferencesが指定されていればそのURLを
-      // 指定されていなければデフォルト設定を読み込む
-      let preferencesPath = router.query.preferences as string | undefined;
-      if (typeof preferencesPath === 'undefined') {
-        preferencesPath = `${router.basePath}/defaultPreferences`;
-      };
-      let loadedPreferences: Preferences;
-      const isdisaster = router.query.isDisaster as boolean | undefined;
-      const disasterPreference = router.query.disaster as string | undefined;
-      
-      
-      if (isdisaster) {
-        if (typeof setDisasters === 'undefined'){
-          return;
-        }
-        setIsDisaster(() => isdisaster);
-        preferencesPath = `${router.basePath}/disaster`;
-        const disastersData = await fetchJson(`${preferencesPath}/disasters.json`);
-        setDisasters(() => disastersData);
-        const disastersPath = disastersData.data[disastersData.default].value as string;
-        preferencesPath = `${preferencesPath}/${disastersPath}`;
-        if (typeof disasterPreference !== undefined) {
-          preferencesPath = `${router.basePath}/disaster/${disasterPreference}`;
-        }
-        if (typeof currentDisaster !== 'undefined' && typeof setCurrentDisaster !== 'undefined' && currentDisaster !== '') {
-            preferencesPath = preferencesPath.replace(`/${disastersPath}`,'');
-            preferencesPath = `${preferencesPath}/${currentDisaster}`;
-        };
-        
-        
-        loadedPreferences = await fetchJsons(preferencesPath);
-        setCurrentDisaster(() => disastersPath);
-      }else{
-        loadedPreferences = await fetchJsons(preferencesPath);
-      }
-      setPreferences(() => loadedPreferences);
-    })();
-  },[router.asPath, router.query.preferences]);
-  
   if (preferences === null) {
-
-    return (
-      <>
-        <div>loading</div>
-      </>
-    );
+    return <div>loading</div>;
   }
-  
-  // const isdisaster = router.query.isDisaster as boolean | undefined;
-  // setIsDisaster(isDisaster);
 
   const toolChipBaseStyle: any = {
     backgroundColor: preferences.settings.tooltip_background_color,
@@ -152,7 +99,6 @@ const App: NextPage = () => {
   };
 
   return (
-    <>{preferences === null ? (<></>) : (
     <>
       <Head>
         <title>{preferences.settings.title}</title>
@@ -163,44 +109,47 @@ const App: NextPage = () => {
       </Head>
       <div className="h-screen">
         <context.Provider value={{ ...contextValues, preferences }}>
-          <div className="h-12">
+          <DashboardProvider>
+            <div className="h-12">
             <Header disasters={disasters} setPreferrence={setPreferences} isDisaster={isDisaster}/>
-          </div>
-          <div className="flex content" style={{ overflow: 'hidden' }}>
-            <div className="w-1/5 flex flex-col h-full ml-4 mr-2 mt-4 pb-10">
-              <div id="sideBar" className="overflow-auto relative flex-1">
-                <Sidebar />
-              </div>
-              {contextValues.mouseTooltipData !== null ? (
-                <div className="relative">
-                  <MouseTooltip mouseTooltipData={contextValues.mouseTooltipData} />
-                </div>
-              ) : undefined}
             </div>
-            <div id="MapArea" className="relative w-4/5 m-2 pb-5 h-full">
-              <Map setTooltipData={setTooltipData} setsetTooltipPosition={setsetTooltipPosition} />
-              {tooltipData.tooltip ? (
-                <div
-                  className="w-1/4 border-2 border-black z-50"
-                  style={{ ...setTooltipPosition, ...toolChipBaseStyle }}
-                >
-                  {tooltipData.tooltip ? <Tooltip {...tooltipData.tooltip} /> : undefined}
-                  <div className="text-right absolute top-0 right-2">
-                    <button
-                      className="text-2xl"
-                      onClick={() => removeExistingTooltip(setTooltipData)}
-                      style={{ backgroundColor: toolChipBaseStyle.backgroundColor }}
-                    >
-                      {closeIcon()}
-                    </button>
+            <div className="flex content" style={{ overflow: 'hidden' }}>
+              <div className="w-1/5 flex flex-col h-full ml-4 mr-2 mt-4 pb-10">
+                <div id="sideBar" className="overflow-auto relative flex-1">
+                  <Sidebar onChangeSelect={onChangeSelect} />
+                </div>
+                {contextValues.mouseTooltipData !== null ? (
+                  <div className="relative">
+                    <MouseTooltip mouseTooltipData={contextValues.mouseTooltipData} />
                   </div>
-                </div>
-              ) : undefined}
+                ) : undefined}
+              </div>
+              <div id="MapArea" className="relative w-4/5 m-2 pb-5 h-full">
+                <Map />
+                {tooltipData && tooltipPosition && tooltipData.data ? (
+                  <Draggable bounds="parent" handle="#handle">
+                    <div
+                      className="w-1/4 border-2 border-black z-50"
+                      style={{ ...tooltipPosition, ...toolChipBaseStyle }}
+                    >
+                      <Tooltip />
+                      <div className="text-right absolute top-0 right-2">
+                        <button
+                          className="text-2xl"
+                          onClick={() => setTooltipData(null)}
+                          style={{ backgroundColor: toolChipBaseStyle.backgroundColor }}
+                        >
+                          {closeIcon()}
+                        </button>
+                      </div>
+                    </div>
+                  </Draggable>
+                ) : undefined}
+              </div>
             </div>
-          </div>
+          </DashboardProvider>
         </context.Provider>
       </div>
-      </>)}
     </>
   );
 };

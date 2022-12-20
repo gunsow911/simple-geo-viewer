@@ -21,12 +21,12 @@ const shizuokaBuilding = (param?: string) => {
   return [
     {
       param: param === '2019',
-      name: '公共2019',
+      name: '公共',
       color: [220, 220, 150, 180],
     },
     {
       param: param === '2020',
-      name: '教育2020',
+      name: '教育',
       color: [150, 220, 150, 180],
     },
     {
@@ -36,8 +36,8 @@ const shizuokaBuilding = (param?: string) => {
     },
     {
       param: x === 2,
-      name: '事務所系',
-      color: [150, 220, 150, 180],
+      name: '事業所系',
+      color: [0, 150, 220, 180],
     },
     {
       param: x !== 1 && x!== 2,

@@ -8,9 +8,7 @@
         "lng": 138.903424,
         "lat": 35.203515,
         "zoom": 14,
-        "id": [
-          "susono-arial"
-        ],
+        "id": ["susono-arial"],
         "checked": false,
         "color": "#44a196",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-photo-1"
@@ -21,9 +19,7 @@
         "lng": 138.903424,
         "lat": 35.203515,
         "zoom": 12,
-        "id": [
-          "susono-arial-2020"
-        ],
+        "id": ["susono-arial-2020"],
         "checked": true,
         "color": "#44a196",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-photo-1"
@@ -39,9 +35,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 14,
-        "id": [
-          "shizuoka-building"
-        ],
+        "id": ["shizuoka-building"],
         "checked": true,
         "color": "#333333"
       }
@@ -56,9 +50,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 12,
-        "id": [
-          "susono-kyojyu-yudo"
-        ],
+        "id": ["susono-kyojyu-yudo"],
         "checked": false,
         "color": "#dca050",
         "download_url": "https://www.geospatial.jp/ckan/dataset/yuudoukuiiki"
@@ -69,9 +61,7 @@
         "lng": 138.9185,
         "lat": 35.2164,
         "zoom": 14,
-        "id": [
-          "susono-toshi-kinou-yudo-iwanami"
-        ],
+        "id": ["susono-toshi-kinou-yudo-iwanami"],
         "checked": false,
         "color": "#a050dc",
         "download_url": "https://www.geospatial.jp/ckan/dataset/yuudoukuiiki"
@@ -82,9 +72,7 @@
         "lng": 138.9078,
         "lat": 35.1723,
         "zoom": 14,
-        "id": [
-          "susono-toshi-kinou-yudo-susono"
-        ],
+        "id": ["susono-toshi-kinou-yudo-susono"],
         "checked": false,
         "color": "#4050dc",
         "download_url": "https://www.geospatial.jp/ckan/dataset/yuudoukuiiki"
@@ -95,9 +83,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 13,
-        "id": [
-          "susono-urbanization-area"
-        ],
+        "id": ["susono-urbanization-area"],
         "checked": false,
         "color": "#dcdc50",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-toshi-2019-6"
@@ -108,9 +94,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 13,
-        "id": [
-          "susono-land-use"
-        ],
+        "id": ["susono-land-use"],
         "checked": false,
         "color": "#dc5050",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-toshi-2019-6"
@@ -121,9 +105,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 13,
-        "id": [
-          "susono-land-relocation"
-        ],
+        "id": ["susono-land-relocation"],
         "checked": false,
         "color": "#50dc50",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-toshi-2019-6"
@@ -134,9 +116,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 13,
-        "id": [
-          "susono-area-plan"
-        ],
+        "id": ["susono-area-plan"],
         "checked": false,
         "color": "#50dcdc",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-toshi-2019-6"
@@ -147,9 +127,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 13,
-        "id": [
-          "susono-jyunbouka"
-        ],
+        "id": ["susono-jyunbouka"],
         "checked": false,
         "color": "#ae5574",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-toshi-2019-6"
@@ -160,9 +138,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 13,
-        "id": [
-          "susono-toshisonota"
-        ],
+        "id": ["susono-toshisonota"],
         "checked": false,
         "color": "#435574",
         "udownload_urlrl": "https://www.geospatial.jp/ckan/dataset/susono-toshi-2019-6"
@@ -173,9 +149,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 13,
-        "id": [
-          "susono-toshikouen"
-        ],
+        "id": ["susono-toshikouen"],
         "checked": false,
         "color": "#43b57b",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-toshi-2019-6"
@@ -186,9 +160,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 13,
-        "id": [
-          "susono-toshiryokuchi"
-        ],
+        "id": ["susono-toshiryokuchi"],
         "checked": false,
         "color": "#43fca9",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-toshi-2019-6"
@@ -204,9 +176,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 14,
-        "id": [
-          "susono-school"
-        ],
+        "id": ["susono-school"],
         "checked": true,
         "icon": "images/school_yellow.png",
         "color": "#f0f060",
@@ -218,9 +188,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 14,
-        "id": [
-          "susono-aed"
-        ],
+        "id": ["susono-aed"],
         "checked": true,
         "icon": "images/AED_yellow.png",
         "color": "#f0f060",
@@ -232,9 +200,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 14,
-        "id": [
-          "susono-kankou"
-        ],
+        "id": ["susono-kankou"],
         "checked": true,
         "icon": "images/tourism_yellow.png",
         "color": "#f0f060",
@@ -246,9 +212,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 15,
-        "id": [
-          "susono-public-facilities"
-        ],
+        "id": ["susono-public-facilities"],
         "checked": true,
         "color": "#f0f060",
         "icon": "images/publicbulding_yellow.png",
@@ -260,9 +224,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 16,
-        "id": [
-          "susono-public-wifi"
-        ],
+        "id": ["susono-public-wifi"],
         "checked": false,
         "color": "#f0f060",
         "icon": "images/Wifi_yellow.png",
@@ -274,9 +236,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 15,
-        "id": [
-          "susono_hotels_and_campsites"
-        ],
+        "id": ["susono_hotels_and_campsites"],
         "checked": false,
         "color": "#f0f060",
         "icon": "images/hotel_yellow.png",
@@ -288,9 +248,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 15,
-        "id": [
-          "susono_medical_institution"
-        ],
+        "id": ["susono_medical_institution"],
         "checked": false,
         "color": "#f0f060",
         "icon": "images/hospital_yellow.png",
@@ -302,9 +260,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 16,
-        "id": [
-          "susono_wikipedia_qrcode"
-        ],
+        "id": ["susono_wikipedia_qrcode"],
         "checked": false,
         "color": "#f0f060",
         "icon": "images/tourism_yellow.png",
@@ -321,9 +277,7 @@
         "lng": 138.91,
         "lat": 35.18,
         "zoom": 10,
-        "id": [
-          "susono-railway-railway"
-        ],
+        "id": ["susono-railway-railway"],
         "checked": true,
         "color": "#666b34"
       },
@@ -333,9 +287,7 @@
         "lng": 138.91,
         "lat": 35.18,
         "zoom": 13,
-        "id": [
-          "susono-railway-station"
-        ],
+        "id": ["susono-railway-station"],
         "checked": true,
         "color": "#669500"
       }
@@ -351,9 +303,7 @@
         "lng": 138.92,
         "lat": 35.18,
         "zoom": 12.5,
-        "id": [
-          "fujikyu_trip_wd"
-        ],
+        "id": ["fujikyu_trip_wd"],
         "checked": true,
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-fujikyu-citybus",
         "color": "#fa5032",
@@ -365,9 +315,7 @@
         "lng": 138.92,
         "lat": 35.18,
         "zoom": 12.5,
-        "id": [
-          "fujikyu_trip_sat"
-        ],
+        "id": ["fujikyu_trip_sat"],
         "checked": false,
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-fujikyu-citybus",
         "color": "#fa5032",
@@ -379,9 +327,7 @@
         "lng": 138.92,
         "lat": 35.18,
         "zoom": 12.5,
-        "id": [
-          "fujikyu_trip_holiday"
-        ],
+        "id": ["fujikyu_trip_holiday"],
         "checked": false,
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-fujikyu-citybus",
         "color": "#fa5032",
@@ -393,9 +339,7 @@
         "lng": 138.91,
         "lat": 35.18,
         "zoom": 16,
-        "id": [
-          "fujikyu-busstop"
-        ],
+        "id": ["fujikyu-busstop"],
         "checked": true,
         "color": "#f0f060",
         "icon": "images/busstop_red.png",
@@ -407,9 +351,7 @@
         "lng": 138.92,
         "lat": 35.18,
         "zoom": 11,
-        "id": [
-          "fujikyu_line"
-        ],
+        "id": ["fujikyu_line"],
         "checked": true,
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-fujikyu-citybus",
         "color": "#fa5032"
@@ -425,9 +367,7 @@
         "lng": 138.92,
         "lat": 35.18,
         "zoom": 12.5,
-        "id": [
-          "susonoru"
-        ],
+        "id": ["susonoru"],
         "checked": true,
         "color": "#44baf5",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-gtfs",
@@ -439,9 +379,7 @@
         "lng": 138.91,
         "lat": 35.18,
         "zoom": 16,
-        "id": [
-          "susono-busstop"
-        ],
+        "id": ["susono-busstop"],
         "checked": true,
         "color": "#f0f060",
         "icon": "images/busstop_yellow.png",
@@ -453,9 +391,7 @@
         "lng": 138.91,
         "lat": 35.18,
         "zoom": 11,
-        "id": [
-          "susono-busline"
-        ],
+        "id": ["susono-busline"],
         "checked": true,
         "color": "#44baf5",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-gtfs"
@@ -471,9 +407,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 13,
-        "id": [
-          "susono-roadh30-road-500"
-        ],
+        "id": ["susono-roadh30-road-500"],
         "checked": false,
         "color": "#89BDDE",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-bridge"
@@ -484,9 +418,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 13,
-        "id": [
-          "susono-roadh30-road-1000"
-        ],
+        "id": ["susono-roadh30-road-1000"],
         "checked": false,
         "color": "#4D7198",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-bridge"
@@ -497,9 +429,7 @@
         "lng": 138.91,
         "lat": 35.18,
         "zoom": 15,
-        "id": [
-          "susono-roadh30-road"
-        ],
+        "id": ["susono-roadh30-road"],
         "checked": false,
         "color": "#B7C1D2",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-bridge"
@@ -510,9 +440,7 @@
         "lng": 138.91,
         "lat": 35.18,
         "zoom": 15,
-        "id": [
-          "susono-roadh30-road-bridge"
-        ],
+        "id": ["susono-roadh30-road-bridge"],
         "checked": false,
         "color": "#f0f060",
         "icon": "images/bridge_yellow.png",
@@ -521,7 +449,7 @@
     ]
   },
   {
-    "category": "裾野市防災マップ(H28.3時点）",
+    "category": "裾野市防災マップ(H28.3時点）",
     "data": [
       {
         "title": "浸水想定_黄瀬川(0.5m未満)「出典：静岡県GIS（洪水浸水想定区域図）」",
@@ -529,9 +457,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 15,
-        "id": [
-          "susono-kisegawa-flood-01"
-        ],
+        "id": ["susono-kisegawa-flood-01"],
         "checked": false,
         "color": "#f9d675"
       },
@@ -541,9 +467,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 15,
-        "id": [
-          "susono-kisegawa-flood-02"
-        ],
+        "id": ["susono-kisegawa-flood-02"],
         "checked": false,
         "color": "#ccff99"
       },
@@ -553,9 +477,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 15,
-        "id": [
-          "susono-kisegawa-flood-03"
-        ],
+        "id": ["susono-kisegawa-flood-03"],
         "checked": false,
         "color": "#99FFFF"
       },
@@ -565,9 +487,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 15,
-        "id": [
-          "susono-kisegawa-flood-04"
-        ],
+        "id": ["susono-kisegawa-flood-04"],
         "checked": false,
         "color": "#1E90FF"
       },
@@ -577,9 +497,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 15,
-        "id": [
-          "susono-oobagawa-flood-01"
-        ],
+        "id": ["susono-oobagawa-flood-01"],
         "checked": false,
         "color": "#f9d675"
       },
@@ -589,9 +507,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 15,
-        "id": [
-          "susono-oobagawa-flood-02"
-        ],
+        "id": ["susono-oobagawa-flood-02"],
         "checked": false,
         "color": "#ccff99"
       },
@@ -601,9 +517,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 15,
-        "id": [
-          "susono-oobagawa-flood-03"
-        ],
+        "id": ["susono-oobagawa-flood-03"],
         "checked": false,
         "color": "#99FFFF"
       },
@@ -613,9 +527,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 15,
-        "id": [
-          "susono-oobagawa-flood-04"
-        ],
+        "id": ["susono-oobagawa-flood-04"],
         "checked": false,
         "color": "#1E90FF"
       },
@@ -625,9 +537,7 @@
         "lng": 138.91,
         "lat": 35.18,
         "zoom": 15,
-        "id": [
-          "susono-bousaih28-yusouro"
-        ],
+        "id": ["susono-bousaih28-yusouro"],
         "checked": false,
         "color": "#333333"
       },
@@ -637,9 +547,7 @@
         "lng": 138.91,
         "lat": 35.18,
         "zoom": 15,
-        "id": [
-          "susono-bousaih28-yusouro-city"
-        ],
+        "id": ["susono-bousaih28-yusouro-city"],
         "checked": false,
         "color": "#333333",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-bousai-h28-3"
@@ -650,9 +558,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 15,
-        "id": [
-          "susono-bosaih28-keisya_r"
-        ],
+        "id": ["susono-bosaih28-keisya_r"],
         "checked": false,
         "color": "#FFAE2B"
       },
@@ -662,9 +568,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 15,
-        "id": [
-          "susono-bosaih28-keisya_y"
-        ],
+        "id": ["susono-bosaih28-keisya_y"],
         "checked": false,
         "color": "#FF832B"
       },
@@ -674,9 +578,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 15,
-        "id": [
-          "susono-bosaih28-doseki_r"
-        ],
+        "id": ["susono-bosaih28-doseki_r"],
         "checked": false,
         "color": "#F4ADC7"
       },
@@ -686,9 +588,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 15,
-        "id": [
-          "susono-bosaih28-doseki_y"
-        ],
+        "id": ["susono-bosaih28-doseki_y"],
         "checked": false,
         "color": "#ff99ff"
       },
@@ -698,9 +598,7 @@
         "lng": 138.8720984,
         "lat": 35.24766,
         "zoom": 15,
-        "id": [
-          "susono-bosaih28-refreshcenter"
-        ],
+        "id": ["susono-bosaih28-refreshcenter"],
         "checked": false,
         "icon": "images/publicfacility_yellow.png",
         "color": "#f0f060",
@@ -712,9 +610,7 @@
         "lng": 138.9097425,
         "lat": 35.179235,
         "zoom": 15,
-        "id": [
-          "susono-bosaih28-firstaid"
-        ],
+        "id": ["susono-bosaih28-firstaid"],
         "checked": false,
         "color": "#f0f060",
         "icon": "images/medicalcenter_yellow.png",
@@ -726,9 +622,7 @@
         "lng": 138.911929616,
         "lat": 35.178901,
         "zoom": 15,
-        "id": [
-          "susono-bosaih28-hospital"
-        ],
+        "id": ["susono-bosaih28-hospital"],
         "checked": false,
         "color": "#f0f060",
         "icon": "images/medicalcenter_yellow.png",
@@ -740,9 +634,7 @@
         "lng": 138.9142461,
         "lat": 35.199425,
         "zoom": 15,
-        "id": [
-          "susono-bosaih28-police-saigai"
-        ],
+        "id": ["susono-bosaih28-police-saigai"],
         "checked": false,
         "icon": "images/government_yellow.png",
         "color": "#f0f060",
@@ -754,9 +646,7 @@
         "lng": 138.906566,
         "lat": 35.1670576,
         "zoom": 15,
-        "id": [
-          "susono-bosaih28-police"
-        ],
+        "id": ["susono-bosaih28-police"],
         "checked": false,
         "icon": "images/government_yellow.png",
         "color": "#f0f060",
@@ -768,9 +658,7 @@
         "lng": 138.9036233,
         "lat": 35.167438,
         "zoom": 15,
-        "id": [
-          "susono-bosaih28-publichall"
-        ],
+        "id": ["susono-bosaih28-publichall"],
         "checked": false,
         "color": "#f0f060",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-bousai-h28-3",
@@ -782,9 +670,7 @@
         "lng": 138.90547,
         "lat": 35.176985,
         "zoom": 13.5,
-        "id": [
-          "susono-bosaih28-wideareaevacuationsite"
-        ],
+        "id": ["susono-bosaih28-wideareaevacuationsite"],
         "checked": false,
         "color": "#00ffff",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-bousai-h28-3"
@@ -795,9 +681,7 @@
         "lng": 138.90442,
         "lat": 35.156269,
         "zoom": 15,
-        "id": [
-          "susono-bosaih28-shelter"
-        ],
+        "id": ["susono-bosaih28-shelter"],
         "checked": false,
         "color": "#f0f060",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-bousai-h28-3",
@@ -809,9 +693,7 @@
         "lng": 138.90750496,
         "lat": 35.1700929,
         "zoom": 15,
-        "id": [
-          "susono-bosaih28-firestation"
-        ],
+        "id": ["susono-bosaih28-firestation"],
         "checked": false,
         "color": "#f0f060",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-bousai-h28-3",
@@ -823,9 +705,7 @@
         "lng": 138.90750496,
         "lat": 35.1700929,
         "zoom": 15,
-        "id": [
-          "susono-bosaih28-firefacility"
-        ],
+        "id": ["susono-bosaih28-firefacility"],
         "checked": false,
         "color": "#f0f060",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-bousai-h28-3",
@@ -837,9 +717,7 @@
         "lng": 138.90750496,
         "lat": 35.1700929,
         "zoom": 15,
-        "id": [
-          "susono-bosaih28-walfare"
-        ],
+        "id": ["susono-bosaih28-walfare"],
         "checked": false,
         "color": "#f0f060",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-bousai-h28-3",
@@ -851,9 +729,7 @@
         "lng": 138.9142461,
         "lat": 35.199425,
         "zoom": 15,
-        "id": [
-          "susono-bosaih28-supply"
-        ],
+        "id": ["susono-bosaih28-supply"],
         "checked": false,
         "color": "#f0f060",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-bousai-h28-3",
@@ -870,9 +746,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 13,
-        "id": [
-          "susono_gyoseiH30"
-        ],
+        "id": ["susono_gyoseiH30"],
         "checked": false,
         "color": "#b2ccca",
         "download_url": "https://www.geospatial.jp/ckan/dataset/susono-area-2019-4-1"
@@ -888,9 +762,7 @@
         "lng": 138.924109,
         "lat": 35.056648,
         "zoom": 16,
-        "id": [
-          "28-D0201-01"
-        ],
+        "id": ["28-D0201-01"],
         "checked": true,
         "color": "#44a196",
         "download_url": "https://www.geospatial.jp/ckan/dataset/28-d0201-01",
@@ -902,9 +774,7 @@
         "lng": 138.4019444,
         "lat": 35.01027778,
         "zoom": 16,
-        "id": [
-          "29-K2452-01"
-        ],
+        "id": ["29-K2452-01"],
         "checked": false,
         "color": "#44a196",
         "download_url": "https://www.geospatial.jp/ckan/dataset/29-k2452-01"
@@ -915,9 +785,7 @@
         "lng": 138.4016667,
         "lat": 35.0075,
         "zoom": 16,
-        "id": [
-          "28-K2450-01"
-        ],
+        "id": ["28-K2450-01"],
         "checked": false,
         "color": "#44a196",
         "download_url": "https://www.geospatial.jp/ckan/dataset/28-k2450-01"
@@ -933,9 +801,7 @@
         "zoom": 16,
         "lng": 138.0138937,
         "lat": 34.7752332,
-        "id": [
-          "1-kakegawa"
-        ],
+        "id": ["1-kakegawa"],
         "checked": false,
         "color": "#44a196",
         "download_url": "https://www.geospatial.jp/ckan/dataset/kakegawacastle"
@@ -946,9 +812,7 @@
         "zoom": 18.7,
         "lng": 138.9620469,
         "lat": 35.0396278,
-        "id": [
-          "2-nirayama"
-        ],
+        "id": ["2-nirayama"],
         "checked": false,
         "color": "#44a196",
         "download_url": "https://www.geospatial.jp/ckan/dataset/h30nirayama"
@@ -964,10 +828,7 @@
         "lng": 138.906795,
         "lat": 35.207141,
         "zoom": 12,
-        "id": [
-          "deckgl-circle-2014",
-          "deckgl-arc-2014"
-        ],
+        "id": ["deckgl-circle-2014", "deckgl-arc-2014"],
         "checked": false,
         "color": "#d0d060"
       },
@@ -977,10 +838,7 @@
         "lng": 138.906795,
         "lat": 35.207141,
         "zoom": 12,
-        "id": [
-          "deckgl-circle-2015",
-          "deckgl-arc-2015"
-        ],
+        "id": ["deckgl-circle-2015", "deckgl-arc-2015"],
         "checked": false,
         "color": "#90c090"
       },
@@ -990,10 +848,7 @@
         "lng": 138.906795,
         "lat": 35.207141,
         "zoom": 12,
-        "id": [
-          "deckgl-circle-2016",
-          "deckgl-arc-2016"
-        ],
+        "id": ["deckgl-circle-2016", "deckgl-arc-2016"],
         "checked": false,
         "color": "#f06040"
       }
@@ -1008,9 +863,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 12,
-        "id": [
-          "boundaryvolume"
-        ],
+        "id": ["boundaryvolume"],
         "checked": false,
         "color": "#00a0f0"
       },
@@ -1020,9 +873,7 @@
         "lng": 138.9067,
         "lat": 35.174,
         "zoom": 12,
-        "id": [
-          "boundaryvolume_h"
-        ],
+        "id": ["boundaryvolume_h"],
         "checked": false,
         "color": "#00a0f0"
       },
@@ -1032,9 +883,7 @@
         "lng": 138.91,
         "lat": 35.18,
         "zoom": 12,
-        "id": [
-          "linkvolume"
-        ],
+        "id": ["linkvolume"],
         "checked": true,
         "color": "#333333"
       },
@@ -1044,9 +893,7 @@
         "lng": 138.86407,
         "lat": 35.11572,
         "zoom": 12,
-        "id": [
-          "persontrips-weekday"
-        ],
+        "id": ["persontrips-weekday"],
         "checked": false,
         "color": "#00a0f0"
       },
@@ -1056,9 +903,7 @@
         "lng": 138.86407,
         "lat": 35.11572,
         "zoom": 12,
-        "id": [
-          "persontrips-holiday"
-        ],
+        "id": ["persontrips-holiday"],
         "checked": false,
         "color": "#f00060"
       }
@@ -1073,9 +918,7 @@
         "lng": 138.3837,
         "lat": 34.9785,
         "zoom": 10,
-        "id": [
-          "prefectural-bridge"
-        ],
+        "id": ["prefectural-bridge"],
         "checked": false,
         "color": "#00c0ff",
         "download_url": "https://www.geospatial.jp/ckan/dataset/shizuokafacilities-bridge",
@@ -1092,9 +935,7 @@
         "lng": 138.3837,
         "lat": 34.9785,
         "zoom": 10,
-        "id": [
-          "prefectural-tunnel"
-        ],
+        "id": ["prefectural-tunnel"],
         "checked": false,
         "color": "#00c0ff",
         "download_url": "https://www.geospatial.jp/ckan/dataset/shizuokafacilities-tunnel",
@@ -1111,9 +952,7 @@
         "lng": 138.3837,
         "lat": 34.9785,
         "zoom": 10,
-        "id": [
-          "prefectural-footbridge"
-        ],
+        "id": ["prefectural-footbridge"],
         "checked": false,
         "color": "#00c0ff",
         "download_url": "https://www.geospatial.jp/ckan/dataset/shizuokafacilities-footbridge",
@@ -1130,9 +969,7 @@
         "lng": 138.3837,
         "lat": 34.9785,
         "zoom": 10,
-        "id": [
-          "prefectural-underpass"
-        ],
+        "id": ["prefectural-underpass"],
         "checked": false,
         "color": "#00c0ff",
         "download_url": "https://www.geospatial.jp/ckan/dataset/shizuokafacilities-underpass",
@@ -1149,9 +986,7 @@
         "lng": 138.3837,
         "lat": 34.9785,
         "zoom": 10,
-        "id": [
-          "prefectural-roadlight"
-        ],
+        "id": ["prefectural-roadlight"],
         "checked": false,
         "color": "#00c0ff",
         "download_url": "https://www.geospatial.jp/ckan/dataset/shizuokafacilities-light",
@@ -1168,9 +1003,7 @@
         "lng": 138.3837,
         "lat": 34.9785,
         "zoom": 10,
-        "id": [
-          "prefectural-guidesign"
-        ],
+        "id": ["prefectural-guidesign"],
         "checked": false,
         "color": "#00c0ff",
         "download_url": "https://www.geospatial.jp/ckan/dataset/shizuokafacilities-sign",
@@ -1187,9 +1020,7 @@
         "lng": 138.8553997,
         "lat": 35.1846039,
         "zoom": 12,
-        "id": [
-          "732c04ae-70e2-46c0-8eba-14ade5652f6f"
-        ],
+        "id": ["732c04ae-70e2-46c0-8eba-14ade5652f6f"],
         "checked": true,
         "color": "#FFFF00",
         "download_url": "https://www.geospatial.jp/ckan/dataset/dsusono-wadai",
@@ -1206,9 +1037,7 @@
         "lng": 138.852569,
         "lat": 35.233324,
         "zoom": 14,
-        "id": [
-          "7b27e8ca-2844-4cb2-ae25-0d8a74765406"
-        ],
+        "id": ["7b27e8ca-2844-4cb2-ae25-0d8a74765406"],
         "checked": true,
         "color": "#FFFF00",
         "download_url": "https://www.geospatial.jp/ckan/dataset/dsusono-specificthemes",
@@ -1217,7 +1046,7 @@
     ]
   },
   {
-    "category": "農業センサスデータ",
+    "category": "農業センサスデータ",
     "data": [
       {
         "title": "有機農業に取り組んでいる経営体の取組品目別作付（栽培）経営体数と（栽培）面積",
@@ -1225,9 +1054,7 @@
         "lng": 138.876,
         "lat": 35.22,
         "zoom": 11,
-        "id": [
-          "census-agriculture-susono-001"
-        ],
+        "id": ["census-agriculture-susono-001"],
         "checked": false,
         "color": "#c0c0c0",
         "url": "https://www.geospatial.jp/ckan/dataset/census-agriculture-susono-001"
@@ -1238,9 +1065,7 @@
         "lng": 138.876,
         "lat": 35.22,
         "zoom": 11,
-        "id": [
-          "census-agriculture-susono-002"
-        ],
+        "id": ["census-agriculture-susono-002"],
         "checked": false,
         "color": "#c0c0c0",
         "url": "https://www.geospatial.jp/ckan/dataset/census-agriculture-susono-002"
@@ -1251,9 +1076,7 @@
         "lng": 138.876,
         "lat": 35.22,
         "zoom": 11,
-        "id": [
-          "census-agriculture-susono-003"
-        ],
+        "id": ["census-agriculture-susono-003"],
         "checked": false,
         "color": "#c0c0c0",
         "url": "https://www.geospatial.jp/ckan/dataset/census-agriculture-susono-003"
@@ -1264,9 +1087,7 @@
         "lng": 138.876,
         "lat": 35.22,
         "zoom": 11,
-        "id": [
-          "census-agriculture-susono-004"
-        ],
+        "id": ["census-agriculture-susono-004"],
         "checked": false,
         "color": "#c0c0c0",
         "url": "https://www.geospatial.jp/ckan/dataset/census-agriculture-susono-004"
@@ -1277,9 +1098,7 @@
         "lng": 138.876,
         "lat": 35.22,
         "zoom": 11,
-        "id": [
-          "census-agriculture-susono-005"
-        ],
+        "id": ["census-agriculture-susono-005"],
         "checked": false,
         "color": "#c0c0c0",
         "url": "https://www.geospatial.jp/ckan/dataset/census-agriculture-susono-005"
@@ -1290,9 +1109,7 @@
         "lng": 138.876,
         "lat": 35.22,
         "zoom": 11,
-        "id": [
-          "census-agriculture-susono-006"
-        ],
+        "id": ["census-agriculture-susono-006"],
         "checked": false,
         "color": "#c0c0c0",
         "url": "https://www.geospatial.jp/ckan/dataset/census-agriculture-susono-006"
@@ -1303,9 +1120,7 @@
         "lng": 138.876,
         "lat": 35.22,
         "zoom": 11,
-        "id": [
-          "census-agriculture-susono-007"
-        ],
+        "id": ["census-agriculture-susono-007"],
         "checked": false,
         "color": "#c0c0c0",
         "url": "https://www.geospatial.jp/ckan/dataset/census-agriculture-susono-007"
@@ -1316,9 +1131,7 @@
         "lng": 138.876,
         "lat": 35.22,
         "zoom": 11,
-        "id": [
-          "census-agriculture-susono-008"
-        ],
+        "id": ["census-agriculture-susono-008"],
         "checked": false,
         "color": "#c0c0c0",
         "url": "https://www.geospatial.jp/ckan/dataset/census-agriculture-susono-008"
@@ -1329,9 +1142,7 @@
         "lng": 138.876,
         "lat": 35.22,
         "zoom": 11,
-        "id": [
-          "census-agriculture-susono-009"
-        ],
+        "id": ["census-agriculture-susono-009"],
         "checked": false,
         "color": "#c0c0c0",
         "url": "https://www.geospatial.jp/ckan/dataset/census-agriculture-susono-009"
@@ -1342,9 +1153,7 @@
         "lng": 138.876,
         "lat": 35.22,
         "zoom": 11,
-        "id": [
-          "census-agriculture-susono-010"
-        ],
+        "id": ["census-agriculture-susono-010"],
         "checked": false,
         "color": "#c0c0c0",
         "url": "https://www.geospatial.jp/ckan/dataset/census-agriculture-susono-010"
@@ -1361,9 +1170,7 @@
         "lng": 138.379982,
         "lat": 34.972835,
         "zoom": 14,
-        "id": [
-          "i059ac989-b2b6-49b1-b51f-b209a2dd62ce_p33-14_22"
-        ],
+        "id": ["i059ac989-b2b6-49b1-b51f-b209a2dd62ce_p33-14_22"],
         "checked": false,
         "icon": "images/shop_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p33-22"
@@ -1374,9 +1181,7 @@
         "lng": 137.753011,
         "lat": 34.659517,
         "zoom": 14,
-        "id": [
-          "i105fbd11-39f1-47db-b51f-6e97900be14d_biomasspowerstation22"
-        ],
+        "id": ["i105fbd11-39f1-47db-b51f-6e97900be14d_biomasspowerstation22"],
         "checked": false,
         "icon": "images/industrial_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p03-22"
@@ -1387,9 +1192,7 @@
         "lng": 138.775356,
         "lat": 34.771676,
         "zoom": 14,
-        "id": [
-          "i105fbd11-39f1-47db-b51f-6e97900be14d_generalhydroelectricpowerplant22"
-        ],
+        "id": ["i105fbd11-39f1-47db-b51f-6e97900be14d_generalhydroelectricpowerplant22"],
         "checked": false,
         "icon": "images/industrial_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p03-22"
@@ -1400,9 +1203,7 @@
         "lng": 138.146089,
         "lat": 34.621557,
         "zoom": 14,
-        "id": [
-          "i105fbd11-39f1-47db-b51f-6e97900be14d_nuclearpowerplant22"
-        ],
+        "id": ["i105fbd11-39f1-47db-b51f-6e97900be14d_nuclearpowerplant22"],
         "checked": false,
         "icon": "images/industrial_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p03-22"
@@ -1413,9 +1214,7 @@
         "lng": 138.686344,
         "lat": 35.148956,
         "zoom": 14,
-        "id": [
-          "i105fbd11-39f1-47db-b51f-6e97900be14d_photovoltaicpowerplant22"
-        ],
+        "id": ["i105fbd11-39f1-47db-b51f-6e97900be14d_photovoltaicpowerplant22"],
         "checked": false,
         "icon": "images/industrial_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p03-22"
@@ -1426,9 +1225,7 @@
         "lng": 138.184028,
         "lat": 35.32025,
         "zoom": 14,
-        "id": [
-          "i105fbd11-39f1-47db-b51f-6e97900be14d_pondinformation22"
-        ],
+        "id": ["i105fbd11-39f1-47db-b51f-6e97900be14d_pondinformation22"],
         "checked": false,
         "icon": "images/watergate_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p03-22"
@@ -1439,9 +1236,7 @@
         "lng": 137.751169,
         "lat": 34.703416,
         "zoom": 14,
-        "id": [
-          "i105fbd11-39f1-47db-b51f-6e97900be14d_powerplantcomplex22"
-        ],
+        "id": ["i105fbd11-39f1-47db-b51f-6e97900be14d_powerplantcomplex22"],
         "checked": false,
         "icon": "images/industrial_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p03-22"
@@ -1452,9 +1247,7 @@
         "lng": 138.184028,
         "lat": 35.32025,
         "zoom": 14,
-        "id": [
-          "i105fbd11-39f1-47db-b51f-6e97900be14d_pumpedstoragehydroelectricplant22"
-        ],
+        "id": ["i105fbd11-39f1-47db-b51f-6e97900be14d_pumpedstoragehydroelectricplant22"],
         "checked": false,
         "icon": "images/industrial_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p03-22"
@@ -1465,9 +1258,7 @@
         "lng": 138.663899,
         "lat": 35.128883,
         "zoom": 14,
-        "id": [
-          "i105fbd11-39f1-47db-b51f-6e97900be14d_thermalpowerplant22"
-        ],
+        "id": ["i105fbd11-39f1-47db-b51f-6e97900be14d_thermalpowerplant22"],
         "checked": false,
         "icon": "images/industrial_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p03-22"
@@ -1478,9 +1269,7 @@
         "lng": 138.227526,
         "lat": 34.607049,
         "zoom": 14,
-        "id": [
-          "i105fbd11-39f1-47db-b51f-6e97900be14d_windpowerplant22"
-        ],
+        "id": ["i105fbd11-39f1-47db-b51f-6e97900be14d_windpowerplant22"],
         "checked": false,
         "icon": "images/industrial_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p03-22"
@@ -1491,9 +1280,7 @@
         "lng": 137.978439,
         "lat": 34.749253,
         "zoom": 14,
-        "id": [
-          "i10a18a17-29d6-404b-8bec-ea0520b45338_p13-11_22"
-        ],
+        "id": ["i10a18a17-29d6-404b-8bec-ea0520b45338_p13-11_22"],
         "checked": false,
         "icon": "images/park_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p13-22"
@@ -1504,9 +1291,7 @@
         "lng": 138.861817,
         "lat": 35.249424,
         "zoom": 14,
-        "id": [
-          "i1a161149-2ce4-4e38-9213-59b80a69d0cc_l05-0922-gindustrialcomplex"
-        ],
+        "id": ["i1a161149-2ce4-4e38-9213-59b80a69d0cc_l05-0922-gindustrialcomplex"],
         "checked": false,
         "icon": "images/industrial_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-l05-22"
@@ -1517,9 +1302,7 @@
         "lng": 138.689,
         "lat": 35.149609,
         "zoom": 14,
-        "id": [
-          "i1a161149-2ce4-4e38-9213-59b80a69d0cc_l05-0922-gisolatedindustrialsite"
-        ],
+        "id": ["i1a161149-2ce4-4e38-9213-59b80a69d0cc_l05-0922-gisolatedindustrialsite"],
         "checked": false,
         "icon": "images/industrial_red.png",
         "color": "#FF832B",
@@ -1531,9 +1314,7 @@
         "lng": 138.384908,
         "lat": 34.971182,
         "zoom": 14,
-        "id": [
-          "i1d3b38e5-a631-4756-be64-dc1cdbfcfb89_p27-13_22"
-        ],
+        "id": ["i1d3b38e5-a631-4756-be64-dc1cdbfcfb89_p27-13_22"],
         "checked": false,
         "icon": "images/cultual_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p27-22"
@@ -1544,9 +1325,7 @@
         "lng": 138.384908,
         "lat": 34.971182,
         "zoom": 14,
-        "id": [
-          "i248ffb6f-197f-47b5-8ba3-902799ae13df_p02-06_22-g_publicfacility"
-        ],
+        "id": ["i248ffb6f-197f-47b5-8ba3-902799ae13df_p02-06_22-g_publicfacility"],
         "checked": false,
         "icon": "images/cultual_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p02-22"
@@ -1557,9 +1336,7 @@
         "lng": 137.696768,
         "lat": 34.675545,
         "zoom": 14,
-        "id": [
-          "i28b7de2f-0af1-4d03-b2f5-1f72ba3df4c0_p14-15_22"
-        ],
+        "id": ["i28b7de2f-0af1-4d03-b2f5-1f72ba3df4c0_p14-15_22"],
         "checked": false,
         "icon": "images/cultual_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p14-22"
@@ -1570,9 +1347,7 @@
         "lng": 138.421548,
         "lat": 34.982015,
         "zoom": 14,
-        "id": [
-          "i36636519-4958-4c84-bde9-520aeade4f1e_p26-13_22"
-        ],
+        "id": ["i36636519-4958-4c84-bde9-520aeade4f1e_p26-13_22"],
         "checked": false,
         "icon": "images/publicfacility_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p26-22"
@@ -1583,9 +1358,7 @@
         "lng": 138.383134,
         "lat": 34.975267,
         "zoom": 14,
-        "id": [
-          "i3a87acc6-c6bd-4e0e-8985-07d07b8149f4_p18-1222policestation"
-        ],
+        "id": ["i3a87acc6-c6bd-4e0e-8985-07d07b8149f4_p18-1222policestation"],
         "checked": false,
         "icon": "images/publicbulding_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p18-22"
@@ -1596,9 +1369,7 @@
         "lng": 138.895059,
         "lat": 35.323662,
         "zoom": 14,
-        "id": [
-          "i3a87acc6-c6bd-4e0e-8985-07d07b8149f4_p18-1222policestationjurisdiction"
-        ],
+        "id": ["i3a87acc6-c6bd-4e0e-8985-07d07b8149f4_p18-1222policestationjurisdiction"],
         "checked": false,
         "icon": "images/publicbulding_red.png",
         "color": "#FF832B",
@@ -1610,9 +1381,7 @@
         "lng": 138.940821,
         "lat": 35.075092,
         "zoom": 14,
-        "id": [
-          "i3d8344d0-c4f9-4ef2-9c9b-a1ba5a823303_gesuiponpu22"
-        ],
+        "id": ["i3d8344d0-c4f9-4ef2-9c9b-a1ba5a823303_gesuiponpu22"],
         "checked": false,
         "icon": "images/publicbulding_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p22-22"
@@ -1623,9 +1392,7 @@
         "lng": 138.245201,
         "lat": 34.743216,
         "zoom": 14,
-        "id": [
-          "i3d8344d0-c4f9-4ef2-9c9b-a1ba5a823303_gesuishori22"
-        ],
+        "id": ["i3d8344d0-c4f9-4ef2-9c9b-a1ba5a823303_gesuishori22"],
         "checked": false,
         "icon": "images/publicbulding_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p22-22"
@@ -1636,9 +1403,7 @@
         "lng": 138.938769,
         "lat": 35.001646,
         "zoom": 14,
-        "id": [
-          "i58b59bcb-260e-4b71-9edd-7c8d9845fb40_p16-12_22"
-        ],
+        "id": ["i58b59bcb-260e-4b71-9edd-7c8d9845fb40_p16-12_22"],
         "checked": false,
         "icon": "images/publicbulding_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p16-22"
@@ -1649,9 +1414,7 @@
         "lng": 139.103125,
         "lat": 34.971448,
         "zoom": 14,
-        "id": [
-          "i6efec041-92b8-4ccb-8401-6c7ad3d85450_p31-13_22_e"
-        ],
+        "id": ["i6efec041-92b8-4ccb-8401-6c7ad3d85450_p31-13_22_e"],
         "checked": false,
         "icon": "images/publicbulding_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p31-22"
@@ -1662,9 +1425,7 @@
         "lng": 138.411453,
         "lat": 35.023113,
         "zoom": 14,
-        "id": [
-          "i6f4e580a-a158-4124-b627-34bc791dae90_generalwastedisposalfacilities22"
-        ],
+        "id": ["i6f4e580a-a158-4124-b627-34bc791dae90_generalwastedisposalfacilities22"],
         "checked": false,
         "icon": "images/publicbulding_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p15-22"
@@ -1675,9 +1436,7 @@
         "lng": 137.644424,
         "lat": 34.68895,
         "zoom": 14,
-        "id": [
-          "i6f4e580a-a158-4124-b627-34bc791dae90_industrialwastedisposalfacilities22"
-        ],
+        "id": ["i6f4e580a-a158-4124-b627-34bc791dae90_industrialwastedisposalfacilities22"],
         "checked": false,
         "icon": "images/publicbulding_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p15-22"
@@ -1688,9 +1447,7 @@
         "lng": 138.097743,
         "lat": 34.729864,
         "zoom": 14,
-        "id": [
-          "i714a7d2f-de63-45b1-a6b3-61273d819eda_p21-1222a"
-        ],
+        "id": ["i714a7d2f-de63-45b1-a6b3-61273d819eda_p21-1222a"],
         "checked": false,
         "icon": "images/waterplant_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p21-22"
@@ -1701,9 +1458,7 @@
         "lng": 138.891261,
         "lat": 35.161454,
         "zoom": 14,
-        "id": [
-          "i714a7d2f-de63-45b1-a6b3-61273d819eda_p21-1222b"
-        ],
+        "id": ["i714a7d2f-de63-45b1-a6b3-61273d819eda_p21-1222b"],
         "checked": false,
         "icon": "images/waterplant_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p21-22"
@@ -1714,9 +1469,7 @@
         "lng": 139.091639,
         "lat": 34.935974,
         "zoom": 14,
-        "id": [
-          "i80261f3b-aac6-4e7b-8ee9-87f2e495ec39_p07-15_22"
-        ],
+        "id": ["i80261f3b-aac6-4e7b-8ee9-87f2e495ec39_p07-15_22"],
         "checked": false,
         "icon": "images/publicbulding_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p07-22"
@@ -1727,9 +1480,7 @@
         "lng": 138.381482,
         "lat": 34.976178,
         "zoom": 14,
-        "id": [
-          "i82de159e-2390-4449-b103-e343520d07b6_p28-13_22"
-        ],
+        "id": ["i82de159e-2390-4449-b103-e343520d07b6_p28-13_22"],
         "checked": false,
         "icon": "images/publicbulding_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p28-22"
@@ -1740,9 +1491,7 @@
         "lng": 138.215791,
         "lat": 34.718652,
         "zoom": 14,
-        "id": [
-          "i9bb09f14-e0e5-4466-a55d-97494a3bd061_p04-20_22"
-        ],
+        "id": ["i9bb09f14-e0e5-4466-a55d-97494a3bd061_p04-20_22"],
         "checked": false,
         "icon": "images/medicalcenter_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p04-22"
@@ -1766,9 +1515,7 @@
         "lng": 138.365622,
         "lat": 35.140588,
         "zoom": 14,
-        "id": [
-          "ib415de0c-8c3c-485f-b494-1e86734b1540_p24_12_22"
-        ],
+        "id": ["ib415de0c-8c3c-485f-b494-1e86734b1540_p24_12_22"],
         "checked": false,
         "icon": "images/publicbulding_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p24-22"
@@ -1779,9 +1526,7 @@
         "lng": 138.38645,
         "lat": 34.971172,
         "zoom": 14,
-        "id": [
-          "ic2c0f3d0-a361-415b-b6dd-774af6f85691_p30-13_22"
-        ],
+        "id": ["ic2c0f3d0-a361-415b-b6dd-774af6f85691_p30-13_22"],
         "checked": false,
         "icon": "images/publicbulding_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p30-22"
@@ -1792,9 +1537,7 @@
         "lng": 138.381801,
         "lat": 34.976017,
         "zoom": 14,
-        "id": [
-          "id627dc60-b4f4-4062-af86-39d27369b6ec_p17-1222firestation"
-        ],
+        "id": ["id627dc60-b4f4-4062-af86-39d27369b6ec_p17-1222firestation"],
         "checked": false,
         "icon": "images/publicbulding_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p17-22"
@@ -1805,9 +1548,7 @@
         "lng": 138.918684,
         "lat": 35.360072,
         "zoom": 14,
-        "id": [
-          "id627dc60-b4f4-4062-af86-39d27369b6ec_p17-1222firestationjurisdiction"
-        ],
+        "id": ["id627dc60-b4f4-4062-af86-39d27369b6ec_p17-1222firestationjurisdiction"],
         "checked": false,
         "color": "#FF832B",
         "icon": "images/publicbulding_red.png",
@@ -1819,9 +1560,7 @@
         "lng": 138.647042,
         "lat": 35.13341,
         "zoom": 14,
-        "id": [
-          "ie158530c-4328-417f-a3e7-b7585e67926c_p35_18_22"
-        ],
+        "id": ["ie158530c-4328-417f-a3e7-b7585e67926c_p35_18_22"],
         "checked": false,
         "icon": "images/publicbulding_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p35-22"
@@ -1832,9 +1571,7 @@
         "lng": 138.382388,
         "lat": 34.975473,
         "zoom": 14,
-        "id": [
-          "ie43bb7dc-ae6f-4511-9a8d-bdb2db878555_p34-14_22"
-        ],
+        "id": ["ie43bb7dc-ae6f-4511-9a8d-bdb2db878555_p34-14_22"],
         "checked": false,
         "icon": "images/publicbulding_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p34-22"
@@ -1845,9 +1582,7 @@
         "lng": 138.382912,
         "lat": 34.982044,
         "zoom": 14,
-        "id": [
-          "if31c39f5-996b-4d12-a94a-6df95c202e35_p29-13_22"
-        ],
+        "id": ["if31c39f5-996b-4d12-a94a-6df95c202e35_p29-13_22"],
         "checked": false,
         "icon": "images/school_red.png",
         "url": "https://www.geospatial.jp/ckan/dataset/ksj-p29-22"
@@ -1865,9 +1600,7 @@
         "lng": 139.7673068,
         "lat": 35.6809591,
         "zoom": 11,
-        "id": [
-          "drm_test"
-        ],
+        "id": ["drm_test"],
         "checked": false,
         "color": "#333333"
       }

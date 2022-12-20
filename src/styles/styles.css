@@ -103,3 +103,18 @@
   top: 14px;
   transform: translate3d(-50%, 0, 0);
 }
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dashboard .menuitem {
+  cursor: pointer;
+}
+
+.dashboard .menuitem:hover {
+  filter: brightness(110%);
+}
+.dashboard .menuitem.selected {
+  filter: brightness(130%);
+}

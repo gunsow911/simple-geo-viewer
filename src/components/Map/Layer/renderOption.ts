@@ -79,7 +79,7 @@ const susonoBuilding = (layer: any) => {
           if (x === 1) {
             return [150, 150, 220, 180];
           } else if (x === 2) {
-            return [150, 220, 150, 180];
+            return [0, 150, 220, 180];
           } else {
             return [220, 150, 150, 180];
           }
@@ -124,8 +124,7 @@ const zenrinBuilding = (layer: any) => {
   });
 };
 
-export const addRenderOption = (layers: any[]) => {
-  const addedPropsLayers: any[] = [];
+export const addRenderOption = (layer: any) => {
   const colorBuildIDs = [
     'shizuoka-building',
     '37201',
@@ -156,29 +155,18 @@ export const addRenderOption = (layers: any[]) => {
     'zenrin-building5',
     'zenrin-building6',
   ];
-
-  for (const layer of layers) {
+  if (layer && layer.id) {
     if (layer.id === 'gyosei-tokyo') {
-      const newLayer: any = gyoseiTokyo(layer);
-      addedPropsLayers.push(newLayer);
-      continue;
+      return gyoseiTokyo(layer);
     }
 
     if (colorBuildIDs.includes(layer.id)) {
-      const newLayer: any = susonoBuilding(layer);
-      addedPropsLayers.push(newLayer);
-      continue;
+      return susonoBuilding(layer);
     }
 
     if (zenrinIDs.includes(layer.id)) {
-      const newLayer: any = zenrinBuilding(layer);
-      addedPropsLayers.push(newLayer);
-      continue;
+      return zenrinBuilding(layer);
     }
-
-    //条件に一致しなければlayerに変更を加えずに配列に追加
-    addedPropsLayers.push(layer);
   }
-
-  return addedPropsLayers;
+  return layer;
 };

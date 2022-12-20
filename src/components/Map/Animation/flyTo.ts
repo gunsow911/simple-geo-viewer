@@ -5,7 +5,7 @@ import { clickedLayerViewState, ViewState } from '@/components/Map/types';
 import { getStatusForUpdate } from '@/components/Map/Animation/option';
 import { InitialView } from '@/components/LayerFilter/loader';
 
-const easeOutQuart = (t: number) => {
+export const easeOutQuart = (t: number) => {
   return 1 - Math.pow(1 - t, 4);
 };
 

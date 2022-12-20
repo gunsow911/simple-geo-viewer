@@ -35,3 +35,9 @@ yarn-error.log*
 
 # deploy setting
 .secrets
+/public
+!/public/defaultPreferences
+!/public/images
+
+.idea
+.tool-versions

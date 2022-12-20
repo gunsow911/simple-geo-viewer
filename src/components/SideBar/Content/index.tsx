@@ -92,23 +92,23 @@ export const Content: React.FC<LayerListProps> = ({ title, layers }) => {
   const downloadLink = getDownloadLink(preferences.menu, title);
 
   return (
-    <div 
-      className="pb-px"
-      onMouseOver={(event) =>
-        setMouseTooltipData(() => ({
-          text: title,
-          top: (window.innerHeight - event.clientY + 10) * -1,
-          left: 20,
-        }))
-      }
-      onMouseOut={() => setMouseTooltipData(() => null)}
-    >
+    <div className="pb-px">
       <div
         className="h-10 text-left transition-hover duration-500 ease bg-white hover:bg-gray-200 shadow-md flex p-3"
         style={datasetStyle}
         onClick={toggleAccordion}
       >
-        <div className="text-left flex w-11/12 items-center">
+        <div
+          onMouseOver={(event) =>
+            setMouseTooltipData(() => ({
+              text: title,
+              top: (window.innerHeight - event.clientY + 10) * -1,
+              left: 20,
+            }))
+          }
+          onMouseOut={() => setMouseTooltipData(() => null)}
+          className="text-left flex w-11/12 items-center"
+        >
           {FolderIcon}
           <Title datasetName={title} />
         </div>

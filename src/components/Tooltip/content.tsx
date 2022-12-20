@@ -3,30 +3,29 @@ import { context } from '@/pages';
 import Collapsible from 'react-collapsible';
 import { getDataById, getCategoryByTitle, getDataTitleById } from '@/components/LayerFilter/menu';
 import { largeDownloadIcon, shareIcon, linkIcon } from '@/components/SideBar/Icon';
+import { useRecoilValue } from 'recoil';
+import { TooltipDataState } from '@/store/TooltipState';
+import { getPropertiesObj } from '@/components/Tooltip/util';
 
 type BaseTooltipProps = { children: ReactNode };
 
+const tdStyle = {
+  paddingRight: '35px',
+};
+
 const BaseTooltip: VFC<BaseTooltipProps> = ({ children }) => {
   const { preferences } = useContext(context);
-  if (preferences === null) return null;
-  const setTooltipPosition = {
+  const toolchipContentStyle = {
     backgroundColor: preferences.settings.tooltip_background_color,
-    overflow: 'scroll',
   };
   return (
     <div className="visible h-full">
-      <div id="tooltip_content" className="bg-white h-full" style={setTooltipPosition}>
+      <div id="handle" className="h-7 w-full bg-gray-400 cursor-move"></div>
+      <div id="tooltip_content" className="bg-white h-full" style={toolchipContentStyle}>
         {children}
       </div>
     </div>
   );
-};
-
-type TooltipProps = {
-  properties: any;
-  labels: string[];
-  tooltipType: string;
-  id: string;
 };
 
 type TooltipBodyProps = {
@@ -46,7 +45,17 @@ type TooltipTableBodyProps = {
   id: string;
 };
 
-export const Tooltip: VFC<TooltipProps> = ({ properties, labels, tooltipType, id }) => {
+export const Tooltip: VFC = () => {
+  const tooltipData = useRecoilValue(TooltipDataState);
+  if (!tooltipData) {
+    return null;
+  }
+  const {
+    data: { properties, labels },
+    tooltipType,
+    id,
+  } = tooltipData;
+
   return (
     <div className={'relative overflow-auto h-full '}>
       <BaseTooltip>
@@ -84,7 +93,7 @@ const TooltipDefaultBody: VFC<TooltipBodyProps> = ({ properties, labels }) => {
             content = 'N/A';
             if (value.startsWith('http')) content = <img src={value} />; // 値がURLではない場合があるのでチェック
           }
-          if (key === 'URL' || key === '関連URL') {
+          if ((key === 'URL' || key === '関連URL') && value !== 'null') {
             content = (
               <a
                 className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
@@ -109,8 +118,10 @@ const TooltipDefaultBody: VFC<TooltipBodyProps> = ({ properties, labels }) => {
 
           return (
             <tr key={key}>
-              <td className="whitespace-nowrap font-bold align-top">{key}</td>
-              <td className="whitespace-nomal">{content}</td>
+              <td className="whitespace-nomal font-bold align-top w-24">{key}</td>
+              <td className="align-top" style={tdStyle}>
+                {content}
+              </td>
             </tr>
           );
         })}
@@ -128,7 +139,7 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
   };
 
   const { preferences } = useContext(context);
-  if (preferences === null) return null;
+
   const { description, ..._summaryKey } = summaryKey;
   const summaryKeys = Object.keys(_summaryKey)
     .map((key) => {
@@ -160,11 +171,18 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
       let content: JSX.Element | string;
       content = 'N/A';
 
-      if (imageValue.startsWith('http')) content = <img className="w-full" src={imageValue} style = {{
-                                                                                                      objectFit: 'cover',
-                                                                                                      objectPosition: '0% 50%',
-                                                                                                      height: 'calc(50%)'
-                                                                                                    }} />;
+      if (imageValue.startsWith('http'))
+        content = (
+          <img
+            className="w-full"
+            src={imageValue}
+            style={{
+              objectFit: 'cover',
+              objectPosition: '50% 50%',
+              height: 'calc(50%)',
+            }}
+          />
+        );
       return content;
     };
 
@@ -215,7 +233,7 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
 
                 let content: JSX.Element | string;
                 content = value;
-                if (key === 'URL' || key === '関連URL') {
+                if ((key === 'URL' || key === '関連URL') && value !== 'null') {
                   content = (
                     <a
                       className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
@@ -240,8 +258,10 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
 
                 return (
                   <tr key={key}>
-                    <td className="whitespace-nowrap font-bold align-top">{key}</td>
-                    <td className="whitespace-nomal">{content}</td>
+                    <td className="whitespace-nomal font-bold align-top w-24">{key}</td>
+                    <td className="whitespace-nomal break-all" style={tdStyle}>
+                      {content}
+                    </td>
                   </tr>
                 );
               })}
@@ -263,7 +283,6 @@ const TooltipTableBody: VFC<TooltipTableBodyProps> = ({ properties, labels, id }
 
   const Summary = () => {
     const { preferences } = useContext(context);
-    if (preferences === null) return null;
     const layerTitle = getDataTitleById(preferences.menu, id);
     const layerCategory = getCategoryByTitle(preferences.menu, layerTitle);
 
@@ -305,8 +324,10 @@ const TooltipTableBody: VFC<TooltipTableBodyProps> = ({ properties, labels, id }
 
             return (
               <tr key={key}>
-                <td className="whitespace-nowrap font-bold align-top">{key}</td>
-                <td className="whitespace-nomal">{content}</td>
+                <td className="whitespace-nomal font-bold align-top w-24">{key}</td>
+                <td className="whitespace-nomal break-all" style={tdStyle}>
+                  {content}
+                </td>
               </tr>
             );
           })}
