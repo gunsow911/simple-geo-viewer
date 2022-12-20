@@ -124,6 +124,7 @@ const SbMeshVolumePanel = () => {
             })}
           </select>
           {info.selectedCode && <Bar data={data} options={options} />}
+          <div className="text-right">出典：ソフトバンク 全国うごき統計</div>
         </div>
       )}
     </>
