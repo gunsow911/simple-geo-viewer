@@ -1,24 +1,40 @@
 import React, { useContext, Dispatch, SetStateAction } from 'react';
 import { context } from '@/pages';
-import { Disaster } from '@/components/LayerFilter/loader';
+import { Disasters, Disaster } from '@/components/LayerFilter/loader';
 import { useRouter } from 'next/router';
-import { Disasters } from '@/components/LayerFilter/loader';
-import { Preferences, fetchJsons } from '@/components/LayerFilter/loader';
+import { Menu } from '@/components/LayerFilter/menu';
+import { Config } from '@/components/LayerFilter/config';
+import { Preferences, fetchJson, Settings, Backgrounds, InitialView } from '@/components/LayerFilter/loader';
 
 type Props = {
   disasters: Disasters;
-  setPreferrences: Dispatch<SetStateAction<Preferences | null>>
+  setPreferrences: Dispatch<SetStateAction<Preferences | null>>;
+  setCurrentDisaster: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const DisasterSelector: React.FC<Props> = ({ disasters, setPreferrences}) => {
-  
-
+const DisasterSelector: React.FC<Props> = ({ disasters, setPreferrences, setCurrentDisaster}) => {
+  const fetchJson = async (url: string) => await (await fetch(url)).json();
   const router = useRouter();
   
   const updateCurrentDisaster = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const disastersPath = e.target.value;
     const preferencesPath = `${router.basePath}/disaster/${disastersPath}`;
-    const loadedPreferences = await fetchJsons(preferencesPath);
+    setCurrentDisaster(disastersPath);
+    const results = await Promise.all([
+      fetchJson(`${preferencesPath}/settings.json`),
+      fetchJson(`${preferencesPath}/menu.json`),
+      fetchJson(`${preferencesPath}/config.json`),
+      fetchJson(`${preferencesPath}/backgrounds.json`),
+      fetchJson(`${preferencesPath}/initial_view.json`),
+    ]);
+    
+    const loadedPreferences = {
+      settings: results[0] as Settings,
+      menu: results[1] as Menu,
+      config: results[2] as Config,
+      backgrounds: results[3] as Backgrounds,
+      initialView: results[4] as InitialView,
+    };
     setPreferrences(loadedPreferences);
   };
 

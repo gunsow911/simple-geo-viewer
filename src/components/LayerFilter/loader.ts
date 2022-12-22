@@ -39,6 +39,19 @@ export type InitialView = {
   };
 };
 
+export type Disaster = {
+  text: string;
+  value: string; 
+} 
+
+/**
+ * disasters.json
+ */
+export type Disasters = {
+    default: number;
+    data: Disaster[];
+}
+
 /**
  * 複数の設定ファイルJSONを読み込んだ結果を格納するデータ型
  */
@@ -50,7 +63,7 @@ export type Preferences = {
   initialView: InitialView;
 };
 
-const fetchJson = async (url: string) => await (await fetch(url)).json();
+export const fetchJson = async (url: string) => await (await fetch(url)).json();
 
 /**
  * リモートにある設定ファイルJSON群を取得しstateを返す

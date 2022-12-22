@@ -70,7 +70,7 @@ export const Tooltip: VFC = () => {
             case 'table':
               return <TooltipTableBody {...{ properties: properties, labels: labels, id: id }} />;
             default:
-              break;
+              return <TooltipDefaultBody {...{ properties: properties, labels: labels }} />;
           }
         })()}
       </BaseTooltip>

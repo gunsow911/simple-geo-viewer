@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import { NextPage } from 'next';
 import Sidebar from '@/components/SideBar';
 import Header from '@/components/Header';
@@ -7,7 +7,9 @@ import { clickedLayerViewState } from '@/components/Map/types';
 import { defaultLegendId } from '@/components/Map/Legend/layerIds';
 import { Tooltip } from '@/components/Tooltip/content';
 import MouseTooltip, { MouseTooltipData } from '@/components/MouseTooltip';
-import { usePreferences, Preferences } from '@/components/LayerFilter/loader';
+import { usePreferences, Preferences, Settings, Backgrounds, InitialView } from '@/components/LayerFilter/loader';
+import { Menu } from '@/components/LayerFilter/menu';
+import { Config } from '@/components/LayerFilter/config';
 import Head from 'next/head';
 import { closeIcon } from '@/components/SideBar/Icon';
 import Draggable from 'react-draggable';
@@ -16,7 +18,14 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { TooltipDataState, TooltipPositionState } from '@/store/TooltipState';
 import useWeatherMap from '@/components/Map/Custom/useWeatherMap';
 import { Disasters } from '@/components/LayerFilter/loader';
-
+import { useRouter } from 'next/router';
+import {
+  DashboardLayersState,
+  LayersState,
+  TemporalLayerConfigState,
+  TemporalLayerState,
+  WeatherMapLayerState,
+} from '@/store/LayersState';
 
 type TContext = {
   checkedLayerTitleList: string[];
@@ -82,11 +91,102 @@ const App: NextPage = () => {
   const tooltipPosition = useRecoilValue(TooltipPositionState);
   const [tooltipData, setTooltipData] = useRecoilState(TooltipDataState);
   const contextValues = useContextValues();
-  const { setPreferences } = useContextValues();
-  const { preferences } = usePreferences();
+  const { setPreferences, preferences } = useContextValues();
+  // const { preferences } = usePreferences();
   const { onChangeSelect } = useWeatherMap('weather-data-mapping');
-  const { disasters } = useContextValues();
-  const { isDisaster } = useContextValues();
+
+  const router = useRouter();
+  const [currentDisaster, setCurrentDisaster] = useState<string>('');
+  const [isDisaster, setIsDisaster] = useState<boolean>(false);
+  const defaultDisasters: Disasters =  {default:0,data:[]} 
+  const [disasters, setDisasters] = useState<Disasters>(defaultDisasters);
+
+  const fetchJson = async (url: string) => await (await fetch(url)).json();
+
+  useEffect(() => {
+    
+    // preferencesが指定されているがqueryとして読み込みが完了していない場合はJSONの取得処理の開始を保留する
+    if (router.asPath.includes('preferences=') && typeof router.query.preferences === 'undefined')
+      return;
+    if (
+      router.asPath.includes('querySelectLayerId=') &&
+      typeof router.query.querySelectLayerId === 'undefined'
+    )
+      return;
+
+    (async () => {
+      // クエリパラメータでpreferencesが指定されていればそのURLを
+      // 指定されていなければデフォルト設定を読み込む
+      let preferencesPath = router.query.preferences as string | undefined;
+      if (typeof preferencesPath === 'undefined') {
+        preferencesPath = `${router.basePath}/defaultPreferences`;
+      };
+      let loadedPreferences: Preferences;
+      const isdisaster = router.query.isDisaster as boolean | undefined;
+      const disasterPreference = router.query.disaster as string | undefined;
+      
+      
+      if (isdisaster) {
+        if (typeof setDisasters === 'undefined'){
+          return;
+        }
+        setIsDisaster(() => isdisaster);
+        preferencesPath = `${router.basePath}/disaster`;
+        const disastersData = await fetchJson(`${preferencesPath}/disasters.json`);
+        setDisasters(() => disastersData);
+        const disastersPath = disastersData.data[disastersData.default].value as string;
+        preferencesPath = `${preferencesPath}/${disastersPath}`;
+        if (typeof disasterPreference !== 'undefined') {
+          preferencesPath = `${router.basePath}/disaster/${disasterPreference}`;
+        }
+        if (typeof currentDisaster !== 'undefined' && typeof setCurrentDisaster !== 'undefined' && currentDisaster !== '') {
+            preferencesPath = preferencesPath.replace(`/${disastersPath}`,'');
+            preferencesPath = `${preferencesPath}/${currentDisaster}`;
+        };
+        
+        
+        const results = await Promise.all([
+          fetchJson(`${preferencesPath}/settings.json`),
+          fetchJson(`${preferencesPath}/menu.json`),
+          fetchJson(`${preferencesPath}/config.json`),
+          fetchJson(`${preferencesPath}/backgrounds.json`),
+          fetchJson(`${preferencesPath}/initial_view.json`),
+        ]);
+        
+        loadedPreferences = {
+          settings: results[0] as Settings,
+          menu: results[1] as Menu,
+          config: results[2] as Config,
+          backgrounds: results[3] as Backgrounds,
+          initialView: results[4] as InitialView,
+        };
+        setCurrentDisaster(() => disastersPath);
+      }else{
+        const results = await Promise.all([
+          fetchJson(`${preferencesPath}/settings.json`),
+          fetchJson(`${preferencesPath}/menu.json`),
+          fetchJson(`${preferencesPath}/config.json`),
+          fetchJson(`${preferencesPath}/backgrounds.json`),
+          fetchJson(`${preferencesPath}/initial_view.json`),
+        ]);
+        
+        loadedPreferences = {
+          settings: results[0] as Settings,
+          menu: results[1] as Menu,
+          config: results[2] as Config,
+          backgrounds: results[3] as Backgrounds,
+          initialView: results[4] as InitialView,
+        };
+      }
+      setPreferences(() => loadedPreferences);
+    })();
+  },[router.asPath, router.query.preferences]);
+
+  const [deckGLLayers, setDeckGLLayers] = useRecoilState(LayersState);
+  useEffect(
+    () => {
+      setDeckGLLayers([]);
+    },[currentDisaster]);
 
   if (preferences === null) {
     return <div>loading</div>;
@@ -97,7 +197,9 @@ const App: NextPage = () => {
     position: 'absolute',
     height: '400px',
   };
-
+  
+  
+  
   return (
     <>
       <Head>
@@ -111,12 +213,12 @@ const App: NextPage = () => {
         <context.Provider value={{ ...contextValues, preferences }}>
           <DashboardProvider>
             <div className="h-12">
-            <Header disasters={disasters} setPreferrence={setPreferences} isDisaster={isDisaster}/>
+            <Header disasters={disasters} setPreferrence={setPreferences} isDisaster={isDisaster} setCurrentDisaster={setCurrentDisaster}/>
             </div>
             <div className="flex content" style={{ overflow: 'hidden' }}>
               <div className="w-1/5 flex flex-col h-full ml-4 mr-2 mt-4 pb-10">
                 <div id="sideBar" className="overflow-auto relative flex-1">
-                  <Sidebar onChangeSelect={onChangeSelect} />
+                  <Sidebar onChangeSelect={onChangeSelect} currentDisaster={currentDisaster} preferences={preferences}/>
                 </div>
                 {contextValues.mouseTooltipData !== null ? (
                   <div className="relative">

@@ -10,9 +10,10 @@ type Props = {
   disasters: Disasters;
   isDisaster: boolean;
   setPreferrence: Dispatch<SetStateAction<Preferences | null>>;
+  setCurrentDisaster: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const Header: React.FC<Props> = ({ disasters, setPreferrence, isDisaster }) => {
+const Header: React.FC<Props> = ({ disasters, setPreferrence, isDisaster, setCurrentDisaster }) => {
   const { preferences } = useContext(context);
   const router = useRouter();
   if (preferences === null) return null;
@@ -39,7 +40,7 @@ const Header: React.FC<Props> = ({ disasters, setPreferrence, isDisaster }) => {
           </div>
           { isDisaster ? (
             <div className="text-left z-10 absolute top-2 right-40 bg-white p-1">
-              <DisasterSelector disasters={disasters} setPreferrences={setPreferrence}/>
+              <DisasterSelector disasters={disasters} setPreferrences={setPreferrence} setCurrentDisaster={setCurrentDisaster}/>
             </div>
           ) : null}
         </>
@@ -53,7 +54,7 @@ const Header: React.FC<Props> = ({ disasters, setPreferrence, isDisaster }) => {
           </div>
           { isDisaster ? (
             <div className="text-left z-10 absolute top-2 right-40 bg-white p-1">
-              <DisasterSelector disasters={disasters} setPreferrences={setPreferrence}/>
+              <DisasterSelector disasters={disasters} setPreferrences={setPreferrence} setCurrentDisaster={setCurrentDisaster}/>
             </div>
           ) : null}
         </>

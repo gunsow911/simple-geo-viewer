@@ -1,5 +1,7 @@
 import { PickInfo } from 'deck.gl';
 import { GeoJsonLayer } from '@deck.gl/layers';
+import { CompositeLayer,CompositeLayerProps } from "@deck.gl/core/typed";
+
 
 import {
   GeojsonIconLayerConfig,
@@ -31,10 +33,18 @@ export function makeGeoJsonLayer(layerConfig: LayerConfig, setTooltipData, setTo
     setTooltipData,
     setTooltipPosition
   );
+
+  const geoJsonArrowCreator = new GeoJsonArrowLayerCreator(
+    layerConfig,
+    setTooltipData,
+    setTooltipPosition
+  );
+
   const geoJsonLinePolygonLayer = geoJsonLinePolygonCreator.makeDeckGlLayer();
   const geoJsonIconLayer = geoJsonIconCreator.makeDeckGlLayer();
   const geoJsonFeatureCollectionIconLayer = geoJsonFeatureCollectionIconCreator.makeDeckGlLayer();
-  return geoJsonLinePolygonLayer ?? geoJsonIconLayer ?? geoJsonFeatureCollectionIconLayer;
+  const geoJsonArrowLayer = geoJsonArrowCreator.makeDeckGlLayers();
+  return geoJsonLinePolygonLayer ?? geoJsonIconLayer ?? geoJsonFeatureCollectionIconLayer ?? geoJsonArrowLayer;
 }
 
 class GeoJsonLinePolygonCreator {
@@ -225,6 +235,145 @@ class GeoJsonFeatureCollectionIconLayerCreator {
   };
 
   isTargetConfig(layerConfig: LayerConfig): layerConfig is GeojsonIconLayerConfig {
+    return layerConfig.type === this.layerType;
+  }
+
+  showToolTip = (info: PickInfo<any>) => {
+    showToolTip(info, this.setTooltipData, this.setTooltipPosition);
+  };
+}
+
+interface GeoJsonArrowLayerData<D> extends CompositeLayerProps{
+  url?: string;
+  mesh: string;
+  icon: any;
+}
+
+export default class GeoJsonArrowLayer extends CompositeLayer<GeoJsonArrowLayerData<unknown>> {
+
+  degreesToAnchorPer(degrees,x,y) {
+    const pi: number = Math.PI;
+    const round = 1000000000000;
+    const radian:number = degrees * (pi / 180);
+    const cos:number = Math.floor((Math.cos(radian) * round)) / round;
+    const sin:number = Math.floor((Math.sin(radian) * round)) / round;
+    //画像の配置の仕様
+    const anchor :any = {x:((1-sin)*0.5)*x, y:((1+cos)*0.5)*y};
+    return {...anchor};
+  }
+
+  renderLayers(){
+    const { id, visible, url } = this.props;
+    return [
+      new GeoJsonLayer({
+        data: url,
+        id: id + 'point',
+        visible: visible,
+        pickable: true,
+        autoHighlight: true,
+        sizeScale: 8,
+        // @ts-ignore
+        iconSizeScale: 60,
+        pointType: 'icon',
+        getIcon: (_) => ({
+          url: `images/icon_${this.props.icon.color}.png`,
+          width: this.props.icon.width,
+          height: this.props.icon.height,
+          anchorY: this.props.icon.anchorY,
+          mask: false,
+        }),
+        parameters: {
+          depthTest: false,
+        },
+      }),
+      new GeoJsonLayer({
+        data: url,
+        id: id + 'arrow',
+        visible: visible,
+        pickable: true,
+        autoHighlight: true,
+        sizeScale: 8,
+        // @ts-ignore
+        iconSizeScale: 60,
+        pointType: 'icon',
+        getIcon: (d) => {
+          const angle: number = ("方向" in d.properties ? (d.properties.方向 === null ? 0 : d.properties.方向) : 0);
+          // const angle = 90
+          const anchor: any = this.degreesToAnchorPer(angle,64,64); 
+    
+          return ({
+          id: String(angle),
+          url: 'images/arrow.png',
+          width: this.props.icon.width,
+          height: this.props.icon.height,
+          anchorX: anchor.x,
+          anchorY: anchor.y,
+          mask: false,
+          })
+        },
+        parameters: {
+          depthTest: false,
+        },
+        getIconAngle: (d) => {
+          const angle = "方向" in d.properties ? (d.properties.方向 === null ? 0 : d.properties.方向) : 0;
+          // const angle = 345.57;
+          // const angle = 90;
+          return angle
+        },
+        updateTriggers: {
+          getIcon: this.props.updateTriggers.getIcon,
+        }
+      })
+    ];
+  }
+}
+
+class GeoJsonArrowLayerCreator {
+  layerType: string = 'geojsonarrow';
+  private readonly layerConfig: LayerConfig;
+  private readonly setTooltipData: SetterOrUpdater<{
+    tooltipType: 'default' | 'thumbnail' | 'table';
+    id: string;
+    data: any;
+  } | null>;
+  private readonly setTooltipPosition: SetterOrUpdater<{ top: string; left: string } | null>;
+
+  constructor(layerConfig: LayerConfig, setTooltipData, setTooltipPosition) {
+    this.layerConfig = layerConfig;
+    this.setTooltipData = setTooltipData;
+    this.setTooltipPosition = setTooltipPosition;
+  }
+
+  makeDeckGlLayers() {
+    const { layerConfig } = this;
+    if (this.isTargetConfig(layerConfig)) {
+      const config = this.extractLayerConfig(layerConfig);
+
+      return new GeoJsonArrowLayer({
+        url: layerConfig.source,
+        visible: true,
+        pickable: true,
+        autoHighlight: true,
+        onClick: this.showToolTip,
+        // @ts-ignore
+        sizeScale: 8,
+        // @ts-ignore
+        iconSizeScale: 60,
+        pointType: 'icon',
+        ...config,
+      });
+    };
+    
+
+    return null;
+  }
+
+  extractLayerConfig = (layerConfig: GeojsonLayerConfig) => {
+    const { type, source, ...otherConfig } = layerConfig;
+    return otherConfig;
+  };
+
+  isTargetConfig(layerConfig: LayerConfig): layerConfig is GeojsonLayerConfig {
     return layerConfig.type === this.layerType;
   }
 

@@ -26,6 +26,7 @@ import { ViewState } from '@/store/ViewState';
 import WeatherMapPanel from './Custom/WeatherMapPanel';
 import { useRouter } from 'next/router';
 import { getDataById } from '@/components/LayerFilter/menu';
+import { useRecoilState } from 'recoil';
 
 const getViewStateFromMaplibre = (map) => {
   const { lng, lat } = map.getCenter();
@@ -155,7 +156,7 @@ const useDeckGLLayer = (currentZoomLevel: number, config) => {
 const MapComponent: React.VFC = () => {
   const maplibreContainer = useRef<HTMLDivElement | null>(null);
   const deckglContainer = useRef<HTMLCanvasElement | null>(null);
-  const { preferences } = useContext(context);
+  const { preferences, isDisaster, currentDisaster } = useContext(context);
   const temporalLayerConfigs = useRecoilValue(TemporalLayerConfigState);
   const dashboardLayers = useRecoilValue(DashboardLayersState);
   const weatherMapLayer = useRecoilValue(WeatherMapLayerState);
@@ -166,9 +167,12 @@ const MapComponent: React.VFC = () => {
     deckglContainer,
     preferences
   );
+
   const deckglLayers = useDeckGLLayer(currentZoomLevel, preferences.config);
   //クリックされたレイヤに画面移動
   useFlyTo(deckGLRef.current);
+
+  
 
   // 各種レイヤーの統合
   if (deckGLRef.current) {
@@ -176,8 +180,8 @@ const MapComponent: React.VFC = () => {
   }
 
   const router = useRouter();
-
   useEffect(() => {
+    
     let querySelectLayerId = router.query.querySelectLayerId as string | undefined;
     querySelectLayerId = querySelectLayerId === undefined ? '' : querySelectLayerId;
     if (querySelectLayerId !== '') {
@@ -195,7 +199,7 @@ const MapComponent: React.VFC = () => {
       };
       deckGLRef.current.setProps({ initialViewState: viewState });
     }
-  }, []);
+  }, [preferences]);
 
   return (
     <>
