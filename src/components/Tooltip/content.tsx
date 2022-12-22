@@ -16,6 +16,7 @@ const tdStyle = {
 const BaseTooltip: VFC<BaseTooltipProps> = ({ children }) => {
   const { preferences } = useContext(context);
   const toolchipContentStyle = {
+    // @ts-ignore
     backgroundColor: preferences.settings.tooltip_background_color,
   };
   return (
@@ -164,7 +165,9 @@ const TooltipThumbnailBody: VFC<TooltipThumbnailBodyProps> = ({ properties, labe
         })[0]
       ];
 
+    // @ts-ignore
     const layerTitle = getDataTitleById(preferences.menu, id);
+    // @ts-ignore
     const resource = getDataById(preferences.menu, [id]);
 
     const image = () => {
@@ -283,7 +286,9 @@ const TooltipTableBody: VFC<TooltipTableBodyProps> = ({ properties, labels, id }
 
   const Summary = () => {
     const { preferences } = useContext(context);
+    // @ts-ignore
     const layerTitle = getDataTitleById(preferences.menu, id);
+    // @ts-ignore
     const layerCategory = getCategoryByTitle(preferences.menu, layerTitle);
 
     const titleValue =

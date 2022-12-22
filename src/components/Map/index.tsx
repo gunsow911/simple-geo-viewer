@@ -66,8 +66,9 @@ const getInitialStyle = (backgrounds: Backgrounds): Style => {
 const useInitializeMap = (
   maplibreContainer: React.MutableRefObject<HTMLDivElement | null>,
   deckglContainer: React.MutableRefObject<HTMLCanvasElement | null>,
-  preferences: Preferences
+  preferences: Preferences | null
 ) => {
+  // @ts-ignore
   const { backgrounds, initialView, menu } = preferences;
   const [currentZoomLevel, setCurrentZoomLevel] = useState(0);
   const setRecoilViewState = useSetRecoilState(ViewState);
@@ -168,6 +169,7 @@ const MapComponent: React.VFC = () => {
     preferences
   );
 
+  // @ts-ignore
   const deckglLayers = useDeckGLLayer(currentZoomLevel, preferences.config);
   //クリックされたレイヤに画面移動
   useFlyTo(deckGLRef.current);
@@ -185,6 +187,8 @@ const MapComponent: React.VFC = () => {
     let querySelectLayerId = router.query.querySelectLayerId as string | undefined;
     querySelectLayerId = querySelectLayerId === undefined ? '' : querySelectLayerId;
     if (querySelectLayerId !== '') {
+      
+      // @ts-ignore
       const targetResource = getDataById(preferences.menu, [querySelectLayerId]);
 
       const viewState = {
@@ -192,6 +196,7 @@ const MapComponent: React.VFC = () => {
         latitude: targetResource.lat,
         zoom: targetResource.zoom,
         id: targetResource.id[0],
+        // @ts-ignore
         pitch: preferences.initialView.map.pitch,
         transitionDuration: 2000,
         transitionEasing: easeOutQuart,

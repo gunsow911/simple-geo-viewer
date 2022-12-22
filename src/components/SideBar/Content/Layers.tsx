@@ -49,6 +49,7 @@ export const Layers: FC<LayersProps> = ({ layers, onChange, currentDisaster }) =
   const layerCreateById = useCallback(
     (ids: string[]) => {
       return ids.forEach((id) => {
+        // @ts-ignore
         const layerConfig = getLayerConfigById(id, preferences.config);
         if (!layerConfig) {
           return;
@@ -68,6 +69,7 @@ export const Layers: FC<LayersProps> = ({ layers, onChange, currentDisaster }) =
       });
     },
     [
+      // @ts-ignore
       preferences.config,
       setTemporalLayerConfigs,
       setTooltipData,
@@ -101,6 +103,7 @@ export const Layers: FC<LayersProps> = ({ layers, onChange, currentDisaster }) =
       return item !== resource.title;
     });
     resource.id.forEach((id) => {
+      // @ts-ignore
       const layerConfig = getLayerConfigById(id, preferences.config);
       if (!layerConfig) {
         return;
@@ -154,7 +157,8 @@ export const Layers: FC<LayersProps> = ({ layers, onChange, currentDisaster }) =
                   onChange && onChange(resource.id[0], e.target.checked);
                 }}
               />
-              {getResourceIcon(resource, preferences.config)}
+              {// @ts-ignore
+              getResourceIcon(resource, preferences.config)}
               <p
                 onMouseOver={(event) =>
                   setMouseTooltipData(() => ({
