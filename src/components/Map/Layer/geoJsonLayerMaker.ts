@@ -272,7 +272,6 @@ export default class GeoJsonArrowLayer extends CompositeLayer<GeoJsonArrowLayerD
         pickable: true,
         autoHighlight: true,
         sizeScale: 8,
-        // @ts-ignore
         iconSizeScale: 60,
         pointType: 'icon',
         getIcon: (_) => ({
@@ -293,7 +292,6 @@ export default class GeoJsonArrowLayer extends CompositeLayer<GeoJsonArrowLayerD
         pickable: true,
         autoHighlight: true,
         sizeScale: 8,
-        // @ts-ignore
         iconSizeScale: 60,
         pointType: 'icon',
         getIcon: (d) => {
@@ -355,9 +353,7 @@ class GeoJsonArrowLayerCreator {
         pickable: true,
         autoHighlight: true,
         onClick: this.showToolTip,
-        // @ts-ignore
         sizeScale: 8,
-        // @ts-ignore
         iconSizeScale: 60,
         pointType: 'icon',
         ...config,

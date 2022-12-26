@@ -34,6 +34,7 @@ type RasterLayerConfig = LayerConfigGenericProps & {
 type MvtLayerConfig = LayerConfigGenericProps & {
   type: 'mvt';
   getFillColor: RGBAColor;
+  getLineColor?: RGBAColor;
 };
 
 export type GeojsonLayerConfig = LayerConfigGenericProps & {
@@ -41,6 +42,9 @@ export type GeojsonLayerConfig = LayerConfigGenericProps & {
   getLineColor: RGBAColor;
   lineWidthMinPixels: number;
   getFillColor?: RGBAColor;
+  sizeScale?: number;
+  iconSizeScale?: number;
+  pointType?: string;
 };
 
 export type GeojsonIconLayerConfig = LayerConfigGenericProps & {

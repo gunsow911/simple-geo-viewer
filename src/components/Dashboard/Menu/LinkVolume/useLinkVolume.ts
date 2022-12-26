@@ -128,7 +128,6 @@ const useLinkVolume = (props: Props): UseMenuReturn => {
         filled: true,
         lineWidthScale: 25,
         lineWidthMinPixels: 3,
-        // @ts-ignore
         getLineColor: colorContinuous({
           attr: 'max',
           domain: [0, maxVolume],
