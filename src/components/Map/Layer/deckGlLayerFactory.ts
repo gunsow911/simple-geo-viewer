@@ -69,6 +69,7 @@ export const makeDeckGlLayers = (
     makeTile3DLayer,
     makeGeoJsonLayer,
   ];
+  
   // ここでフィルタリングのidを求める
   const layerConfig = getFilteredLayerConfig(menu, config).filter((layer) => {
     // check状態になっているものを取り出し

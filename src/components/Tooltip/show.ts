@@ -11,11 +11,11 @@ export const showToolTip = (
   } | null>,
   setTooltipPosition: SetterOrUpdater<{ top: string; left: string } | null>
 ) => {
-  // @ts-ignore
+
   const { coordinate, object } = info;
   if (!coordinate) return;
   if (!object) return;
-  // @ts-ignore
+
   const {
     layer: {
       props: { tooltipType },

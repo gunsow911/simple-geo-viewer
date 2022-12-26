@@ -23,7 +23,6 @@ export const TimeSlider: VFC = memo(function TimeSlider() {
 
   const { checkedLayerTitleList } = useContext(context);
   const { preferences } = useContext(context);
-
   /* jsonからプロパティの取得 設定されていない場合は元々のタイムスライダーの値をセット */
   const maxVal = 1439;
   const speed = 0;
@@ -41,6 +40,7 @@ export const TimeSlider: VFC = memo(function TimeSlider() {
 
   // callback関数に変更があった場合のみanimateを再生成する
   const animate = useCallback(() => {
+    if (preferences === null) return; 
     setTimestamp((prevState) => {
       if (prevState >= maxVal) {
         setTemporalLayers(() =>
@@ -61,7 +61,7 @@ export const TimeSlider: VFC = memo(function TimeSlider() {
       return prevState + (1 + speed);
     });
     requestRef.current = requestAnimationFrame(animate);
-  }, [setTemporalLayers, temporalLayerConfigs, checkedLayerTitleList, preferences.menu]);
+  }, [setTemporalLayers, temporalLayerConfigs, checkedLayerTitleList, preferences]);
 
   // animate関数に変更があった場合は一度破棄して再度呼び出す
   useEffect(() => {
@@ -81,6 +81,7 @@ export const TimeSlider: VFC = memo(function TimeSlider() {
   };
 
   useEffect(() => {
+    if (preferences === null) return; 
     setTemporalLayers(() => {
       return temporalLayerConfigs.map((lc) =>
         addRenderOption(makeTemporalLayer(lc, timestamp, checkedLayerTitleList, preferences.menu))
@@ -106,6 +107,7 @@ export const TimeSlider: VFC = memo(function TimeSlider() {
             return getDisplayTime(value);
           }}
           onChange={(value) => {
+            if (preferences === null) return; 
             setTemporalLayers(() =>
               temporalLayerConfigs.map((lc) =>
                 addRenderOption(

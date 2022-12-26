@@ -1,9 +1,22 @@
-import React, { useContext } from 'react';
+import React, { useContext, Dispatch, SetStateAction } from 'react';
 import { context } from '@/pages';
+import { useRouter } from 'next/router';
 import DashboardMenu from '@/components/Dashboard/Menu/DashboardMenu';
+import { Disasters } from '@/components/LayerFilter/loader';
+import DisasterSelector  from "@/components/Header/DisasterSelector";
+import { Preferences } from '@/components/LayerFilter/loader';
 
-const Header = () => {
+type Props = {
+  disasters: Disasters;
+  isDisaster: boolean;
+  setPreferrence: Dispatch<SetStateAction<Preferences | null>>;
+  setCurrentDisaster: React.Dispatch<React.SetStateAction<string>>;
+};
+
+const Header: React.FC<Props> = ({ disasters, setPreferrence, isDisaster, setCurrentDisaster }) => {
   const { preferences } = useContext(context);
+  const router = useRouter();
+  if (preferences === null) return null;
   const headerStyle = {
     backgroundColor: preferences.settings.background_color,
   };
@@ -25,6 +38,11 @@ const Header = () => {
           <div className="text-right text-white font-semibold text-3l w-3/12 p-3">
             Powerd By AIGID
           </div>
+          { isDisaster ? (
+            <div className="text-left z-10 absolute top-2 right-40 bg-white p-1">
+              <DisasterSelector disasters={disasters} setPreferrences={setPreferrence} setCurrentDisaster={setCurrentDisaster}/>
+            </div>
+          ) : null}
         </>
       ) : (
         <>
@@ -34,6 +52,11 @@ const Header = () => {
           <div className="text-right text-white font-semibold text-3l w-7/12 p-3">
             Powerd By AIGID
           </div>
+          { isDisaster ? (
+            <div className="text-left z-10 absolute top-2 right-40 bg-white p-1">
+              <DisasterSelector disasters={disasters} setPreferrences={setPreferrence} setCurrentDisaster={setCurrentDisaster}/>
+            </div>
+          ) : null}
         </>
       )}
     </header>

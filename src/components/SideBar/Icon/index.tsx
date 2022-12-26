@@ -258,9 +258,7 @@ export const getResourceIcon = (resource: Data, config: Config) => {
   const color = resource.color;
 
   const type = resource.type;
-  // @ts-ignore
-  if (iconLoadTypes.includes(layerConfig.type)) {
-    // @ts-ignore
+  if (iconLoadTypes.includes(layerConfig.type) && (layerConfig.icon)) {
     return configIcon(layerConfig.icon.url);
   }
 
