@@ -89,7 +89,6 @@ const useInitializeMap = (
       });
     }
 
-    // @ts-ignore
     const gl = mapRef.current.painter.context.gl;
     deckGLRef.current = new Deck({
       initialViewState: {
@@ -174,7 +173,6 @@ const MapComponent: React.VFC = () => {
   //クリックされたレイヤに画面移動
   useFlyTo(deckGLRef.current);
 
-  
 
   // 各種レイヤーの統合
   if (deckGLRef.current) {
@@ -183,12 +181,11 @@ const MapComponent: React.VFC = () => {
 
   const router = useRouter();
   useEffect(() => {
-    
+
     let querySelectLayerId = router.query.querySelectLayerId as string | undefined;
     querySelectLayerId = querySelectLayerId === undefined ? '' : querySelectLayerId;
     if (querySelectLayerId !== '') {
-      
-      // @ts-ignore
+      if (!preferences){return};
       const targetResource = getDataById(preferences.menu, [querySelectLayerId]);
 
       const viewState = {
@@ -196,7 +193,6 @@ const MapComponent: React.VFC = () => {
         latitude: targetResource.lat,
         zoom: targetResource.zoom,
         id: targetResource.id[0],
-        // @ts-ignore
         pitch: preferences.initialView.map.pitch,
         transitionDuration: 2000,
         transitionEasing: easeOutQuart,

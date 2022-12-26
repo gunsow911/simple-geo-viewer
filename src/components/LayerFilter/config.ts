@@ -25,6 +25,12 @@ type LayerConfigGenericProps = {
   maxzoom?: number;
   opacity?: number;
   visible?: boolean;
+  icon?: {
+    url: string;
+    width: number;
+    height: number;
+    anchorY: number;
+  };
 };
 
 type RasterLayerConfig = LayerConfigGenericProps & {
@@ -76,7 +82,7 @@ type Tile3dLayerConfig = LayerConfigGenericProps & {
   pointsize: number;
 };
 
-type ScatterprotLayerConfig = {
+type ScatterprotLayerConfig = LayerConfigGenericProps & {
   type: 'Scatterplot';
   id: string;
   data: string;
@@ -87,7 +93,7 @@ type ScatterprotLayerConfig = {
   visible: boolean;
 };
 
-type ArcLayerConfig = {
+type ArcLayerConfig = LayerConfigGenericProps & {
   type: 'Arc';
   id: string;
   data: string;
