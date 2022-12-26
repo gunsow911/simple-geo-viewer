@@ -33,7 +33,7 @@ export const useGetInfoClickedLayerId = () => {
   // 現在凡例が表示されている場合、そのタイトルを取得
   let displayedInfoLayerTitle = '';
 
-  if (displayedInfoLayerId !== '') {
+  if (displayedInfoLayerId !== '' && (preferences)) {
     if (getLayerConfigById(displayedInfoLayerId, preferences.config) !== undefined) {
       displayedInfoLayerTitle = getDataTitleById(preferences.menu, displayedInfoLayerId);
     }
@@ -56,9 +56,11 @@ export const useGetInfoClickedLayerId = () => {
       return displayedInfoLayerId;
     }
     // 現在情報が表示されておらず、かつ情報を持つレイヤがチェックされていたら、その情報を表示
-    const id = getCheckedLayerIdByDataTitleList(checkedLayerTitleList, preferences.menu);
-    setDisplayedInfoLayerId(id);
-    return id;
+    if (preferences) {
+      const id = getCheckedLayerIdByDataTitleList(checkedLayerTitleList, preferences.menu);
+      setDisplayedInfoLayerId(id);
+      return id;
+    }
 
     // すでに表示されている情報のレイヤ以外のチェックが外された場合、そのまま表示
   } else if (!clickedId && checkedLayerTitleList.includes(displayedInfoLayerTitle)) {
@@ -75,9 +77,11 @@ export const useGetInfoClickedLayerId = () => {
     // すでに表示されている情報のレイヤのチェックが外された場合
   } else if (!clickedId && !checkedLayerTitleList.includes(displayedInfoLayerTitle)) {
     // 情報を持つレイヤがチェックされていたら、その情報を表示
-    const id = getCheckedLayerIdByDataTitleList(checkedLayerTitleList, preferences.menu);
-    setDisplayedInfoLayerId(id);
-    return id;
+    if (preferences) {
+      const id = getCheckedLayerIdByDataTitleList(checkedLayerTitleList, preferences.menu);
+      setDisplayedInfoLayerId(id);
+      return id;
+    }
   }
   // getCheckedLayerIdByDataTitleListですべて拾えている想定だが一応追加
   setDisplayedInfoLayerId('');

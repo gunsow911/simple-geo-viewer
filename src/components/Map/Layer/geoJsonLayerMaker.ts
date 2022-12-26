@@ -110,8 +110,6 @@ class GeoJsonCO2PolygonCreator {
   layerType: string = 'geojsonco2';
   private readonly layerConfig: LayerConfig;
   private readonly setTooltipData: SetterOrUpdater<{
-    lng: number;
-    lat: number;
     tooltipType: 'default' | 'thumbnail' | 'table';
     id: string;
     data: any;
@@ -448,7 +446,6 @@ class GeoJsonArrowLayerCreator {
         ...config,
       });
     };
-    
 
     return null;
   }
