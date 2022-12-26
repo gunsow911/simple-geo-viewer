@@ -1,8 +1,6 @@
 import { atom } from 'recoil';
 
 export const TooltipDataState = atom<{
-  lng: number;
-  lat: number;
   tooltipType: 'default' | 'thumbnail' | 'table';
   id: string;
   data: any;

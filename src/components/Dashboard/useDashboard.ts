@@ -8,10 +8,13 @@ import useSbMeshVolume from './Menu/SbMeshVolume/useSbMeshVolume';
 import { useRouter } from 'next/router';
 import { useSetRecoilState } from 'recoil';
 import { DashboardLayersState } from '@/store/LayersState';
+import { RGBAColor } from 'deck.gl';
 
 // ダッシュボード専用レイヤープロパティ
 export type DashboardLayerProps = {
   dashboardMenuId?: string;
+  getLineColor?: RGBAColor;
+  getFillColor?: RGBAColor;
 };
 
 // ダッシュボードフック返却値

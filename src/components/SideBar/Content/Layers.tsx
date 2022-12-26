@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, SetStateAction, useCallback, useContext, useEffect } from 'react';
+import React, { Dispatch, FC, SetStateAction, useCallback, useContext, useEffect, useRef } from 'react';
 import { context } from '@/pages';
 import { Data, Menu } from '@/components/LayerFilter/menu';
 import { getResourceIcon } from '@/components/SideBar/Icon';
@@ -30,9 +30,10 @@ const setResourceViewState = (resource: Data, setClickedLayerViewState: any) => 
 type LayersProps = {
   onChange?: (layerId: string, checked: boolean) => void;
   layers: Data[];
+  currentDisaster: string;
 };
 
-export const Layers: FC<LayersProps> = ({ layers, onChange }) => {
+export const Layers: FC<LayersProps> = ({ layers, onChange, currentDisaster }) => {
   const {
     checkedLayerTitleList,
     setCheckedLayerTitleList,
@@ -40,7 +41,6 @@ export const Layers: FC<LayersProps> = ({ layers, onChange }) => {
     setMouseTooltipData,
     preferences,
   } = useContext(context);
-
   const [deckGLLayers, setDeckGLLayers] = useRecoilState(LayersState);
   const [temporalLayerConfigs, setTemporalLayerConfigs] = useRecoilState(TemporalLayerConfigState);
   const [tooltipData, setTooltipData] = useRecoilState(TooltipDataState);
@@ -49,6 +49,7 @@ export const Layers: FC<LayersProps> = ({ layers, onChange }) => {
   const layerCreateById = useCallback(
     (ids: string[]) => {
       return ids.forEach((id) => {
+        // @ts-ignore
         const layerConfig = getLayerConfigById(id, preferences.config);
         if (!layerConfig) {
           return;
@@ -68,6 +69,7 @@ export const Layers: FC<LayersProps> = ({ layers, onChange }) => {
       });
     },
     [
+      // @ts-ignore
       preferences.config,
       setTemporalLayerConfigs,
       setTooltipData,
@@ -78,12 +80,11 @@ export const Layers: FC<LayersProps> = ({ layers, onChange }) => {
 
   //最初の一度だけ、menuのcheckedを確認し、trueならレイヤーを作成する
   useEffect(() => {
-    layers
-      .filter((value) => value.checked)
-      .forEach((value) => {
+    layers.filter((value) => value.checked).forEach((value) => {
         layerCreateById(value.id);
-      });
-  }, []);
+    });
+  }, [preferences]);
+
 
   const toggleSelectedResourceList = (resource: Data) => {
     // 既存のリストに対象リソースが入っていなければ格納
@@ -102,6 +103,7 @@ export const Layers: FC<LayersProps> = ({ layers, onChange }) => {
       return item !== resource.title;
     });
     resource.id.forEach((id) => {
+      // @ts-ignore
       const layerConfig = getLayerConfigById(id, preferences.config);
       if (!layerConfig) {
         return;
@@ -155,7 +157,8 @@ export const Layers: FC<LayersProps> = ({ layers, onChange }) => {
                   onChange && onChange(resource.id[0], e.target.checked);
                 }}
               />
-              {getResourceIcon(resource, preferences.config)}
+              {// @ts-ignore
+              getResourceIcon(resource, preferences.config)}
               <p
                 onMouseOver={(event) =>
                   setMouseTooltipData(() => ({

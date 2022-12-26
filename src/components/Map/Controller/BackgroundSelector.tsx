@@ -9,8 +9,10 @@ type Props = {
 
 const BackgroundSelector: React.FunctionComponent<Props> = ({ map }) => {
   const { preferences } = useContext(context);
+  if (preferences === null) return null;
   const updateBackground = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (map === undefined) return;
+    
 
     // プルダウンで選択されたレイヤーのsourceを取得
     const selectedBackgroundId = e.target.value;

@@ -1,0 +1,68 @@
+{
+  "layers": [
+    {
+      "type": "geojsonarrow",
+      "id": "i4a3fddd0-f8b8-4a86-9647-ad291d308e8b_dataset",
+      "getSize": 10,
+      "sizeScale": 8,
+      "icon": {
+        "url": "images/arrow_blue.png",
+        "width": 64,
+        "height": 64,
+        "anchorY": 64,
+        "color": "blue"
+      },
+      "minzoom": 6,
+      "visible": true,
+      "source": "https://www.geospatial.jp/disaster-info/data/4867ce23-ea63-4cd4-aad3-8bd636afaa7b/4a3fddd0-f8b8-4a86-9647-ad291d308e8b/dataset.geojson"
+    },
+    {
+      "type": "geojsonarrow",
+      "id": "i87c90daf-6a5f-4dd2-ba88-d404ec945618_dataset",
+      "getSize": 10,
+      "sizeScale": 8,
+      "icon": {
+        "url": "images/arrow_red.png",
+        "width": 64,
+        "height": 64,
+        "anchorY": 64,
+        "color": "red"
+      },
+      "minzoom": 6,
+      "visible": true,
+      "source": "https://www.geospatial.jp/disaster-info/data/4867ce23-ea63-4cd4-aad3-8bd636afaa7b/87c90daf-6a5f-4dd2-ba88-d404ec945618/dataset.geojson"
+    },
+    {
+      "type": "geojsonarrow",
+      "id": "ibb5f7f33-4a64-4d3e-993d-28e3e85aa5cd_dataset",
+      "getSize": 10,
+      "sizeScale": 8,
+      "icon": {
+        "url": "images/arrow_red.png",
+        "width": 64,
+        "height": 64,
+        "anchorY": 64,
+        "color": "red"
+      },
+      "minzoom": 6,
+      "visible": true,
+      "source": "https://www.geospatial.jp/disaster-info/data/4867ce23-ea63-4cd4-aad3-8bd636afaa7b/bb5f7f33-4a64-4d3e-993d-28e3e85aa5cd/dataset.geojson"
+    },
+    {
+      "type": "geojsonarrow",
+      "id": "if6889f2c-8a6b-42fe-bc00-7e10eb35d1c4_dataset",
+      "getSize": 10,
+      "sizeScale": 8,
+      "icon": {
+        "url": "images/arrow_yellow.png",
+        "width": 64,
+        "height": 64,
+        "anchorY": 64,
+        "color": "yellow"
+      },
+      "minzoom": 6,
+      "visible": true,
+      "source": "https://www.geospatial.jp/disaster-info/data/4867ce23-ea63-4cd4-aad3-8bd636afaa7b/f6889f2c-8a6b-42fe-bc00-7e10eb35d1c4/dataset.geojson"
+    }
+  ]
+}

@@ -8,6 +8,7 @@ type props = {
 
 export const Title = (props: props) => {
   const { preferences } = useContext(context);
+  if (preferences === null) return null;
   const { id } = props;
   const title = getDataTitleById(preferences.menu, id);
   return <p className="text-center font-bold">{title}</p>;

@@ -27,6 +27,12 @@ type LayerConfigGenericProps = {
   maxzoom?: number;
   opacity?: number;
   visible?: boolean;
+  icon?: {
+    url: string;
+    width: number;
+    height: number;
+    anchorY: number;
+  };
 };
 
 type RasterLayerConfig = LayerConfigGenericProps & {
@@ -36,6 +42,7 @@ type RasterLayerConfig = LayerConfigGenericProps & {
 type MvtLayerConfig = LayerConfigGenericProps & {
   type: 'mvt';
   getFillColor: RGBAColor;
+  getLineColor?: RGBAColor;
 };
 
 export type GeojsonLayerConfig = LayerConfigGenericProps & {
@@ -43,6 +50,9 @@ export type GeojsonLayerConfig = LayerConfigGenericProps & {
   getLineColor: RGBAColor;
   lineWidthMinPixels: number;
   getFillColor?: RGBAColor;
+  sizeScale?: number;
+  iconSizeScale?: number;
+  pointType?: string;
 };
 
 export type GeojsonIconLayerConfig = LayerConfigGenericProps & {
@@ -74,7 +84,7 @@ type Tile3dLayerConfig = LayerConfigGenericProps & {
   pointsize: number;
 };
 
-type ScatterprotLayerConfig = {
+type ScatterprotLayerConfig = LayerConfigGenericProps & {
   type: 'Scatterplot';
   id: string;
   data: string;
@@ -85,7 +95,7 @@ type ScatterprotLayerConfig = {
   visible: boolean;
 };
 
-type ArcLayerConfig = {
+type ArcLayerConfig = LayerConfigGenericProps & {
   type: 'Arc';
   id: string;
   data: string;

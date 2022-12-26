@@ -124,7 +124,6 @@ const useTuMeshVolume = (props: Props): UseMenuReturn => {
       pickable: true,
       stroked: false,
       filled: true,
-      // @ts-ignore
       getFillColor: colorContinuous({
         attr: 'v',
         domain: [0, maxVolume],

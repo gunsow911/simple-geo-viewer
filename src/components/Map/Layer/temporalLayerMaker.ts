@@ -351,7 +351,6 @@ class TripsDRMLayerCreator extends TemporalLayerCreator {
       return new MVTLayer({
         id: layerConfig.id,
         data: layerConfig.source,
-        // @ts-ignore
         getLineColor: (d: any) => {
           const dataIndex: number = Math.trunc(timestamp / layerConfig.step);
           const temporalValue: number = JSON.parse('[' + d.properties.traffic_volume + ']')[

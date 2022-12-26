@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
-import { Map, Marker, NavigationControl, Style } from 'maplibre-gl';
+import { Map, NavigationControl, Style } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 import { Deck, FlyToInterpolator } from '@deck.gl/core/typed';
@@ -15,7 +15,7 @@ import { TimeSlider } from '@/components/Map/Controller/TimeSlider';
 import { getLayerConfigById } from '@/components/LayerFilter/config';
 import { Backgrounds, Preferences } from '@/components/LayerFilter/loader';
 import DashboardPanelManager from '../Dashboard/DashboardPanelManager';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   DashboardLayersState,
   LayersState,
@@ -23,12 +23,11 @@ import {
   TemporalLayerState,
   WeatherMapLayerState,
 } from '@/store/LayersState';
-import { TooltipDataState } from '@/store/TooltipState';
-import { getPropertiesObj } from '@/components/Tooltip/util';
 import { ViewState } from '@/store/ViewState';
 import WeatherMapPanel from './Custom/WeatherMapPanel';
 import { useRouter } from 'next/router';
 import { getDataById } from '@/components/LayerFilter/menu';
+import { useRecoilState } from 'recoil';
 
 const getViewStateFromMaplibre = (map) => {
   const { lng, lat } = map.getCenter();
@@ -68,8 +67,9 @@ const getInitialStyle = (backgrounds: Backgrounds): Style => {
 const useInitializeMap = (
   maplibreContainer: React.MutableRefObject<HTMLDivElement | null>,
   deckglContainer: React.MutableRefObject<HTMLCanvasElement | null>,
-  preferences: Preferences
+  preferences: Preferences | null
 ) => {
+  // @ts-ignore
   const { backgrounds, initialView, menu } = preferences;
   const [currentZoomLevel, setCurrentZoomLevel] = useState(0);
   const setRecoilViewState = useSetRecoilState(ViewState);
@@ -90,7 +90,6 @@ const useInitializeMap = (
       });
     }
 
-    // @ts-ignore
     const gl = mapRef.current.painter.context.gl;
     deckGLRef.current = new Deck({
       initialViewState: {
@@ -128,25 +127,6 @@ const useInitializeMap = (
   };
 };
 
-const useShowTooltip = (map: any) => {
-  const pointMarkerRef = useRef<any>();
-
-  const tooltipData = useRecoilValue(TooltipDataState);
-  useEffect(() => {
-    if (!tooltipData || !tooltipData.data) {
-      if (pointMarkerRef.current) {
-        pointMarkerRef.current.remove();
-      }
-    } else {
-      const { data, tooltipType, id, lat, lng } = tooltipData;
-      getPropertiesObj(data, !tooltipType ? 'default' : tooltipType, id);
-      if (map) {
-        pointMarkerRef.current = new Marker().setLngLat([lng, lat]).addTo(map);
-      }
-    }
-  }, [map, tooltipData]);
-};
-
 const useDeckGLLayer = (currentZoomLevel: number, config) => {
   const deckglLayers = useRecoilValue(LayersState);
   const temporalLayers = useRecoilValue(TemporalLayerState);
@@ -177,7 +157,7 @@ const useDeckGLLayer = (currentZoomLevel: number, config) => {
 const MapComponent: React.VFC = () => {
   const maplibreContainer = useRef<HTMLDivElement | null>(null);
   const deckglContainer = useRef<HTMLCanvasElement | null>(null);
-  const { preferences } = useContext(context);
+  const { preferences, isDisaster, currentDisaster } = useContext(context);
   const temporalLayerConfigs = useRecoilValue(TemporalLayerConfigState);
   const dashboardLayers = useRecoilValue(DashboardLayersState);
   const weatherMapLayer = useRecoilValue(WeatherMapLayerState);
@@ -188,22 +168,25 @@ const MapComponent: React.VFC = () => {
     deckglContainer,
     preferences
   );
+
+  // @ts-ignore
   const deckglLayers = useDeckGLLayer(currentZoomLevel, preferences.config);
   //クリックされたレイヤに画面移動
   useFlyTo(deckGLRef.current);
+
 
   // 各種レイヤーの統合
   if (deckGLRef.current) {
     deckGLRef.current.setProps({ layers: [...deckglLayers, ...dashboardLayers, weatherMapLayer] });
   }
 
-  useShowTooltip(mapRef.current);
   const router = useRouter();
-
   useEffect(() => {
+
     let querySelectLayerId = router.query.querySelectLayerId as string | undefined;
     querySelectLayerId = querySelectLayerId === undefined ? '' : querySelectLayerId;
     if (querySelectLayerId !== '') {
+      if (!preferences){return};
       const targetResource = getDataById(preferences.menu, [querySelectLayerId]);
 
       const viewState = {
@@ -218,7 +201,7 @@ const MapComponent: React.VFC = () => {
       };
       deckGLRef.current.setProps({ initialViewState: viewState });
     }
-  }, []);
+  }, [preferences]);
 
   return (
     <>
