@@ -8,6 +8,7 @@ import { Deck, FlyToInterpolator } from '@deck.gl/core/typed';
 import { context } from '@/pages';
 import { useFlyTo, easeOutQuart } from '@/components/Map/Animation/flyTo';
 import Legend, { useGetClickedLayerId } from '@/components/Map/Legend';
+import Info, { useGetInfoClickedLayerId } from '@/components/Map/Info';
 
 import BackgroundSelector from './Controller/BackgroundSelector';
 import { TimeSlider } from '@/components/Map/Controller/TimeSlider';
@@ -208,6 +209,9 @@ const MapComponent: React.VFC = () => {
         <canvas className="z-10 absolute h-full" ref={deckglContainer}></canvas>
         <div className="z-10 absolute top-2 left-2 w-60">
           <Legend id={useGetClickedLayerId()} />
+        </div>
+        <div className="z-20 absolute bottom-0 right-0 w-80">
+          <Info id={useGetInfoClickedLayerId()} />
         </div>
         <div className="z-10 absolute top-2 right-12 bg-white p-1">
           <div className="text-center font-bold">背景</div>

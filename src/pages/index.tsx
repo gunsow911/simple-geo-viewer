@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import Map from '@/components/Map';
 import { clickedLayerViewState } from '@/components/Map/types';
 import { defaultLegendId } from '@/components/Map/Legend/layerIds';
+import { defaultInfoId } from '@/components/Map/Info/layerIds';
 import { Tooltip } from '@/components/Tooltip/content';
 import MouseTooltip, { MouseTooltipData } from '@/components/MouseTooltip';
 import { usePreferences, Preferences, Settings, Backgrounds, InitialView } from '@/components/LayerFilter/loader';
@@ -32,6 +33,8 @@ type TContext = {
   setCheckedLayerTitleList: React.Dispatch<React.SetStateAction<string[]>>;
   displayedLegendLayerId: string;
   setDisplayedLegendLayerId: React.Dispatch<React.SetStateAction<string>>;
+  displayedInfoLayerId: string;
+  setDisplayedInfoLayerId: React.Dispatch<React.SetStateAction<string>>;
   clickedLayerViewState: clickedLayerViewState | null;
   setClickedLayerViewState: React.Dispatch<React.SetStateAction<clickedLayerViewState | null>>;
   isDefault: boolean;
@@ -51,6 +54,7 @@ type TContext = {
 const useContextValues = (): TContext => {
   const [checkedLayerTitleList, setCheckedLayerTitleList] = useState<string[]>([]);
   const [displayedLegendLayerId, setDisplayedLegendLayerId] = useState<string>(defaultLegendId);
+  const [displayedInfoLayerId, setDisplayedInfoLayerId] = useState<string>(defaultInfoId);
   const [clickedLayerViewState, setClickedLayerViewState] = useState<clickedLayerViewState | null>(
     null
   );
@@ -68,6 +72,8 @@ const useContextValues = (): TContext => {
     setCheckedLayerTitleList,
     displayedLegendLayerId,
     setDisplayedLegendLayerId,
+    displayedInfoLayerId,
+    setDisplayedInfoLayerId,
     clickedLayerViewState,
     setClickedLayerViewState,
     isDefault,

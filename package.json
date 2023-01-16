@@ -24,6 +24,7 @@
     "axios": "^0.21.1",
     "chart.js": "^3.9.1",
     "chartjs-adapter-dayjs": "^1.0.0",
+    "chroma-js": "^2.4.2",
     "dayjs": "^1.11.5",
     "deck.gl": "^8.8",
     "japanmesh": "^1.0.0",

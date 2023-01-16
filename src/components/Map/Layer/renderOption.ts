@@ -2,6 +2,7 @@ import { getColorParamList } from '@/components/Map/Legend/colorParamList';
 
 const getColorParam = (id: string, param: number | string) => {
   const colorParamList = getColorParamList(id, param);
+  // @ts-ignore
   const colorParam = colorParamList.find((colorParam) => colorParam.param);
   return colorParam?.color;
 };
@@ -124,6 +125,34 @@ const zenrinBuilding = (layer: any) => {
   });
 };
 
+const buildingPlateau = (layer: any) => {
+  const getLineColor = () => [255, 170, 50, 200];
+  const getFillColor = (d: any) => getColorParam(layer.id, d.properties['usage']);
+  const getElevation = (d: any) =>
+    'measuredHeight' in d.properties ? d.properties.measuredHeight : 0;
+
+  return layer.clone({
+    extruded: true,
+    getLineColor,
+    getFillColor,
+    getElevation,
+  });
+};
+
+const buildingPlateauNoUsage = (layer: any) => {
+  const getLineColor = () => [255, 170, 50, 200];
+  const getFillColor = (d: any) => [200, 200, 200, 200];
+  const getElevation = (d: any) =>
+    'measuredHeight' in d.properties ? d.properties.measuredHeight : 0;
+
+  return layer.clone({
+    extruded: true,
+    getLineColor,
+    getFillColor,
+    getElevation,
+  });
+};
+
 export const addRenderOption = (layer: any) => {
   const colorBuildIDs = [
     'shizuoka-building',
@@ -166,6 +195,14 @@ export const addRenderOption = (layer: any) => {
 
     if (zenrinIDs.includes(layer.id)) {
       return zenrinBuilding(layer);
+    }
+
+    if (layer.id === 'plateau-building') {
+      return buildingPlateau(layer);
+    }
+
+    if (layer.id === 'plateau-building-no-usage') {
+      return buildingPlateauNoUsage(layer);
     }
   }
   return layer;

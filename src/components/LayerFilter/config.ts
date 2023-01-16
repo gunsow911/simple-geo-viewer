@@ -12,6 +12,8 @@ type LayerConfigType =
   | 'Scatterplot'
   | 'Arc'
   | 'temporal_polygon'
+  | 'temporal_polygon_shape'
+  | 'temporal_polygon_area'
   | 'temporal_line'
   | 'gltf'
   | 'trips_json'
@@ -113,6 +115,22 @@ type TemporalPolygonLayerConfig = LayerConfigGenericProps & {
   colorScale: number;
 };
 
+type TemporalPolygonShapeLayerConfig = LayerConfigGenericProps & {
+  type: 'temporal_polygon_shape';
+  values: [number, number];
+  colors: [RGBAColor, RGBAColor];
+  heights?: [number, number];
+  colorScale: number;
+};
+
+type TemporalPolygonAreaLayerConfig = LayerConfigGenericProps & {
+  type: 'temporal_polygon_area';
+  values: [number, number];
+  colors: [RGBAColor, RGBAColor];
+  heights?: [number, number];
+  colorScale: number;
+};
+
 type TemporalLineLayerConfig = LayerConfigGenericProps & {
   type: 'temporal_line';
   values: [number, number];
@@ -151,6 +169,8 @@ export type LayerConfig =
   | ScatterprotLayerConfig
   | ArcLayerConfig
   | TemporalPolygonLayerConfig
+  | TemporalPolygonShapeLayerConfig
+  | TemporalPolygonAreaLayerConfig
   | TemporalLineLayerConfig
   | GltfLayerConfig
   | TripsJsonLayerConfig
