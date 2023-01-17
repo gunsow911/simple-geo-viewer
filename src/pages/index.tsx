@@ -8,8 +8,14 @@ import { defaultLegendId } from '@/components/Map/Legend/layerIds';
 import { defaultInfoId } from '@/components/Map/Info/layerIds';
 import { Tooltip } from '@/components/Tooltip/content';
 import MouseTooltip, { MouseTooltipData } from '@/components/MouseTooltip';
-import { usePreferences, Preferences, Settings, Backgrounds, InitialView } from '@/components/LayerFilter/loader';
-import { Menu } from '@/components/LayerFilter/menu';
+import {
+  usePreferences,
+  Preferences,
+  Settings,
+  Backgrounds,
+  InitialView,
+} from '@/components/LayerFilter/loader';
+import { getDataById, Menu } from '@/components/LayerFilter/menu';
 import { Config } from '@/components/LayerFilter/config';
 import Head from 'next/head';
 import { closeIcon } from '@/components/SideBar/Icon';
@@ -20,13 +26,7 @@ import { TooltipDataState, TooltipPositionState } from '@/store/TooltipState';
 import useWeatherMap from '@/components/Map/Custom/useWeatherMap';
 import { Disasters } from '@/components/LayerFilter/loader';
 import { useRouter } from 'next/router';
-import {
-  DashboardLayersState,
-  LayersState,
-  TemporalLayerConfigState,
-  TemporalLayerState,
-  WeatherMapLayerState,
-} from '@/store/LayersState';
+import { LayersState } from '@/store/LayersState';
 
 type TContext = {
   checkedLayerTitleList: string[];
@@ -42,7 +42,7 @@ type TContext = {
   mouseTooltipData: MouseTooltipData | null;
   setMouseTooltipData: React.Dispatch<React.SetStateAction<MouseTooltipData | null>>;
   preferences: Preferences | null;
-  setPreferences : React.Dispatch<React.SetStateAction<Preferences | null>>;
+  setPreferences: React.Dispatch<React.SetStateAction<Preferences | null>>;
   currentDisaster: string;
   setCurrentDisaster: React.Dispatch<React.SetStateAction<string>>;
   isDisaster: boolean;
@@ -61,11 +61,11 @@ const useContextValues = (): TContext => {
   const [isDefault, setIsDefault] = useState<boolean>(true);
   const [mouseTooltipData, setMouseTooltipData] = useState<MouseTooltipData | null>(null);
 
-  const [ preferences, setPreferences ] = useState<Preferences | null>(null);
+  const [preferences, setPreferences] = useState<Preferences | null>(null);
   const [currentDisaster, setCurrentDisaster] = useState<string>('');
   const [isDisaster, setIsDisaster] = useState<boolean>(false);
-  const defaultDisasters: Disasters =  {default:0,data:[]} 
-  const [disasters, setDisasters] = useState<Disasters>(defaultDisasters)
+  const defaultDisasters: Disasters = { default: 0, data: [] };
+  const [disasters, setDisasters] = useState<Disasters>(defaultDisasters);
 
   return {
     checkedLayerTitleList,
@@ -87,7 +87,7 @@ const useContextValues = (): TContext => {
     isDisaster,
     setIsDisaster,
     disasters,
-    setDisasters
+    setDisasters,
   };
 };
 
@@ -104,13 +104,12 @@ const App: NextPage = () => {
   const router = useRouter();
   const [currentDisaster, setCurrentDisaster] = useState<string>('');
   const [isDisaster, setIsDisaster] = useState<boolean>(false);
-  const defaultDisasters: Disasters =  {default:0,data:[]} 
+  const defaultDisasters: Disasters = { default: 0, data: [] };
   const [disasters, setDisasters] = useState<Disasters>(defaultDisasters);
 
   const fetchJson = async (url: string) => await (await fetch(url)).json();
 
   useEffect(() => {
-    
     // preferencesが指定されているがqueryとして読み込みが完了していない場合はJSONの取得処理の開始を保留する
     if (router.asPath.includes('preferences=') && typeof router.query.preferences === 'undefined')
       return;
@@ -126,14 +125,13 @@ const App: NextPage = () => {
       let preferencesPath = router.query.preferences as string | undefined;
       if (typeof preferencesPath === 'undefined') {
         preferencesPath = `${router.basePath}/defaultPreferences`;
-      };
+      }
       let loadedPreferences: Preferences;
       const isdisaster = router.query.isDisaster as boolean | undefined;
       const disasterPreference = router.query.disaster as string | undefined;
-      
-      
+
       if (isdisaster) {
-        if (typeof setDisasters === 'undefined'){
+        if (typeof setDisasters === 'undefined') {
           return;
         }
         setIsDisaster(() => isdisaster);
@@ -145,12 +143,15 @@ const App: NextPage = () => {
         if (typeof disasterPreference !== 'undefined') {
           preferencesPath = `${router.basePath}/disaster/${disasterPreference}`;
         }
-        if (typeof currentDisaster !== 'undefined' && typeof setCurrentDisaster !== 'undefined' && currentDisaster !== '') {
-            preferencesPath = preferencesPath.replace(`/${disastersPath}`,'');
-            preferencesPath = `${preferencesPath}/${currentDisaster}`;
-        };
-        
-        
+        if (
+          typeof currentDisaster !== 'undefined' &&
+          typeof setCurrentDisaster !== 'undefined' &&
+          currentDisaster !== ''
+        ) {
+          preferencesPath = preferencesPath.replace(`/${disastersPath}`, '');
+          preferencesPath = `${preferencesPath}/${currentDisaster}`;
+        }
+
         const results = await Promise.all([
           fetchJson(`${preferencesPath}/settings.json`),
           fetchJson(`${preferencesPath}/menu.json`),
@@ -158,7 +159,7 @@ const App: NextPage = () => {
           fetchJson(`${preferencesPath}/backgrounds.json`),
           fetchJson(`${preferencesPath}/initial_view.json`),
         ]);
-        
+
         loadedPreferences = {
           settings: results[0] as Settings,
           menu: results[1] as Menu,
@@ -167,7 +168,7 @@ const App: NextPage = () => {
           initialView: results[4] as InitialView,
         };
         setCurrentDisaster(() => disastersPath);
-      }else{
+      } else {
         const results = await Promise.all([
           fetchJson(`${preferencesPath}/settings.json`),
           fetchJson(`${preferencesPath}/menu.json`),
@@ -175,7 +176,7 @@ const App: NextPage = () => {
           fetchJson(`${preferencesPath}/backgrounds.json`),
           fetchJson(`${preferencesPath}/initial_view.json`),
         ]);
-        
+
         loadedPreferences = {
           settings: results[0] as Settings,
           menu: results[1] as Menu,
@@ -183,16 +184,44 @@ const App: NextPage = () => {
           backgrounds: results[3] as Backgrounds,
           initialView: results[4] as InitialView,
         };
+
+        let querySelectLayerId = router.query.querySelectLayerId as string | undefined;
+        querySelectLayerId = querySelectLayerId === undefined ? '' : querySelectLayerId;
+        if (querySelectLayerId !== '') {
+          let targetResource = getDataById(loadedPreferences.menu, [querySelectLayerId]);
+          targetResource.checked = true;
+          for (
+            let categoryIndex = 0;
+            categoryIndex < loadedPreferences.menu.length;
+            categoryIndex++
+          ) {
+            const element = loadedPreferences.menu[categoryIndex];
+            for (let dataIndex = 0; dataIndex < element.data.length; dataIndex++) {
+              const resource = element.data[dataIndex];
+              if (resource.id[0] === targetResource.id[0]) {
+                loadedPreferences.menu[categoryIndex].data[dataIndex] = targetResource;
+              }
+            }
+          }
+        }
       }
       setPreferences(() => loadedPreferences);
     })();
-  },[router.asPath, router.query.preferences]);
+  }, [
+    currentDisaster,
+    router.asPath,
+    router.basePath,
+    router.query.disaster,
+    router.query.isDisaster,
+    router.query.preferences,
+    router.query.querySelectLayerId,
+    setPreferences,
+  ]);
 
   const [deckGLLayers, setDeckGLLayers] = useRecoilState(LayersState);
-  useEffect(
-    () => {
-      setDeckGLLayers([]);
-    },[currentDisaster]);
+  useEffect(() => {
+    setDeckGLLayers([]);
+  }, [currentDisaster]);
 
   if (preferences === null) {
     return <div>loading</div>;
@@ -203,9 +232,7 @@ const App: NextPage = () => {
     position: 'absolute',
     height: '400px',
   };
-  
-  
-  
+
   return (
     <>
       <Head>
@@ -219,12 +246,21 @@ const App: NextPage = () => {
         <context.Provider value={{ ...contextValues, preferences }}>
           <DashboardProvider>
             <div className="h-12">
-            <Header disasters={disasters} setPreferrence={setPreferences} isDisaster={isDisaster} setCurrentDisaster={setCurrentDisaster}/>
+              <Header
+                disasters={disasters}
+                setPreferrence={setPreferences}
+                isDisaster={isDisaster}
+                setCurrentDisaster={setCurrentDisaster}
+              />
             </div>
             <div className="flex content" style={{ overflow: 'hidden' }}>
               <div className="w-1/5 flex flex-col h-full ml-4 mr-2 mt-4 pb-10">
                 <div id="sideBar" className="overflow-auto relative flex-1">
-                  <Sidebar onChangeSelect={onChangeSelect} currentDisaster={currentDisaster} preferences={preferences}/>
+                  <Sidebar
+                    onChangeSelect={onChangeSelect}
+                    currentDisaster={currentDisaster}
+                    preferences={preferences}
+                  />
                 </div>
                 {contextValues.mouseTooltipData !== null ? (
                   <div className="relative">
