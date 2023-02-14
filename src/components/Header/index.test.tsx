@@ -4,6 +4,7 @@
 import React, { SetStateAction, useState } from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
+import { renderHook, cleanup } from '@testing-library/react-hooks';
 import Header from '.';
 import { context } from '@/pages';
 import { Disasters, Preferences } from '../LayerFilter/loader';
@@ -21,6 +22,9 @@ jest.mock('@/components/Tooltip/content', () => {
 });
 
 describe('Rendering', () => {
+  beforeEach(() => {
+    cleanup();
+  });
   const _context: any = {};
   const mockSettings = {
     title: 'デジタル裾野',
@@ -32,14 +36,22 @@ describe('Rendering', () => {
       default: 1,
       data: [],
     };
-    const [_preference, setPreferrence] = useState<Preferences | null>(null);
-    const [_currentDisaster, setCurrentDisaster] = useState<string>('');
+    const {
+      result: {
+        current: [_preferences, setPreferences],
+      },
+    } = renderHook(() => useState<Preferences | null>(null));
+    const {
+      result: {
+        current: [_currentDisaster, setCurrentDisaster],
+      },
+    } = renderHook(() => useState<string>(''));
     const header = render(
       <context.Provider value={_context}>
         <Header
           disasters={disasters}
           isDisaster={true}
-          setPreferrence={setPreferrence}
+          setPreferrence={setPreferences}
           setCurrentDisaster={setCurrentDisaster}
         />
       </context.Provider>
